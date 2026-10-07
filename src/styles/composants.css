@@ -1551,6 +1551,15 @@
   .reperes__sommaire {
     padding-inline: var(--e-4);
   }
+  /* Repères : tout le panneau défile, titre et sommaire compris (voir .panneau__entete). */
+  .reperes {
+    display: block;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .reperes .panneau__corps {
+    overflow: visible;
+  }
   .vide {
     padding-inline: var(--e-4);
   }

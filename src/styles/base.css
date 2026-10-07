@@ -397,8 +397,10 @@ mark.a-completer {
   /* clip et non hidden : la fenêtre ne doit jamais défiler (seul son contenu défile). */
   overflow: clip;
 }
+/* backwards et non both : une animation qui reste en effet après sa fin fait du panneau le
+   repère des éléments fixes (Chrome, Safari), qui défileraient alors avec lui. */
 .panneau[open] {
-  animation: entree-panneau var(--transition) both;
+  animation: entree-panneau var(--transition) backwards;
 }
 .panneau--reperes[open] {
   animation-name: entree-centre;
@@ -543,6 +545,20 @@ mark.a-completer {
   .panneau__entete,
   .panneau__corps {
     padding-inline: var(--e-4);
+  }
+  /* L'en-tête des panneaux part avec le contenu pour laisser l'écran à la lecture ; seul le
+     bouton Fermer reste, flottant en haut à droite comme les flèches de la fiche. */
+  .panneau__entete {
+    position: static;
+    padding-right: 64px;
+  }
+  .panneau__entete > .bouton-icone {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    right: 8px;
+    z-index: 4;
+    background: var(--surface);
+    box-shadow: var(--ombre-md);
   }
 }
 

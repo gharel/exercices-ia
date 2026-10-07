@@ -142,3 +142,49 @@ test('sur téléphone : onglets d’outils, sommaire des repères et état vide 
     expect(await sansDefilementHorizontal(page)).toBe(true);
   }
 });
+
+test('sur téléphone : les panneaux laissent l’écran au contenu, Fermer reste à portée', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.locator('.carte').first()).toBeVisible();
+  const enBas = (zone) => zone.evaluate((z) => z.scrollTo(0, 1500));
+
+  // Repères : titre et sommaire partent avec le contenu, le bouton Fermer flotte.
+  await page.getByRole('button', { name: 'Repères', exact: true }).tap();
+  const reperes = page.getByRole('dialog');
+  const sommaire = reperes.getByRole('navigation', { name: 'Sommaire des repères' });
+  const fermerReperes = reperes.getByRole('button', { name: 'Fermer les repères' });
+  await enBas(reperes.locator('.reperes'));
+  await expect(sommaire).not.toBeInViewport();
+  await expect(fermerReperes).toBeInViewport();
+  // Le sommaire mène à la section, qui s'arrête sous le bouton Fermer et non dessous.
+  await reperes.locator('.reperes').evaluate((z) => z.scrollTo(0, 0));
+  await sommaire.getByRole('link', { name: 'Sources' }).tap();
+  const sources = reperes.getByRole('heading', { name: 'Sources officielles' });
+  await expect(sources).toBeInViewport();
+  const basFermer = await fermerReperes.evaluate((b) => b.getBoundingClientRect().bottom);
+  await expect
+    .poll(() => sources.evaluate((h) => h.getBoundingClientRect().top))
+    .toBeGreaterThanOrEqual(basFermer);
+  await fermerReperes.tap();
+  await expect(reperes).toBeHidden();
+
+  // Fiche : les flèches et la croix suivent le défilement (l'animation d'ouverture ne doit pas
+  // rester en effet, sinon elles défilent avec le panneau).
+  await page.locator('.carte__lien').first().tap();
+  const fiche = page.getByRole('dialog');
+  await enBas(fiche);
+  await expect(fiche.getByRole('button', { name: 'Fermer la fiche' })).toBeInViewport();
+  await fiche.getByRole('button', { name: 'Fermer la fiche' }).tap();
+
+  // Séance : l'en-tête part aussi, le bouton Fermer reste.
+  for (let i = 0; i < 4; i++) await page.locator('.carte__signet').nth(i).tap();
+  await page.locator('#bouton-seance').tap();
+  const seance = page.getByRole('dialog');
+  await enBas(seance);
+  await expect(seance.getByRole('heading', { name: 'Ma séance' })).not.toBeInViewport();
+  await expect(seance.getByRole('button', { name: 'Fermer ma séance' })).toBeInViewport();
+  await seance.getByRole('button', { name: 'Fermer ma séance' }).tap();
+  await expect(seance).toBeHidden();
+});

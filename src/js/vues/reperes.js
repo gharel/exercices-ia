@@ -30,16 +30,27 @@ export function monterReperes(dialogue) {
   ];
 
   /**
-   * Fait défiler la zone de contenu jusqu'à `cible`, et seulement elle. scrollIntoView()
+   * Fait défiler la zone qui défile jusqu'à `cible`, et seulement elle. scrollIntoView()
    * ferait aussi défiler la fenêtre elle-même (overflow masqué) : le sommaire sortait par le
-   * haut et l'ascenseur restait bloqué.
+   * haut et l'ascenseur restait bloqué. Sur ordinateur, seul le contenu défile ; sur téléphone,
+   * tout le panneau défile (titre et sommaire partent avec le contenu) et la cible s'arrête sous
+   * le bouton Fermer, qui flotte.
    */
   function defilerVers(cible, { centrer = false, doux = false } = {}) {
     const corps = dialogue.querySelector('.panneau__corps');
-    const ecart = cible.getBoundingClientRect().top - corps.getBoundingClientRect().top;
-    const marge = centrer ? Math.max((corps.clientHeight - cible.offsetHeight) / 2, 16) : 16;
+    const zone = getComputedStyle(corps).overflowY === 'visible' ? corps.parentElement : corps;
+    const haut = zone.getBoundingClientRect().top;
+    const fermer = dialogue.querySelector('.panneau__entete > .bouton-icone');
+    const marge =
+      getComputedStyle(fermer).position === 'fixed'
+        ? fermer.getBoundingClientRect().bottom - haut + 8
+        : 16;
+    const ecart = cible.getBoundingClientRect().top - haut;
+    const decalage = centrer
+      ? Math.max((zone.clientHeight - cible.offsetHeight) / 2, marge)
+      : marge;
     const animer = doux && !globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    corps.scrollTo({ top: corps.scrollTop + ecart - marge, behavior: animer ? 'smooth' : 'auto' });
+    zone.scrollTo({ top: zone.scrollTop + ecart - decalage, behavior: animer ? 'smooth' : 'auto' });
   }
 
   remplir(
