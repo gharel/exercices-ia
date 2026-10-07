@@ -310,6 +310,13 @@
   text-transform: uppercase;
   color: var(--scene-accent);
 }
+.resume-profil__niveau {
+  white-space: nowrap;
+}
+/* Le point est dans l'élément qui le suit : on lui redonne l'écart des autres éléments. */
+.resume-profil__point {
+  margin-right: 10px;
+}
 .resume-profil .bouton--discret {
   color: var(--scene-accent);
 }
@@ -676,6 +683,8 @@
 
 .vide {
   display: grid;
+  /* minmax(0, 1fr) : la colonne garde la largeur du cadre, le bouton passe à la ligne au besoin. */
+  grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   gap: var(--e-3);
   padding: var(--e-12) var(--e-6);
@@ -690,6 +699,10 @@
 .vide p {
   max-width: 48ch;
   color: var(--texte-doux);
+}
+.vide .bouton {
+  white-space: normal;
+  text-align: center;
 }
 .vide__icone {
   font-size: 2rem;
@@ -860,10 +873,11 @@
   border-radius: var(--rayon-xl);
   overflow: hidden;
 }
+/* Les onglets passent à la ligne plutôt que de défiler : aucun outil n'est coupé au bord. */
 .onglets {
   display: flex;
+  flex-wrap: wrap;
   gap: 2px;
-  overflow-x: auto;
   padding: 6px;
   background: var(--surface-2);
 }
@@ -1173,10 +1187,11 @@
   gap: var(--e-10);
   padding-bottom: var(--e-12);
 }
+/* Le sommaire passe à la ligne plutôt que de défiler : aucune entrée n'est coupée au bord. */
 .reperes__sommaire {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--e-2);
-  overflow-x: auto;
   padding: var(--e-3) var(--e-6);
   border-bottom: 1px solid var(--bord);
   background: var(--surface);
@@ -1465,12 +1480,33 @@
   .resume-profil__outils {
     display: none;
   }
+  /* « Profil » au-dessus, comme un surtitre : métier et niveau tiennent ensemble sur la ligne. */
+  .resume-profil__etiquette {
+    flex-basis: 100%;
+  }
   .fiche__entete {
     position: static;
     padding-inline: var(--e-4);
   }
+  /* La navigation flotte en haut à droite (position fixe). Les badges s'écoulent comme du texte
+     autour d'une réserve de sa taille : seule la première ligne se raccourcit, et aucun badge ne
+     passe sous les flèches. Une boîte flex ne contournerait pas le flottant. */
   .fiche__haut {
-    padding-right: 150px;
+    display: block;
+  }
+  .fiche__haut::before {
+    content: '';
+    float: right;
+    width: 142px;
+    height: 36px;
+  }
+  .fiche__badges {
+    display: block;
+    margin-bottom: calc(-1 * var(--e-2));
+  }
+  .fiche__badges > * {
+    margin: 0 var(--e-2) var(--e-2) 0;
+    vertical-align: middle;
   }
   .fiche__nav {
     position: fixed;
@@ -1513,6 +1549,9 @@
     gap: 2px;
   }
   .reperes__sommaire {
+    padding-inline: var(--e-4);
+  }
+  .vide {
     padding-inline: var(--e-4);
   }
   /* Familles sur téléphone : deux colonnes égales, le nombre calé à droite comme pour la durée

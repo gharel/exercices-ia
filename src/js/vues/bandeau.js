@@ -42,6 +42,9 @@ export function monterBandeau(conteneur, magasin, { ouvrirSeance, ouvrirReperes 
       {
         type: 'button',
         class: 'bouton bouton--fantome bouton-reperes',
+        // Sous 960 px, seule l'icône reste : le nom passe par aria-label et l'info-bulle.
+        'aria-label': 'Repères',
+        title: 'Repères',
         onclick: () => ouvrirReperes(),
       },
       icone('compass'),

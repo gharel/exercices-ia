@@ -244,12 +244,17 @@ export function monterProfil(conteneur, resume, magasin) {
           { class: 'resume-profil__texte' },
           el('span', { class: 'resume-profil__etiquette' }, 'Profil'),
           el('strong', {}, nomMetier),
-          el('span', { 'aria-hidden': 'true' }, '·'),
-          nomNiv,
+          // Le point reste collé au niveau : il ne finit jamais seul une ligne.
+          el(
+            'span',
+            { class: 'resume-profil__niveau' },
+            el('span', { class: 'resume-profil__point', 'aria-hidden': 'true' }, '·'),
+            nomNiv,
+          ),
           el(
             'span',
             { class: 'resume-profil__outils' },
-            el('span', { 'aria-hidden': 'true' }, '· '),
+            el('span', { class: 'resume-profil__point', 'aria-hidden': 'true' }, '·'),
             outils,
           ),
         ),
