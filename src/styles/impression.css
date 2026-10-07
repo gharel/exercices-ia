@@ -1,0 +1,108 @@
+/*
+ * Impression. Avec les boutons « Imprimer » (fiche ou séance), seule la zone #impression est
+ * imprimée. Avec Ctrl+P, la liste des exercices s'imprime sans le profil ni les boutons.
+ */
+
+.impression {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 16mm 14mm;
+  }
+
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    background: #ffffff;
+    color: #2e2e2e;
+    font-size: 11pt;
+  }
+
+  .bandeau,
+  .profil,
+  .resume-profil,
+  .familles,
+  .resultats__outils,
+  .resultats__plus,
+  .carte__signet,
+  .pied,
+  .toast,
+  .lien-evitement,
+  dialog {
+    display: none !important;
+  }
+
+  .carte {
+    box-shadow: none;
+    border: 1px solid #ced4da;
+    break-inside: avoid;
+  }
+
+  body.en-impression > *:not(.impression) {
+    display: none !important;
+  }
+  body.en-impression .impression {
+    display: block;
+  }
+
+  .imp-entete {
+    margin-bottom: 8mm;
+  }
+  .imp-entete h1 {
+    font-size: 20pt;
+  }
+  .imp-fiche {
+    border-top: 4px solid #50967c;
+    padding-top: 4mm;
+    margin-bottom: 8mm;
+  }
+  .imp-fiche + .imp-fiche {
+    break-before: page;
+  }
+  .imp-fiche h2 {
+    font-size: 16pt;
+    margin-bottom: 1mm;
+  }
+  .imp-fiche h3 {
+    font-size: 11pt;
+    margin: 4mm 0 1mm;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #3d7a62;
+  }
+  .imp-fiche p {
+    margin: 0 0 2mm;
+  }
+  .imp-fiche pre {
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 10pt;
+    background: #f1f3f5;
+    border-radius: 6px;
+    padding: 3mm 4mm;
+    margin: 0 0 2mm;
+  }
+  .imp-meta {
+    color: #5c646c;
+    font-size: 9.5pt;
+  }
+  .imp-vigilance {
+    background: #fdf3dc;
+    padding: 2mm 3mm;
+    border-radius: 6px;
+  }
+  .imp-formateur {
+    background: #e8f5f0;
+    padding: 1mm 4mm 2mm;
+    border-radius: 8px;
+    break-inside: avoid;
+  }
+  .imp-pied {
+    color: #5c646c;
+    font-size: 9pt;
+  }
+}

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Atelier d’exercices IA · Skazy Formation</title>
+    <meta
+      name="description"
+      content="Des centaines d’exercices concrets pour pratiquer l’IA dans votre métier, par niveau et par outil : Claude, ChatGPT, Copilot, Gemini, Gemini Notebook et Canva."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="assets/img/favicon.svg" />
+    <link rel="stylesheet" href="styles/charte.css" />
+    <link rel="stylesheet" href="styles/base.css" />
+    <link rel="stylesheet" href="styles/composants.css" />
+    <link rel="stylesheet" href="styles/impression.css" />
+    <script>
+      // Thème choisi, appliqué avant l'affichage pour éviter un éclair de la mauvaise couleur.
+      try {
+        const theme = JSON.parse(localStorage.getItem('skazy-exos:theme'));
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch {
+        // stockage indisponible : thème du système
+      }
+    </script>
+    <script type="module" src="js/main.js"></script>
+  </head>
+  <body>
+    <a class="lien-evitement" href="#resultats">Aller aux exercices</a>
+
+    <header class="bandeau">
+      <div class="bandeau__interieur">
+        <a
+          class="bandeau__logo"
+          href="https://formation.skazy.nc"
+          target="_blank"
+          rel="noopener"
+          title="Site de Skazy Formation (nouvel onglet)"
+        >
+          <img
+            class="logo logo--clair"
+            src="assets/img/logo-skazy-formation.svg"
+            alt="Skazy Formation"
+            width="109"
+            height="36"
+          />
+          <img
+            class="logo logo--sombre"
+            src="assets/img/logo-skazy-formation-blanc.svg"
+            alt="Skazy Formation"
+            width="109"
+            height="36"
+          />
+        </a>
+        <p class="bandeau__nom">Atelier d’exercices IA</p>
+        <nav class="bandeau__actions" aria-label="Réglages et séance" id="actions-bandeau"></nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="profil" id="profil" aria-labelledby="titre-profil"></section>
+      <div class="resume-profil" id="resume-profil" hidden></div>
+      <section
+        class="resultats"
+        id="resultats"
+        aria-labelledby="titre-resultats"
+        tabindex="-1"
+      ></section>
+    </main>
+
+    <footer class="pied">
+      <div class="pied__interieur" id="pied"></div>
+    </footer>
+
+    <dialog class="panneau panneau--fiche" id="fiche" aria-labelledby="titre-fiche"></dialog>
+    <dialog class="panneau panneau--seance" id="seance" aria-labelledby="titre-seance"></dialog>
+    <dialog class="panneau panneau--reperes" id="reperes" aria-labelledby="titre-reperes"></dialog>
+
+    <div class="impression" id="impression" aria-hidden="true"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="hors-ecran" id="annonces" aria-live="polite"></div>
+  </body>
+</html>
