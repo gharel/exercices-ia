@@ -1129,66 +1129,18 @@
   border-radius: var(--rayon-xl);
   background: var(--surface-2);
 }
-.segment {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--e-2);
-}
-.segment legend {
-  width: 100%;
-  margin-bottom: var(--e-2);
-  font-weight: 700;
-  color: var(--texte-fort);
-  font-size: var(--texte-sm);
-}
-.segment__choix {
-  position: relative;
-  cursor: pointer;
-}
-.segment__choix input {
-  position: absolute;
-  opacity: 0;
-  inset: 0;
-  margin: 0;
-  cursor: pointer;
-}
-.segment__choix span {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--e-2);
-  padding: 8px 14px;
-  border: 1.5px solid var(--bord-fort);
-  border-radius: var(--rayon-pilule);
-  background: var(--surface);
-  font-size: var(--texte-sm);
-  font-weight: 600;
-}
-.segment__choix input:checked + span {
-  border-color: var(--primaire-fonce);
-  background: var(--primaire-pale);
-  color: var(--primaire-texte);
-}
-.segment__choix input:focus-visible + span {
-  outline: 3px solid var(--primaire);
-  outline-offset: 2px;
-}
-.seance__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--e-2);
-}
-.seance__partage {
+/* Deux sorties : l'impression et le lien de partage, chacune avec son explication. */
+.seance__sortie {
   display: grid;
   gap: var(--e-3);
-  padding-top: var(--e-4);
-  border-top: 1px solid var(--bord);
   font-size: var(--texte-sm);
 }
-.seance__partage .bouton {
+.seance__sortie .bouton {
   justify-self: start;
+}
+.seance__sortie + .seance__sortie {
+  padding-top: var(--e-4);
+  border-top: 1px solid var(--bord);
 }
 .seance__vider {
   margin-top: var(--e-4);

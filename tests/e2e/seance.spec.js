@@ -26,11 +26,24 @@ test('composer une séance, l’exporter et la partager', async ({ page, context
   await seance.getByLabel('Titre de la séance').press('Tab');
   await verifierAccessibilite(page);
 
-  // Export Markdown
-  const telechargement = page.waitForEvent('download');
-  await seance.getByRole('button', { name: 'Markdown' }).click();
-  const fichier = await telechargement;
-  expect(fichier.suggestedFilename()).toBe('atelier-btp-du-jeudi.md');
+  // Une seule sortie papier, en version apprenant : plus d'export texte, Markdown ou HTML.
+  for (const nom of ['Copier le texte', 'Markdown', 'Page HTML']) {
+    await expect(seance.getByRole('button', { name: nom })).toHaveCount(0);
+  }
+  await expect(seance.getByRole('radio')).toHaveCount(0);
+  // On intercepte la boîte d'impression pour lire ce qui serait imprimé.
+  await page.evaluate(() => {
+    window.print = () => {
+      window.imprime = document.getElementById('impression').innerText;
+    };
+  });
+  await seance.getByRole('button', { name: 'Imprimer' }).click();
+  const imprime = await page.evaluate(() => window.imprime);
+  expect(imprime).toContain('Atelier BTP du jeudi');
+  expect(imprime).toContain(titres[0]);
+  expect(imprime).toContain('Votre mission');
+  expect(imprime).not.toContain('Notes formateur');
+  expect(imprime).not.toContain('Résultat attendu');
 
   // Lien de partage, ouvert comme un apprenant
   await seance.getByRole('button', { name: 'Copier le lien de partage' }).click();

@@ -122,16 +122,6 @@ export async function copier(texte) {
   }
 }
 
-/** Télécharge un texte comme fichier (lien temporaire vers un Blob). */
-export function telecharger(nomFichier, contenu, type = 'text/plain') {
-  const url = URL.createObjectURL(new Blob([contenu], { type: `${type};charset=utf-8` }));
-  const lien = el('a', { href: url, download: nomFichier, class: 'hors-ecran' });
-  document.body.append(lien);
-  lien.click();
-  lien.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
 /** Pluriel simple : pluriel(3, 'exercice') → « 3 exercices ». */
 export function pluriel(nombre, singulier, plurielForme = `${singulier}s`) {
   return `${nombre.toLocaleString('fr-FR')} ${nombre > 1 ? plurielForme : singulier}`;

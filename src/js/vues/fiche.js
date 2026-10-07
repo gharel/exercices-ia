@@ -254,10 +254,7 @@ export function monterFiche(dialogue, magasin, { exercice, ouvrirReperes, imprim
           bouton('Imprimer', {
             icone: 'print',
             variante: 'discret',
-            onclick: () =>
-              imprimer([e], {
-                formateur: Boolean(dialogue.querySelector('.fiche__formateur')?.open),
-              }),
+            onclick: () => imprimer([e]),
           }),
           bouton('Copier le lien', {
             icone: 'link',

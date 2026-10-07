@@ -1,21 +1,13 @@
 /**
- * « Ma séance » : la liste ordonnée des exercices choisis par le formateur, sa durée, ses
- * exports (texte, Markdown, HTML, impression) et le lien à partager aux apprenants.
+ * « Ma séance » : la liste ordonnée des exercices choisis par le formateur, sa durée, son
+ * impression (version apprenant) et le lien à partager aux apprenants.
  */
-import { el, remplir, copier, telecharger, pluriel, annoncer } from '../ui.js';
+import { el, remplir, copier, pluriel, annoncer } from '../ui.js';
 import { icone } from '../icones.js';
 import { badgeFamille, bouton, boutonIcone, toast } from './commun.js';
-import {
-  dureeTotale,
-  formaterDuree,
-  lienDePartage,
-  nomDeFichier,
-  seanceEnHtml,
-  seanceEnMarkdown,
-} from '../seance.js';
+import { dureeTotale, formaterDuree, lienDePartage } from '../seance.js';
 
 export function monterSeance(dialogue, magasin, { exercice, ouvrirFiche, imprimer }) {
-  let version = 'apprenant';
   let confirmerVider = false;
 
   function exercicesDeLaSeance() {
@@ -99,75 +91,26 @@ export function monterSeance(dialogue, magasin, { exercice, ouvrirFiche, imprime
   function afficher() {
     const { seance } = magasin.get();
     const exercices = exercicesDeLaSeance();
-    const formateur = version === 'formateur';
     if (document.activeElement !== champTitre) champTitre.value = seance.titre;
 
-    const exports = el(
+    // Une seule sortie papier, toujours en version apprenant (sans les notes formateur).
+    const sorties = el(
       'div',
       { class: 'seance__exports' },
       el(
-        'fieldset',
-        { class: 'segment' },
-        el('legend', {}, 'Version à exporter'),
-        [
-          ['apprenant', 'Apprenant', 'user-graduate'],
-          ['formateur', 'Formateur, avec les notes', 'chalkboard-user'],
-        ].map(([valeur, nom, nomIcone]) =>
-          el(
-            'label',
-            { class: 'segment__choix' },
-            el('input', {
-              type: 'radio',
-              name: 'version-export',
-              value: valeur,
-              checked: version === valeur,
-              onchange: () => {
-                version = valeur;
-                afficher();
-                dialogue.querySelector(`input[value="${valeur}"]`)?.focus();
-              },
-            }),
-            el('span', {}, icone(nomIcone), nom),
-          ),
+        'div',
+        { class: 'seance__sortie' },
+        el(
+          'p',
+          {},
+          el('strong', {}, 'Imprimer la séance. '),
+          'Une fiche par exercice, sans les notes formateur.',
         ),
+        bouton('Imprimer', { icone: 'print', onclick: () => imprimer(exercices) }),
       ),
       el(
         'div',
-        { class: 'seance__actions' },
-        bouton('Copier le texte', {
-          icone: 'copy',
-          onclick: async () =>
-            toast(
-              (await copier(seanceEnMarkdown(seance.titre, exercices, { formateur })))
-                ? 'Séance copiée'
-                : 'Copie impossible',
-            ),
-        }),
-        bouton('Markdown', {
-          icone: 'download',
-          title: 'Télécharger au format Markdown (.md)',
-          onclick: () =>
-            telecharger(
-              `${nomDeFichier(seance.titre)}${formateur ? '-formateur' : ''}.md`,
-              seanceEnMarkdown(seance.titre, exercices, { formateur }),
-              'text/markdown',
-            ),
-        }),
-        bouton('Page HTML', {
-          icone: 'download',
-          title: 'Télécharger une page HTML à ouvrir ou envoyer',
-          onclick: () =>
-            telecharger(
-              `${nomDeFichier(seance.titre)}${formateur ? '-formateur' : ''}.html`,
-              seanceEnHtml(seance.titre, exercices, { formateur }),
-              'text/html',
-            ),
-        }),
-        bouton('Imprimer', { icone: 'print', onclick: () => imprimer(exercices, { formateur }) }),
-      ),
-      el(
-        'div',
-        { class: 'seance__partage' },
+        { class: 'seance__sortie seance__partage' },
         el(
           'p',
           {},
@@ -250,7 +193,7 @@ export function monterSeance(dialogue, magasin, { exercice, ouvrirFiche, imprime
                   'Ajoutez des exercices avec le bouton + des cartes, ou « Ajouter à ma séance » dans une fiche.',
                 ),
               ),
-          exercices.length ? exports : null,
+          exercices.length ? sorties : null,
           exercices.length ? el('div', { class: 'seance__vider' }, vider) : null,
         ),
       ),

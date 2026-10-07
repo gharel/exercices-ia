@@ -3,11 +3,9 @@
  * impression.css n'imprime que cette zone, puis tout est nettoyé après l'impression.
  */
 import { el, remplir } from '../ui.js';
-import { competence, technique } from './commun.js';
 import { resume, formaterDuree, dureeTotale } from '../seance.js';
 
-function ficheImprimee(e, formateur) {
-  const f = e.formateur;
+function ficheImprimee(e) {
   return el(
     'article',
     { class: 'imp-fiche' },
@@ -29,35 +27,6 @@ function ficheImprimee(e, formateur) {
     e.vigilance
       ? el('p', { class: 'imp-vigilance' }, el('strong', {}, 'Vigilance. '), e.vigilance)
       : null,
-    formateur
-      ? el(
-          'div',
-          { class: 'imp-formateur' },
-          el('h3', {}, 'Notes formateur'),
-          el('p', {}, el('strong', {}, 'Résultat attendu. '), f.resultat),
-          el('p', {}, el('strong', {}, 'Critères de réussite')),
-          el(
-            'ul',
-            {},
-            f.criteres.map((x) => el('li', {}, x)),
-          ),
-          el('p', {}, el('strong', {}, 'Pièges fréquents')),
-          el(
-            'ul',
-            {},
-            f.pieges.map((x) => el('li', {}, x)),
-          ),
-          el(
-            'p',
-            {},
-            el('strong', {}, 'Compétence. '),
-            competence(f.competence).nom,
-            ' · ',
-            el('strong', {}, 'Technique. '),
-            technique(f.technique).nom,
-          ),
-        )
-      : null,
   );
 }
 
@@ -67,8 +36,8 @@ export function creerImpression(zone, magasin) {
     zone.replaceChildren();
   });
 
-  /** Imprime une ou plusieurs fiches ; par défaut, les notes suivent la vue choisie. */
-  return function imprimer(exercices, { formateur = magasin.get().vue === 'formateur' } = {}) {
+  /** Imprime une ou plusieurs fiches, toujours en version apprenant (sans notes formateur). */
+  return function imprimer(exercices) {
     const { seance } = magasin.get();
     remplir(
       zone,
@@ -84,7 +53,7 @@ export function creerImpression(zone, magasin) {
             ),
           )
         : null,
-      exercices.map((e) => ficheImprimee(e, formateur)),
+      exercices.map((e) => ficheImprimee(e)),
       el(
         'p',
         { class: 'imp-pied' },

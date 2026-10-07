@@ -95,12 +95,6 @@
     padding: 2mm 3mm;
     border-radius: 6px;
   }
-  .imp-formateur {
-    background: #e8f5f0;
-    padding: 1mm 4mm 2mm;
-    border-radius: 8px;
-    break-inside: avoid;
-  }
   .imp-pied {
     color: #5c646c;
     font-size: 9pt;

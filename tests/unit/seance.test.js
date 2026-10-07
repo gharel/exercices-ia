@@ -1,14 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   dureeTotale,
-  echapperHtml,
-  exerciceEnMarkdown,
   formaterDuree,
   lienDePartage,
   lireParametres,
-  nomDeFichier,
-  seanceEnHtml,
-  seanceEnMarkdown,
+  resume,
 } from '../../src/js/seance.js';
 
 const exercice = {
@@ -45,38 +41,9 @@ describe('durées', () => {
   });
 });
 
-describe('exports', () => {
-  it('Markdown : consigne, prompt en bloc de code, notes formateur seulement si demandé', () => {
-    const apprenant = exerciceEnMarkdown(exercice);
-    expect(apprenant).toContain('## Corriger une annonce');
-    expect(apprenant).toContain('1. Copier');
-    expect(apprenant).toContain('```\nCorrige ceci :');
-    expect(apprenant).not.toContain('Notes formateur');
-    const formateur = exerciceEnMarkdown(exercice, { formateur: true });
-    expect(formateur).toContain('### Notes formateur');
-    expect(formateur).toContain('- [ ] Chiffres identiques');
-    expect(formateur).toContain('Discernement');
-  });
-
-  it('Markdown de séance : titre, sommaire et durée totale', () => {
-    const md = seanceEnMarkdown('Ma séance', [exercice, exercice]);
-    expect(md.startsWith('# Ma séance\n\n2 exercices · 30 min')).toBe(true);
-    expect(md).toContain('2. Corriger une annonce (15 min)');
-  });
-
-  it('HTML : page autonome, texte échappé', () => {
-    const html = seanceEnHtml('Séance <test>', [exercice], { formateur: true });
-    expect(html.startsWith('<!doctype html>')).toBe(true);
-    expect(html).toContain('<title>Séance &lt;test&gt;</title>');
-    expect(html).toContain('Une annonce &lt;urgente&gt;.');
-    expect(html).toContain('Notes formateur');
-    expect(html).not.toContain('<urgente>');
-    expect(echapperHtml('"a" & <b>')).toBe('&quot;a&quot; &amp; &lt;b&gt;');
-  });
-
-  it('nom de fichier sans accents ni espaces', () => {
-    expect(nomDeFichier('Séance du 7 octobre : IA & RH')).toBe('seance-du-7-octobre-ia-rh');
-    expect(nomDeFichier('!!!')).toBe('seance');
+describe('résumé', () => {
+  it('donne famille, niveau, durée et outils', () => {
+    expect(resume(exercice)).toBe('Corriger et reformuler · Débutant · 15 min · Claude, ChatGPT');
   });
 });
 

@@ -6,7 +6,7 @@ Consignes pour les agents de code (Claude Code, Codex, Copilot…) et pour les h
 
 Un outil pour **proposer des exercices concrets de pratique de l'IA** en formation, selon le **métier** et le **niveau** de l'apprenant.
 
-- Le formateur prépare une séance (sélection d'exercices, export, impression, lien de partage) ; l'apprenant pratique en autonomie. Les notes formateur sont repliées dans chaque fiche ; un lien de séance partagé ouvre la vue apprenant, qui ne les affiche pas du tout.
+- Le formateur prépare une séance (sélection d'exercices, impression en version apprenant, lien de partage) ; l'apprenant pratique en autonomie. Les notes formateur sont repliées dans chaque fiche ; un lien de séance partagé ouvre la vue apprenant, qui ne les affiche pas du tout.
 - Outils couverts : Claude, ChatGPT, Microsoft Copilot, Google Gemini, Gemini Notebook (ex-NotebookLM) et Canva.
 - Contexte : la Nouvelle-Calédonie (XPF, CAFAT, RUAMM, TGC, provinces, communes, nickel, tourisme). Toutes les données d'exercice sont **fictives**.
 - **Aucune IA dans l'outil** : il ne fait aucun appel réseau. Il est livré en **un seul fichier HTML autonome** (`dist/index.html`), ouvrable hors ligne en double-cliquant, et publié sur GitHub Pages.
@@ -40,12 +40,12 @@ src/index.html                  La page (gabarit) ; en dev, charge styles/*.css 
 src/styles/charte.css           Jetons du design system (clair et sombre) : seul fichier où une couleur est écrite
 src/styles/base.css             Mise en page, bandeau, boutons, champs, dialogues
 src/styles/composants.css       Profil, filtres, cartes, fiche, séance, repères
-src/styles/impression.css       Fiches imprimées (apprenant / formateur), toujours en clair : seule autre feuille avec des couleurs
+src/styles/impression.css       Fiches imprimées (version apprenant), toujours en clair : seule autre feuille avec des couleurs
 src/js/main.js                  Montage de la page
 src/js/etat.js                  État : profil, filtres, séance, vue ; synchronisé avec l'URL et le stockage
 src/js/filtres.js               Pur : filtrer, trier, compter, tirer au hasard
 src/js/gabarits.js              Pur : décliner un gabarit avec le vocabulaire d'un métier
-src/js/seance.js                Pur : durée, export Markdown / HTML, lien de partage
+src/js/seance.js                Pur : durée, résumé d’un exercice, lien de partage, paramètres d’adresse
 src/js/schema.js                Pur : schéma d'un exercice, contrôle de typographie
 src/js/ui.js · stockage.js      el(), remplir(), typographier() ; seul accès à localStorage (préfixe skazy-exos:)
 src/js/icones.js                Liste des icônes Font Awesome utilisées ; icone('nom')
