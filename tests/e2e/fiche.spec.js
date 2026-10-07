@@ -89,3 +89,32 @@ test('le bouton « Au hasard » ouvre une fiche de la liste', async ({ page }) =
   expect(titre.length).toBeGreaterThan(5);
   expect(titres.length).toBeGreaterThan(0);
 });
+
+test('les titres qui prennent le focus à l’ouverture n’ont pas d’anneau, même en mode nuit', async ({
+  page,
+}) => {
+  // Une feuille ajoutée après la nôtre recopie la règle d'anneau, comme le mode nuit de Brave.
+  await page.addStyleTag({ content: ':focus-visible { outline: 3px solid red; }' });
+  // Ouvert au clavier, le titre correspond à :focus-visible dans Chrome, comme dans Safari
+  // après un toucher.
+  const ouvrirAuClavier = async (declencheur, titre) => {
+    await page.locator(declencheur).first().focus();
+    await page.keyboard.press('Enter');
+    const cible = page.locator(titre);
+    await expect(cible).toBeFocused();
+    expect(await cible.evaluate((e) => e.matches(':focus-visible'))).toBe(true);
+    expect(await cible.evaluate((e) => getComputedStyle(e).outlineStyle)).toBe('none');
+  };
+
+  await ouvrirAuClavier('.carte__lien', '#titre-fiche');
+  await page.keyboard.press('Escape');
+
+  await ouvrirAuClavier('#bouton-seance', '#titre-seance');
+  // Un bouton atteint au clavier garde son anneau.
+  await page.keyboard.press('Tab');
+  const anneau = await page.evaluate(() => getComputedStyle(document.activeElement).outlineStyle);
+  expect(anneau).toBe('solid');
+  await page.keyboard.press('Escape');
+
+  await ouvrirAuClavier('.bouton-reperes', '#titre-reperes');
+});

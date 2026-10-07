@@ -57,6 +57,13 @@ textarea {
   outline: 3px solid var(--primaire);
   outline-offset: 2px;
 }
+/* Titres et sections où le code place le focus (tabindex="-1") pour guider les lecteurs
+   d'écran : pas d'anneau, que Safari dessine sinon même après un toucher. Le sélecteur pèse plus
+   que :focus-visible, pour l'emporter aussi sur les feuilles ajoutées après la nôtre (mode nuit
+   de Brave, Dark Reader). Les boutons et les champs gardent leur anneau. */
+[tabindex='-1']:not(a, button, input, select, textarea, summary):focus {
+  outline: none;
+}
 
 [hidden] {
   display: none !important;

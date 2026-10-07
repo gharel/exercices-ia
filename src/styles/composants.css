@@ -318,9 +318,6 @@
 }
 
 /* ── Résultats ───────────────────────────────────────── */
-.resultats {
-  outline: none;
-}
 .resultats__interieur {
   max-width: var(--largeur);
   margin: 0 auto;
@@ -747,7 +744,6 @@
   font-size: clamp(1.4rem, 2.6vw, 1.875rem);
   font-weight: 800;
   letter-spacing: -0.01em;
-  outline: none;
 }
 .fiche__actions {
   display: flex;
@@ -1277,7 +1273,6 @@
   border-radius: var(--rayon-xl);
   background: var(--primaire-pale);
   font-size: var(--texte-sm);
-  outline: none;
   transition: box-shadow var(--transition);
 }
 .carte-4d__lettre {
@@ -1302,7 +1297,6 @@
 .techniques > div {
   padding: var(--e-3) 0;
   border-top: 1px solid var(--bord);
-  outline: none;
   border-radius: var(--rayon-sm);
   transition: box-shadow var(--transition);
 }
