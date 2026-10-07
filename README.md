@@ -15,7 +15,7 @@ Près de 300 exercices concrets pour **pratiquer l’IA dans son métier**, choi
 - **Le formateur** choisit un profil, ouvre les fiches, compose sa **séance** (bouton +), puis la copie, la télécharge (Markdown ou page HTML), l’imprime (version apprenant ou formateur) ou **partage un lien** à ses apprenants.
 - **L’apprenant** ouvre le lien reçu (sans les notes formateur), ou choisit lui-même son métier et son niveau. Dans chaque fiche, les **notes formateur** sont repliées : on peut projeter une fiche sans dévoiler le résultat attendu.
 - **Outils couverts** : Claude, ChatGPT, Microsoft Copilot, Google Gemini, Gemini Notebook (ex-NotebookLM) et Canva.
-- **Métiers** : 17 métiers (dont alimentation et métiers de bouche), plus « Tous métiers » et « Autre métier » (le métier tapé est glissé dans la situation et le prompt).
+- **Métiers** : 18 métiers (dont restauration, bars et cafés ; alimentation et métiers de bouche), plus « Tous métiers » et « Autre métier » (le métier tapé est glissé dans la situation et le prompt).
 - **Niveaux** : débutant (je découvre), intermédiaire (je pratique), avancé (j’automatise).
 
 La démarche suit les formations officielles :

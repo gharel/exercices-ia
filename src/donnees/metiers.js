@@ -21,6 +21,7 @@ import * as industrie from './metiers/industrie.js';
 import * as logistique from './metiers/logistique.js';
 import * as banque from './metiers/banque.js';
 import * as formation from './metiers/formation.js';
+import * as restauration from './metiers/restauration.js';
 import * as alimentation from './metiers/alimentation.js';
 
 const FICHIERS = {
@@ -41,6 +42,7 @@ const FICHIERS = {
   logistique,
   banque,
   formation,
+  restauration,
   alimentation,
 };
 
@@ -163,6 +165,13 @@ const FICHES = [
     nom: 'Éducation et formation',
     icone: 'graduation-cap',
     description: 'Organisme de formation, établissement scolaire, formateur indépendant.',
+  },
+  {
+    slug: 'restauration',
+    court: 'Restauration, bars',
+    nom: 'Restauration, bars et cafés',
+    icone: 'utensils',
+    description: 'Restaurant, snack, bar, café, food truck, restauration rapide.',
   },
   {
     slug: 'alimentation',
