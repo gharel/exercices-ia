@@ -41,16 +41,20 @@ test('les flèches passent d’un exercice à l’autre', async ({ page }) => {
   await expect(fiche.getByRole('heading', { level: 2 })).toHaveText(titres[0]);
 });
 
-test('la vue apprenant masque les notes formateur', async ({ page }) => {
+test('les notes formateur sont repliées, et restent ouvertes d’une fiche à l’autre', async ({
+  page,
+}) => {
   await page.locator('.carte__lien').first().click();
   const fiche = page.getByRole('dialog');
-  await expect(fiche.getByRole('heading', { name: 'Notes formateur' })).toBeVisible();
-  await page.keyboard.press('Escape');
-
-  await page.getByRole('button', { name: 'Apprenant' }).click();
-  await page.locator('.carte__lien').first().click();
-  await expect(fiche.getByRole('heading', { name: 'Votre mission' })).toBeVisible();
-  await expect(fiche.getByRole('heading', { name: 'Notes formateur' })).toHaveCount(0);
+  const notes = fiche.locator('summary', { hasText: 'Notes formateur' });
+  await expect(notes).toBeVisible();
+  await expect(fiche.getByText('Résultat attendu.')).toBeHidden();
+  await notes.click();
+  await expect(fiche.getByText('Résultat attendu.')).toBeVisible();
+  await fiche.getByRole('button', { name: 'Exercice suivant' }).click();
+  await expect(fiche.getByText('Résultat attendu.')).toBeVisible();
+  // Plus de bascule formateur / apprenant dans le bandeau.
+  await expect(page.getByRole('button', { name: 'Apprenant' })).toHaveCount(0);
 });
 
 test('les onglets d’outils se manipulent au clavier', async ({ page }) => {

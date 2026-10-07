@@ -99,9 +99,9 @@ export const DUREES = [10, 15, 20, 30, 45, 60];
 
 /** Tranches de durée proposées dans les filtres. */
 export const TRANCHES_DUREE = [
-  { slug: 'court', nom: '15 min ou moins', min: 0, max: 15 },
-  { slug: 'moyen', nom: '20 à 30 min', min: 16, max: 30 },
-  { slug: 'long', nom: 'Plus de 30 min', min: 31, max: Infinity },
+  { slug: 'court', nom: '15 min ou moins', court: '≤ 15 min', min: 0, max: 15 },
+  { slug: 'moyen', nom: '20 à 30 min', court: '20 à 30 min', min: 16, max: 30 },
+  { slug: 'long', nom: '45 min et plus', court: '45 min et +', min: 31, max: Infinity },
 ];
 
 /**

@@ -13,6 +13,7 @@
   margin: 0 auto;
   padding: var(--e-6) var(--e-6) var(--e-8);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--e-5);
 }
 .surtitre {
@@ -309,6 +310,8 @@
   margin: 0 auto;
   padding: var(--e-8) var(--e-6) 0;
   display: grid;
+  /* minmax(0, 1fr) : la colonne ne s'élargit jamais au-delà de l'écran, quel que soit le contenu. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--e-5);
 }
 .resultats__entete {
@@ -333,12 +336,103 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--e-2);
-  flex: 1 1 520px;
+  flex: 1 1 420px;
   justify-content: flex-end;
   min-width: 0;
 }
 .resultats__outils .champ-icone {
   max-width: 340px;
+}
+
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-3) var(--e-4);
+}
+
+/* Durée : sélecteur segmenté (boutons radio), chaque tranche annonce son nombre d'exercices. */
+.duree {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.duree__choix {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1.5px solid var(--bord);
+  border-radius: var(--rayon-pilule);
+  background: var(--surface-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.duree__icone {
+  display: inline-grid;
+  place-items: center;
+  padding: 0 6px 0 10px;
+  color: var(--texte-doux);
+}
+.duree__option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 4px 6px 4px 12px;
+  border-radius: var(--rayon-pilule);
+  color: var(--texte-doux);
+  font-size: var(--texte-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--transition-rapide),
+    color var(--transition-rapide);
+}
+.duree__option input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.duree__option:hover {
+  color: var(--texte-fort);
+}
+.duree__option:has(input:checked) {
+  background: var(--surface);
+  color: var(--texte-fort);
+  box-shadow: var(--ombre-sm);
+}
+.duree__option:has(input:focus-visible) {
+  outline: 3px solid var(--primaire);
+  outline-offset: 1px;
+}
+.duree__option:has(input:disabled) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.duree__option:has(input:disabled) input {
+  cursor: not-allowed;
+}
+.duree__nombre {
+  min-width: 1.5rem;
+  padding: 0 6px;
+  border-radius: var(--rayon-pilule);
+  background: var(--surface-3);
+  color: var(--texte);
+  font-size: var(--texte-xs);
+  font-weight: 700;
+  line-height: 1.4rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.duree__option:has(input:checked) .duree__nombre {
+  background: var(--primaire-pale);
+  color: var(--primaire-texte);
 }
 
 .familles {
@@ -846,14 +940,54 @@
   top: 2px;
 }
 
+/* Notes formateur : un volet replié, ouvert à la demande. */
 .fiche__formateur {
-  padding: var(--e-5);
   border-radius: var(--rayon-xl);
   background: var(--primaire-pale);
   color: var(--texte-fort);
 }
-.fiche__formateur .fiche__soustitre {
+.fiche__formateur-titre {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px var(--e-3);
+  padding: var(--e-4) var(--e-5);
+  border-radius: var(--rayon-xl);
+  cursor: pointer;
+  list-style: none;
+}
+.fiche__formateur-titre::-webkit-details-marker {
+  display: none;
+}
+.fiche__formateur-titre > .icone:first-child {
   color: var(--primaire-texte);
+}
+.fiche__formateur-nom {
+  font-size: var(--texte-xs);
+  font-weight: 700;
+  letter-spacing: var(--interlettre-tres-large);
+  text-transform: uppercase;
+  color: var(--primaire-texte);
+}
+.fiche__formateur-aide {
+  flex: 1;
+  font-size: var(--texte-sm);
+  color: var(--texte-doux);
+}
+.fiche__formateur-chevron {
+  color: var(--primaire-texte);
+  transition: transform var(--transition-rapide);
+}
+.fiche__formateur[open] .fiche__formateur-chevron {
+  transform: rotate(180deg);
+}
+.fiche__formateur-titre:hover .fiche__formateur-nom {
+  text-decoration: underline;
+}
+.fiche__formateur-corps {
+  display: grid;
+  gap: var(--e-3);
+  padding: 0 var(--e-5) var(--e-5);
 }
 .fiche__formateur h4 {
   font-size: var(--texte-sm);
@@ -918,11 +1052,6 @@
 .repere__texte {
   font-size: var(--texte-sm);
   color: var(--texte-doux);
-}
-
-/* La vue apprenant ne montre jamais les notes formateur. */
-body[data-vue='apprenant'] .fiche__formateur {
-  display: none;
 }
 
 /* ── Ma séance ───────────────────────────────────────── */
@@ -1332,6 +1461,9 @@ body[data-vue='apprenant'] .fiche__formateur {
   .resultats__outils .champ-icone {
     max-width: none;
   }
+  .duree {
+    flex: 1 1 100%;
+  }
 }
 
 @media (max-width: 760px) {
@@ -1408,5 +1540,17 @@ body[data-vue='apprenant'] .fiche__formateur {
   }
   .reperes__sommaire {
     padding-inline: var(--e-4);
+  }
+  /* Durée sur téléphone : une grille 2 × 2 plutôt qu'une piste qui défile. */
+  .duree__choix {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-radius: var(--rayon-xl);
+  }
+  .duree__icone {
+    display: none;
+  }
+  .duree__option {
+    justify-content: space-between;
   }
 }

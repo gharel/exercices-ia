@@ -20,15 +20,25 @@ export function libelleProfil(profil) {
   return [nomMetier, nomNiveau(profil.niveau), outils];
 }
 
+// « Tous niveaux » en premier : c'est le choix par défaut.
 const NIVEAUX_PROFIL = [
-  ...NIVEAUX,
   {
     slug: 'tous',
     nom: 'Tous niveaux',
     accroche: 'Je compose',
     description: 'Les trois niveaux mélangés, pour composer une séance.',
   },
+  ...NIVEAUX,
 ];
+
+/** « Tous métiers » en tête, puis l'ordre alphabétique, puis « Autre métier ». */
+export function metiersDansLOrdre() {
+  const [tous, ...autres] = METIERS;
+  const tries = [...autres].sort((a, b) =>
+    a.court.localeCompare(b.court, 'fr', { sensitivity: 'base' }),
+  );
+  return [tous, ...tries, AUTRE_METIER];
+}
 
 export function monterProfil(conteneur, resume, magasin) {
   const descriptionNiveau = el('p', {
@@ -36,7 +46,7 @@ export function monterProfil(conteneur, resume, magasin) {
     id: 'description-niveau',
     'aria-live': 'polite',
   });
-  const choixMetiers = [...METIERS, AUTRE_METIER];
+  const choixMetiers = metiersDansLOrdre();
 
   const champAutre = el('input', {
     id: 'metier-libre',
@@ -92,7 +102,7 @@ export function monterProfil(conteneur, resume, magasin) {
       el(
         'div',
         { class: 'niveaux' },
-        NIVEAUX_PROFIL.map((n, i) =>
+        NIVEAUX_PROFIL.map((n) =>
           el(
             'label',
             { class: 'niveau' },
@@ -103,9 +113,10 @@ export function monterProfil(conteneur, resume, magasin) {
               el(
                 'span',
                 { class: 'niveau__marches', 'aria-hidden': 'true' },
-                [0, 1, 2].map((m) =>
-                  el('span', { class: i === 3 ? 'mixte' : m <= i ? 'plein' : '' }),
-                ),
+                [0, 1, 2].map((m) => {
+                  const rang = NIVEAUX.findIndex((x) => x.slug === n.slug);
+                  return el('span', { class: rang < 0 ? 'mixte' : m <= rang ? 'plein' : '' });
+                }),
               ),
               el('span', { class: 'niveau__nom' }, n.nom),
               el('span', { class: 'niveau__accroche' }, n.accroche),
@@ -122,6 +133,16 @@ export function monterProfil(conteneur, resume, magasin) {
       el(
         'div',
         { class: 'pastilles pastilles--outils' },
+        el(
+          'button',
+          {
+            type: 'button',
+            class: 'pastille-action',
+            id: 'tous-outils',
+            title: 'Aucun outil coché : tous les exercices s’affichent',
+          },
+          'Tous les outils',
+        ),
         OUTILS.map((o) =>
           el(
             'label',
@@ -134,16 +155,6 @@ export function monterProfil(conteneur, resume, magasin) {
               o.nom,
             ),
           ),
-        ),
-        el(
-          'button',
-          {
-            type: 'button',
-            class: 'pastille-action',
-            id: 'tous-outils',
-            title: 'Aucun outil coché : tous les exercices s’affichent',
-          },
-          'Tous les outils',
         ),
       ),
     ),

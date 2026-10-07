@@ -227,7 +227,15 @@ export const gabarits = [
   {
     id: 'g-appels-offres-go-no-go',
     titre: 'Repérer les appels d’offres utiles et décider d’y répondre',
-    metiers: ['btp', 'communication', 'formation', 'logistique', 'industrie', 'commercial'],
+    metiers: [
+      'btp',
+      'communication',
+      'formation',
+      'logistique',
+      'industrie',
+      'commercial',
+      'alimentation',
+    ],
     niveau: 'intermediaire',
     famille: 'veiller',
     duree: 45,

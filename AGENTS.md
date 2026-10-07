@@ -6,7 +6,7 @@ Consignes pour les agents de code (Claude Code, Codex, Copilot…) et pour les h
 
 Un outil pour **proposer des exercices concrets de pratique de l'IA** en formation, selon le **métier** et le **niveau** de l'apprenant.
 
-- Le formateur prépare une séance (sélection d'exercices, export, impression, lien de partage) ; l'apprenant pratique en autonomie. La « Vue apprenant » masque les notes formateur.
+- Le formateur prépare une séance (sélection d'exercices, export, impression, lien de partage) ; l'apprenant pratique en autonomie. Les notes formateur sont repliées dans chaque fiche ; un lien de séance partagé ouvre la vue apprenant, qui ne les affiche pas du tout.
 - Outils couverts : Claude, ChatGPT, Microsoft Copilot, Google Gemini, Gemini Notebook (ex-NotebookLM) et Canva.
 - Contexte : la Nouvelle-Calédonie (XPF, CAFAT, RUAMM, TGC, provinces, communes, nickel, tourisme). Toutes les données d'exercice sont **fictives**.
 - **Aucune IA dans l'outil** : il ne fait aucun appel réseau. Il est livré en **un seul fichier HTML autonome** (`dist/index.html`), ouvrable hors ligne en double-cliquant, et publié sur GitHub Pages.
@@ -68,7 +68,7 @@ tests/e2e/                      Playwright : parcours, accessibilité (axe), fic
 ### Où
 
 - **Un exercice propre à un métier** va dans `src/donnees/metiers/<slug>.js`, tableau `exercices`. Exemple de référence : `metiers/immobilier.js`.
-- **Un exercice valable pour tous les métiers, qui change seulement de vocabulaire**, est un **gabarit** dans `src/donnees/gabarits/<famille>.js`. Exemple de référence : `gabarits/corriger.js`. Il est décliné automatiquement pour les 16 métiers et en version neutre (« tous »).
+- **Un exercice valable pour tous les métiers, qui change seulement de vocabulaire**, est un **gabarit** dans `src/donnees/gabarits/<famille>.js`. Exemple de référence : `gabarits/corriger.js`. Il est décliné automatiquement pour chaque métier et en version neutre (« tous »).
 - **Un exercice transversal qui ne dépend pas du métier** (comparer deux outils, sa bibliothèque de prompts…) va dans `metiers/tous.js`.
 
 ### Schéma

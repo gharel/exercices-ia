@@ -142,37 +142,6 @@ textarea {
   gap: var(--e-2);
 }
 
-.bascule-vue {
-  display: flex;
-  padding: 3px;
-  background: var(--surface-2);
-  border-radius: var(--rayon-pilule);
-}
-.bascule-vue__choix {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--e-2);
-  border: 0;
-  background: transparent;
-  color: var(--texte-doux);
-  font-size: var(--texte-sm);
-  font-weight: 600;
-  padding: 6px 14px;
-  border-radius: var(--rayon-pilule);
-  cursor: pointer;
-  transition:
-    background var(--transition-rapide),
-    color var(--transition-rapide);
-}
-.bascule-vue__choix:hover {
-  color: var(--texte-fort);
-}
-.bascule-vue__choix[aria-pressed='true'] {
-  background: var(--surface);
-  color: var(--texte-fort);
-  box-shadow: var(--ombre-sm);
-}
-
 .bouton-seance {
   position: relative;
 }
@@ -321,21 +290,6 @@ textarea {
   outline: none;
   box-shadow: 0 0 0 3px var(--primaire-pale);
 }
-.champ--select {
-  width: auto;
-  padding-right: 36px;
-  appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--texte-doux) 50%),
-    linear-gradient(135deg, var(--texte-doux) 50%, transparent 50%);
-  background-position:
-    calc(100% - 20px) 50%,
-    calc(100% - 14px) 50%;
-  background-size: 6px 6px;
-  background-repeat: no-repeat;
-  cursor: pointer;
-}
-
 .champ-icone {
   position: relative;
   flex: 1 1 260px;
@@ -553,12 +507,8 @@ mark.a-completer {
 
 /* ── Petits écrans ───────────────────────────────────── */
 @media (max-width: 960px) {
-  .bascule-vue__nom,
   .bouton-reperes__texte {
     display: none;
-  }
-  .bascule-vue__choix {
-    padding: 8px 10px;
   }
 }
 @media (max-width: 640px) {

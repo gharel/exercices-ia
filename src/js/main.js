@@ -2,10 +2,10 @@
  * Montage de la page : état, bandeau, profil, résultats, fiche, séance, repères, pied.
  * Une adresse en #id-exercice ouvre directement sa fiche.
  */
-import { CATALOGUE } from '../donnees/catalogue.js';
+import { CATALOGUE, EXERCICES_ECRITS } from '../donnees/catalogue.js';
+import { GABARITS } from '../donnees/gabarits.js';
 import { METIERS } from '../donnees/metiers.js';
 import { el, remplir, pluriel } from './ui.js';
-import { icone } from './icones.js';
 import { creerEtat } from './etat.js';
 import { monterBandeau } from './vues/bandeau.js';
 import { monterProfil } from './vues/profil.js';
@@ -40,14 +40,17 @@ monterBandeau($('actions-bandeau'), magasin, {
 });
 monterProfil($('profil'), $('resume-profil'), magasin);
 
+// Les vrais nombres : un gabarit compte pour un exercice, même s'il est adapté à chaque métier.
 const nbMetiers = METIERS.length - 1;
+const nbEcrits = EXERCICES_ECRITS.length;
+const nbTransversaux = GABARITS.length;
 remplir(
   $('pied'),
   el(
     'p',
     {},
     el('strong', {}, 'Atelier d’exercices IA'),
-    ` · ${pluriel(CATALOGUE.length, 'exercice')} pour ${nbMetiers} métiers · Skazy Formation, Nouvelle-Calédonie.`,
+    ` · ${pluriel(nbEcrits + nbTransversaux, 'exercice')} : ${nbEcrits} écrits pour un métier précis et ${nbTransversaux} transversaux, adaptés au vocabulaire de chacun des ${nbMetiers} métiers.`,
   ),
   el(
     'p',
@@ -63,13 +66,7 @@ remplir(
   el(
     'p',
     {},
-    el(
-      'a',
-      { href: 'index.html', download: 'atelier-exercices-ia.html', class: 'lien-pied' },
-      icone('download'),
-      'Télécharger l’outil pour l’utiliser hors ligne',
-    ),
-    el('span', { class: 'pied__sep', 'aria-hidden': 'true' }, '·'),
+    'Skazy Formation, Nouvelle-Calédonie · ',
     el(
       'a',
       { href: 'https://formation.skazy.nc', target: '_blank', rel: 'noopener', class: 'lien-pied' },

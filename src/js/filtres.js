@@ -64,25 +64,40 @@ export function motsRecherche(recherche) {
     .filter((m) => m.length > 1);
 }
 
+/** La tranche de durée d'un exercice (« court », « moyen », « long »). */
+export function trancheDe(duree) {
+  return TRANCHES_DUREE.find((t) => duree >= t.min && duree <= t.max)?.slug;
+}
+
 /**
- * Applique profil et filtres. Renvoie les exercices retenus et, pour les pastilles de
- * familles, le nombre d'exercices par famille avant le filtre de famille.
+ * Applique profil et filtres. Renvoie les exercices retenus et, pour les pastilles, le
+ * nombre d'exercices par famille (sans le filtre de famille) et par tranche de durée
+ * (sans le filtre de durée) : chaque pastille annonce ce qu'elle donnerait.
  */
 export function selectionner(catalogue, profil, filtres = {}) {
   const mots = motsRecherche(filtres.recherche);
-  const avantFamilles = exercicesDuMetier(catalogue, profil.metier).filter(
-    (e) =>
-      correspondProfil(e, profil) &&
-      correspondDuree(e, filtres.duree) &&
-      correspondRecherche(e, mots),
-  );
-  const parFamille = Object.fromEntries(FAMILLES.map((f) => [f.slug, 0]));
-  for (const e of avantFamilles) parFamille[e.famille] += 1;
   const familles = filtres.familles ?? [];
-  const retenus = familles.length
-    ? avantFamilles.filter((e) => familles.includes(e.famille))
-    : avantFamilles;
-  return { exercices: trier(retenus, mots), parFamille };
+  const base = exercicesDuMetier(catalogue, profil.metier).filter(
+    (e) => correspondProfil(e, profil) && correspondRecherche(e, mots),
+  );
+  const dansFamilles = (e) => !familles.length || familles.includes(e.famille);
+
+  const parFamille = Object.fromEntries(FAMILLES.map((f) => [f.slug, 0]));
+  const parDuree = Object.fromEntries(TRANCHES_DUREE.map((t) => [t.slug, 0]));
+  let toutesDurees = 0;
+  for (const e of base) {
+    if (correspondDuree(e, filtres.duree)) parFamille[e.famille] += 1;
+    if (dansFamilles(e)) {
+      parDuree[trancheDe(e.duree)] += 1;
+      toutesDurees += 1;
+    }
+  }
+  const retenus = base.filter((e) => correspondDuree(e, filtres.duree) && dansFamilles(e));
+  return {
+    exercices: trier(retenus, mots),
+    parFamille,
+    parDuree: { '': toutesDurees, ...parDuree },
+  };
 }
 
 /**

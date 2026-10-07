@@ -117,47 +117,76 @@ export function monterFiche(dialogue, magasin, { exercice, ouvrirReperes, imprim
   let liste = [];
   let index = -1;
   let courant = null;
+  // Les notes formateur restent ouvertes d'une fiche à l'autre si on les a ouvertes.
+  let notesOuvertes = false;
 
+  /**
+   * Notes formateur, repliées par défaut : on peut projeter une fiche devant le groupe sans
+   * dévoiler le résultat attendu. Absentes d'une séance partagée aux apprenants.
+   */
   function notesFormateur(e) {
     const f = e.formateur;
     const c = competence(f.competence);
     const t = technique(f.technique);
-    return el(
-      'section',
-      { class: 'fiche__section fiche__formateur' },
-      el('h3', { class: 'fiche__soustitre' }, icone('chalkboard-user'), 'Notes formateur'),
-      el('p', {}, el('strong', {}, 'Résultat attendu. '), f.resultat),
-      el('h4', {}, 'Critères de réussite'),
+    const details = el(
+      'details',
+      { class: 'fiche__formateur', open: notesOuvertes },
       el(
-        'ul',
-        { class: 'liste-criteres' },
-        f.criteres.map((x) => el('li', {}, icone('check'), x)),
-      ),
-      el('h4', {}, 'Pièges fréquents'),
-      el(
-        'ul',
-        { class: 'liste-pieges' },
-        f.pieges.map((x) => el('li', {}, icone('triangle-exclamation'), x)),
+        'summary',
+        { class: 'fiche__formateur-titre' },
+        icone('chalkboard-user'),
+        el('span', { class: 'fiche__formateur-nom' }, 'Notes formateur'),
+        el('span', { class: 'fiche__formateur-aide' }, 'Résultat attendu, critères, pièges'),
+        icone('chevron-down', { classe: 'fiche__formateur-chevron' }),
       ),
       el(
         'div',
-        { class: 'fiche__reperes' },
+        { class: 'fiche__formateur-corps' },
+        el('p', {}, el('strong', {}, 'Résultat attendu. '), f.resultat),
+        el('h4', {}, 'Critères de réussite'),
         el(
-          'button',
-          { type: 'button', class: 'repere', onclick: () => ouvrirReperes(`competence-${c.slug}`) },
-          el('span', { class: 'repere__etiquette' }, 'Compétence 4D'),
-          el('span', { class: 'repere__nom' }, c.nom),
-          el('span', { class: 'repere__texte' }, c.question),
+          'ul',
+          { class: 'liste-criteres' },
+          f.criteres.map((x) => el('li', {}, icone('check'), x)),
+        ),
+        el('h4', {}, 'Pièges fréquents'),
+        el(
+          'ul',
+          { class: 'liste-pieges' },
+          f.pieges.map((x) => el('li', {}, icone('triangle-exclamation'), x)),
         ),
         el(
-          'button',
-          { type: 'button', class: 'repere', onclick: () => ouvrirReperes(`technique-${t.slug}`) },
-          el('span', { class: 'repere__etiquette' }, 'Technique de prompt'),
-          el('span', { class: 'repere__nom' }, t.nom),
-          el('span', { class: 'repere__texte' }, t.description),
+          'div',
+          { class: 'fiche__reperes' },
+          el(
+            'button',
+            {
+              type: 'button',
+              class: 'repere',
+              onclick: () => ouvrirReperes(`competence-${c.slug}`),
+            },
+            el('span', { class: 'repere__etiquette' }, 'Compétence 4D'),
+            el('span', { class: 'repere__nom' }, c.nom),
+            el('span', { class: 'repere__texte' }, c.question),
+          ),
+          el(
+            'button',
+            {
+              type: 'button',
+              class: 'repere',
+              onclick: () => ouvrirReperes(`technique-${t.slug}`),
+            },
+            el('span', { class: 'repere__etiquette' }, 'Technique de prompt'),
+            el('span', { class: 'repere__nom' }, t.nom),
+            el('span', { class: 'repere__texte' }, t.description),
+          ),
         ),
       ),
     );
+    details.addEventListener('toggle', () => {
+      notesOuvertes = details.open;
+    });
+    return details;
   }
 
   function construire(e) {
@@ -222,7 +251,14 @@ export function monterFiche(dialogue, magasin, { exercice, ouvrirReperes, imprim
           'div',
           { class: 'fiche__actions' },
           boutonSeance,
-          bouton('Imprimer', { icone: 'print', variante: 'discret', onclick: () => imprimer([e]) }),
+          bouton('Imprimer', {
+            icone: 'print',
+            variante: 'discret',
+            onclick: () =>
+              imprimer([e], {
+                formateur: Boolean(dialogue.querySelector('.fiche__formateur')?.open),
+              }),
+          }),
           bouton('Copier le lien', {
             icone: 'link',
             variante: 'discret',

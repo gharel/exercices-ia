@@ -19,14 +19,35 @@ test('la page s’ouvre sur des exercices, sans erreur et accessible', async ({ 
   expect(erreurs).toEqual([]);
 });
 
+test('les métiers sont dans l’ordre alphabétique, « Tous » en tête', async ({ page }) => {
+  const metiers = (await page.locator('.pastilles--metiers .pastille').allTextContents()).map((t) =>
+    t.trim(),
+  );
+  expect(metiers[0]).toBe('Tous métiers');
+  expect(metiers.at(-1)).toBe('Autre métier');
+  const milieu = metiers.slice(1, -1);
+  const trie = [...milieu].sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+  expect(milieu).toEqual(trie);
+  await expect(page.locator('label.niveau').first()).toContainText('Tous niveaux');
+  await expect(page.locator('.pastilles--outils > *').first()).toHaveText('Tous les outils');
+});
+
+test('le pied de page donne le vrai nombre d’exercices, sans téléchargement', async ({ page }) => {
+  const pied = page.locator('.pied');
+  await expect(pied).toContainText(
+    /\d+ exercices\s:\s\d+ écrits pour un métier précis et \d+ transversaux/,
+  );
+  await expect(pied.getByRole('link', { name: /Télécharger/ })).toHaveCount(0);
+});
+
 test('le profil filtre les exercices : métier, niveau, outils', async ({ page }) => {
   await page.locator('label.pastille', { hasText: 'Immobilier' }).click();
   await expect(page.locator('.resultats__contexte')).toContainText('Immobilier');
   const immobilier = await nombre(page);
   expect(immobilier).toBeGreaterThan(10);
 
-  await page.locator('label.niveau', { hasText: 'Tous niveaux' }).click();
-  await expect.poll(() => nombre(page)).toBeGreaterThan(immobilier);
+  await page.locator('label.niveau', { hasText: 'Débutant' }).click();
+  await expect.poll(() => nombre(page)).toBeLessThan(immobilier);
 
   await page.locator('label.pastille', { hasText: 'Canva' }).click();
   await expect(page.locator('.resultats__contexte')).toContainText('Canva');
@@ -60,10 +81,29 @@ test('les familles, la recherche et la durée affinent la liste', async ({ page 
   await page.getByRole('button', { name: 'Effacer les filtres' }).click();
   await expect.poll(() => nombre(page)).toBe(total);
 
-  await page.getByLabel('Durée').selectOption('court');
+  await page.getByRole('radio', { name: /^15 min ou moins/ }).check();
   for (const duree of await page.locator('.carte__duree').allTextContents()) {
     expect(Number(duree.replace(/\D/g, ''))).toBeLessThanOrEqual(15);
   }
+});
+
+test('chaque durée annonce son nombre d’exercices, une tranche vide est grisée', async ({
+  page,
+}) => {
+  const longs = page.getByRole('radio', { name: /^45 min et plus/ });
+  await expect(longs).toBeEnabled();
+  const annonce = Number((await longs.getAttribute('aria-label')).match(/, (\d+) exercice/)[1]);
+  expect(annonce).toBeGreaterThan(20);
+  await longs.check();
+  await expect.poll(() => nombre(page)).toBe(annonce);
+  for (const duree of await page.locator('.carte__duree').allTextContents()) {
+    expect(Number(duree.replace(/\D/g, ''))).toBeGreaterThanOrEqual(45);
+  }
+  // Les débutants n'ont pas d'exercice de plus de 30 min : la tranche se grise.
+  await page.getByRole('radio', { name: /^Toutes durées/ }).check();
+  await page.locator('label.niveau', { hasText: 'Débutant' }).click();
+  await expect(longs).toBeDisabled();
+  await expect(longs).toHaveAttribute('aria-label', /, 0 exercice$/);
 });
 
 test('« Afficher plus » ajoute un lot de cartes', async ({ page }) => {

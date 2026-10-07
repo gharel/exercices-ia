@@ -1,6 +1,7 @@
 /**
- * L'état de la page : profil, filtres, séance, vue, thème, et la séance partagée reçue par
- * lien. Gardé dans le stockage du navigateur (profil, séance, vue, thème) et dans l'adresse
+ * L'état de la page : profil, filtres, séance, thème, et la séance partagée reçue par lien
+ * (qui ouvre la vue apprenant, sans notes formateur). Gardé dans le stockage du navigateur
+ * (profil, séance, thème) et dans l'adresse
  * (profil, séance partagée), pour qu'un lien ouvre la même sélection.
  */
 import { lire, ecrire } from './stockage.js';
@@ -16,7 +17,7 @@ const METIERS_VALIDES = new Set([...SLUGS_METIERS, 'autre']);
 export const PROFIL_PAR_DEFAUT = {
   metier: 'tous',
   metierLibre: '',
-  niveau: 'debutant',
+  niveau: 'tous',
   outils: [],
 };
 export const PAS_AFFICHAGE = 24;
@@ -58,7 +59,7 @@ export function creerEtat(catalogue, adresse = globalThis.location) {
     profil,
     filtres: { familles: [], duree: '', recherche: '' },
     seance: nettoyerSeance(lire('seance', {}), idsConnus),
-    vue: parametres.vue ?? (lire('vue') === 'apprenant' ? 'apprenant' : 'formateur'),
+    vue: parametres.vue ?? 'formateur',
     theme: ['light', 'dark'].includes(lire('theme')) ? lire('theme') : 'auto',
     partage,
     limite: PAS_AFFICHAGE,
@@ -69,7 +70,6 @@ export function creerEtat(catalogue, adresse = globalThis.location) {
   function enregistrer() {
     ecrire('profil', etat.profil);
     ecrire('seance', etat.seance);
-    ecrire('vue', etat.vue);
     ecrire('theme', etat.theme === 'auto' ? null : etat.theme);
     mettreAJourAdresse();
   }

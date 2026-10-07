@@ -34,6 +34,7 @@ test('une fiche ouvre les repères sur la compétence travaillée', async ({ pag
   await page.keyboard.press('Escape');
   await page.locator('.carte__lien').first().click();
   const fiche = page.locator('#fiche');
+  await fiche.locator('summary', { hasText: 'Notes formateur' }).click();
   await fiche.getByRole('button', { name: /Compétence 4D/ }).click();
   const reperes = page.locator('#reperes');
   await expect(reperes.locator('.carte-4d:focus')).toBeInViewport();

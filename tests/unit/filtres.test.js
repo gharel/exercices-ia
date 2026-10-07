@@ -6,6 +6,7 @@ import {
   personnaliser,
   selectionner,
   tirerAuHasard,
+  trancheDe,
   trier,
 } from '../../src/js/filtres.js';
 
@@ -94,6 +95,27 @@ describe('selectionner()', () => {
     ]);
     expect(ids(selectionner(catalogue, profil, { recherche: 'chantier' }).exercices)).toEqual([
       'btp-a',
+    ]);
+  });
+});
+
+describe('compteurs de durée', () => {
+  it('comptent chaque tranche sans le filtre de durée, mais avec celui de famille', () => {
+    const profil = { metier: 'immobilier', niveau: 'tous', outils: [] };
+    const { parDuree } = selectionner(catalogue, profil, { duree: 'court' });
+    expect(parDuree).toEqual({ '': 3, court: 2, moyen: 0, long: 1 });
+    const parFamille = selectionner(catalogue, profil, { familles: ['corriger'] }).parDuree;
+    expect(parFamille).toEqual({ '': 1, court: 1, moyen: 0, long: 0 });
+  });
+
+  it('rangent une durée dans sa tranche', () => {
+    expect([10, 15, 20, 30, 45, 60].map(trancheDe)).toEqual([
+      'court',
+      'court',
+      'moyen',
+      'moyen',
+      'long',
+      'long',
     ]);
   });
 });

@@ -24,12 +24,29 @@ export function monterResultats(conteneur, magasin, catalogue, { ouvrirFiche }) 
     'aria-label': 'Rechercher un exercice',
     autocomplete: 'off',
   });
+  // Durée : un groupe de boutons radio habillé en sélecteur segmenté, avec le nombre
+  // d'exercices de chaque tranche ; une tranche vide est grisée.
+  const CHOIX_DUREE = [{ slug: '', nom: 'Toutes durées', court: 'Toutes' }, ...TRANCHES_DUREE];
   const duree = el(
-    'select',
-    { id: 'duree', class: 'champ champ--select', 'aria-label': 'Durée' },
-    el('option', { value: '' }, 'Toutes durées'),
-    TRANCHES_DUREE.map((t) => el('option', { value: t.slug }, t.nom)),
+    'fieldset',
+    { class: 'duree' },
+    el('legend', { class: 'hors-ecran' }, 'Durée'),
+    el(
+      'div',
+      { class: 'duree__choix' },
+      el('span', { class: 'duree__icone', 'aria-hidden': 'true', title: 'Durée' }, icone('clock')),
+      CHOIX_DUREE.map((t) =>
+        el(
+          'label',
+          { class: 'duree__option', title: t.nom },
+          el('input', { type: 'radio', name: 'duree', value: t.slug, 'data-nom': t.nom }),
+          el('span', { class: 'duree__texte' }, t.court),
+          el('span', { class: 'duree__nombre' }, '0'),
+        ),
+      ),
+    ),
   );
+  const radiosDuree = [...duree.querySelectorAll('input')];
   const hasard = bouton('Au hasard', { icone: 'shuffle', variante: 'secondaire', id: 'hasard' });
   const titre = el('h2', { id: 'titre-resultats' });
   const contexte = el('p', { class: 'resultats__contexte' });
@@ -73,7 +90,9 @@ export function monterResultats(conteneur, magasin, catalogue, { ouvrirFiche }) 
       return [f.slug, b];
     }),
   );
-  familles.append(...boutonsFamilles.values(), reinitialiser);
+  familles.append(...boutonsFamilles.values());
+  // Familles et durée sur une même ligne de filtres, qui passe à la ligne si besoin.
+  const filtresLigne = el('div', { class: 'filtres' }, familles, duree, reinitialiser);
 
   remplir(
     conteneur,
@@ -88,11 +107,10 @@ export function monterResultats(conteneur, magasin, catalogue, { ouvrirFiche }) 
           'div',
           { class: 'resultats__outils' },
           el('div', { class: 'champ-icone' }, icone('magnifying-glass'), recherche),
-          duree,
           hasard,
         ),
       ),
-      familles,
+      filtresLigne,
       banniere,
       grille,
       vide,
@@ -108,13 +126,12 @@ export function monterResultats(conteneur, magasin, catalogue, { ouvrirFiche }) 
       magasin.modifier({ filtres: { ...filtres, recherche: recherche.value } }, ['filtres']);
     }, 200);
   });
-  duree.addEventListener('change', () => {
+  duree.addEventListener('change', (evenement) => {
     const { filtres } = magasin.get();
-    magasin.modifier({ filtres: { ...filtres, duree: duree.value } }, ['filtres']);
+    magasin.modifier({ filtres: { ...filtres, duree: evenement.target.value } }, ['filtres']);
   });
   reinitialiser.addEventListener('click', () => {
     recherche.value = '';
-    duree.value = '';
     magasin.modifier({ filtres: { familles: [], duree: '', recherche: '' } }, ['filtres']);
     recherche.focus();
   });
@@ -137,6 +154,7 @@ export function monterResultats(conteneur, magasin, catalogue, { ouvrirFiche }) 
       return {
         exercices: partage.ids.map((id) => parId.get(id)).filter(Boolean),
         parFamille: null,
+        parDuree: null,
       };
     }
     const resultat = selectionner(catalogue, profil, filtres);
@@ -181,7 +199,7 @@ export function monterResultats(conteneur, magasin, catalogue, { ouvrirFiche }) 
   }
 
   function afficher(etat) {
-    const { exercices, parFamille } = calculer();
+    const { exercices, parFamille, parDuree } = calculer();
     courants = exercices;
     const { profil, filtres, partage } = etat;
 
@@ -192,7 +210,7 @@ export function monterResultats(conteneur, magasin, catalogue, { ouvrirFiche }) 
       remplir(titre, pluriel(exercices.length, 'exercice'));
       remplir(contexte, libelleProfil(profil).join(' · '));
     }
-    familles.hidden = Boolean(partage);
+    filtresLigne.hidden = Boolean(partage);
     conteneur.querySelector('.resultats__outils').hidden = Boolean(partage);
 
     for (const [slug, b] of boutonsFamilles) {
@@ -205,7 +223,14 @@ export function monterResultats(conteneur, magasin, catalogue, { ouvrirFiche }) 
     if (recherche.value !== filtres.recherche && document.activeElement !== recherche) {
       recherche.value = filtres.recherche;
     }
-    duree.value = filtres.duree;
+    for (const radio of radiosDuree) {
+      const n = parDuree?.[radio.value] ?? 0;
+      radio.checked = radio.value === filtres.duree;
+      // Une tranche vide ne se choisit pas (sauf si elle est déjà choisie : on peut la quitter).
+      radio.disabled = n === 0 && !radio.checked;
+      radio.setAttribute('aria-label', `${radio.dataset.nom}, ${pluriel(n, 'exercice')}`);
+      radio.parentElement.querySelector('.duree__nombre').textContent = n;
+    }
 
     banniere.hidden = !partage;
     if (partage) {

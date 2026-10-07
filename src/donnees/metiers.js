@@ -21,6 +21,7 @@ import * as industrie from './metiers/industrie.js';
 import * as logistique from './metiers/logistique.js';
 import * as banque from './metiers/banque.js';
 import * as formation from './metiers/formation.js';
+import * as alimentation from './metiers/alimentation.js';
 
 const FICHIERS = {
   tous,
@@ -40,6 +41,7 @@ const FICHIERS = {
   logistique,
   banque,
   formation,
+  alimentation,
 };
 
 const FICHES = [
@@ -123,9 +125,9 @@ const FICHES = [
   {
     slug: 'tourisme',
     court: 'Tourisme',
-    nom: 'Tourisme, hôtellerie et restauration',
+    nom: 'Tourisme et hôtellerie',
     icone: 'umbrella-beach',
-    description: 'Hôtel, gîte, restaurant, agence de voyages, activités.',
+    description: 'Hôtel, gîte, accueil en tribu, agence de voyages, activités.',
   },
   {
     slug: 'collectivites',
@@ -161,6 +163,13 @@ const FICHES = [
     nom: 'Éducation et formation',
     icone: 'graduation-cap',
     description: 'Organisme de formation, établissement scolaire, formateur indépendant.',
+  },
+  {
+    slug: 'alimentation',
+    court: 'Alimentation',
+    nom: 'Alimentation et métiers de bouche',
+    icone: 'bread-slice',
+    description: 'Boulangerie, boucherie, traiteur, épicerie, production alimentaire locale.',
   },
 ];
 

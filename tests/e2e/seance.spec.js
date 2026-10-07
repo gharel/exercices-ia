@@ -43,9 +43,8 @@ test('composer une séance, l’exporter et la partager', async ({ page, context
   await expect(apprenant.locator('.banniere-partage')).toBeVisible();
   await expect(apprenant.locator('.carte__lien')).toHaveText([titres[1], titres[0]]);
   await apprenant.locator('.carte__lien').first().click();
-  await expect(
-    apprenant.getByRole('dialog').getByRole('heading', { name: 'Notes formateur' }),
-  ).toHaveCount(0);
+  // Lien partagé aux apprenants : aucune note formateur, même repliée.
+  await expect(apprenant.getByRole('dialog').getByText('Notes formateur')).toHaveCount(0);
   await apprenant.keyboard.press('Escape');
   await apprenant.getByRole('button', { name: 'Voir tous les exercices' }).click();
   await expect(apprenant.locator('.banniere-partage')).toBeHidden();

@@ -34,6 +34,8 @@ export const ICONES = [
   'building-columns',
   'graduation-cap',
   'pen',
+  'utensils',
+  'bread-slice',
   // Interface
   'clock',
   'bookmark',

@@ -1,6 +1,6 @@
 # Atelier d’exercices IA · Skazy Formation
 
-Des centaines d’exercices concrets pour **pratiquer l’IA dans son métier**, choisis selon le métier, le niveau et les outils de l’apprenant. Chaque exercice est prêt à faire :
+Près de 300 exercices concrets pour **pratiquer l’IA dans son métier**, choisis selon le métier, le niveau et les outils de l’apprenant. Chaque exercice est prêt à faire :
 
 - une mise en situation en Nouvelle-Calédonie ;
 - une consigne en étapes ;
@@ -13,9 +13,9 @@ Des centaines d’exercices concrets pour **pratiquer l’IA dans son métier**,
 ## Pour qui, et comment
 
 - **Le formateur** choisit un profil, ouvre les fiches, compose sa **séance** (bouton +), puis la copie, la télécharge (Markdown ou page HTML), l’imprime (version apprenant ou formateur) ou **partage un lien** à ses apprenants.
-- **L’apprenant** ouvre le lien reçu, ou choisit lui-même son métier et son niveau. La **vue apprenant** masque les notes formateur.
+- **L’apprenant** ouvre le lien reçu (sans les notes formateur), ou choisit lui-même son métier et son niveau. Dans chaque fiche, les **notes formateur** sont repliées : on peut projeter une fiche sans dévoiler le résultat attendu.
 - **Outils couverts** : Claude, ChatGPT, Microsoft Copilot, Google Gemini, Gemini Notebook (ex-NotebookLM) et Canva.
-- **Métiers** : 16 métiers, plus « Tous métiers » et « Autre métier » (le métier tapé est glissé dans la situation et le prompt).
+- **Métiers** : 17 métiers (dont alimentation et métiers de bouche), plus « Tous métiers » et « Autre métier » (le métier tapé est glissé dans la situation et le prompt).
 - **Niveaux** : débutant (je découvre), intermédiaire (je pratique), avancé (j’automatise).
 
 La démarche suit les formations officielles :
@@ -28,7 +28,7 @@ La fenêtre **Repères** de l’outil les résume, avec les liens vers les sourc
 
 ## Hors ligne
 
-L’outil est **un seul fichier HTML** (`dist/index.html`), sans aucune requête réseau : il s’ouvre en double-cliquant, même sans Internet en salle de formation. Le lien « Télécharger l’outil pour l’utiliser hors ligne », en bas de page, le récupère.
+L’outil est **un seul fichier HTML** (`dist/index.html`), sans aucune requête réseau : il s’ouvre en double-cliquant, même sans Internet en salle de formation. Pour le récupérer : `npm run build`, ou « Enregistrer la page » (Ctrl+S) depuis le site publié.
 
 ## Développer
 
