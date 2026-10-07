@@ -1488,6 +1488,23 @@
   .fiche__contenu {
     padding-inline: var(--e-4);
   }
+  /* Notes formateur : l'aide passe sous le titre au lieu de se tasser entre lui et le chevron. */
+  .fiche__formateur-titre {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    padding-inline: var(--e-4);
+  }
+  .fiche__formateur-aide {
+    grid-column: 2 / -1;
+    grid-row: 2;
+  }
+  .fiche__formateur-chevron {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .fiche__formateur-corps {
+    padding-inline: var(--e-4);
+  }
   .fiche__position {
     display: none;
   }

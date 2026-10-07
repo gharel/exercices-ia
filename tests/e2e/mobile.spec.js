@@ -52,6 +52,13 @@ test('sur téléphone : pas de défilement horizontal, fiche en plein écran', a
   await expect(fiche).toBeVisible();
   const largeur = await fiche.evaluate((d) => d.getBoundingClientRect().width);
   expect(largeur).toBeGreaterThanOrEqual(388);
+  // L'aide des notes formateur passe sous le titre, sur une ligne, au lieu de se tasser à côté.
+  const lignesAide = await fiche.locator('.fiche__formateur-aide').evaluate((aide) => {
+    const plage = document.createRange();
+    plage.selectNodeContents(aide);
+    return plage.getClientRects().length;
+  });
+  expect(lignesAide).toBe(1);
   await verifierAccessibilite(page);
   await fiche.getByRole('button', { name: 'Fermer la fiche' }).tap();
 
