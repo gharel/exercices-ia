@@ -13,7 +13,7 @@ function bloc(id, titre, chapo, ...contenu) {
   return el(
     'section',
     { class: 'reperes__bloc', id, 'aria-labelledby': `${id}-titre` },
-    el('h3', { id: `${id}-titre` }, titre),
+    el('h3', { id: `${id}-titre`, tabindex: '-1' }, titre),
     chapo ? el('p', { class: 'reperes__chapo' }, chapo) : null,
     ...contenu,
   );
@@ -28,6 +28,19 @@ export function monterReperes(dialogue) {
     ['reperes-outils', 'Les outils'],
     ['reperes-sources', 'Sources'],
   ];
+
+  /**
+   * Fait défiler la zone de contenu jusqu'à `cible`, et seulement elle. scrollIntoView()
+   * ferait aussi défiler la fenêtre elle-même (overflow masqué) : le sommaire sortait par le
+   * haut et l'ascenseur restait bloqué.
+   */
+  function defilerVers(cible, { centrer = false, doux = false } = {}) {
+    const corps = dialogue.querySelector('.panneau__corps');
+    const ecart = cible.getBoundingClientRect().top - corps.getBoundingClientRect().top;
+    const marge = centrer ? Math.max((corps.clientHeight - cible.offsetHeight) / 2, 16) : 16;
+    const animer = doux && !globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    corps.scrollTo({ top: corps.scrollTop + ecart - marge, behavior: animer ? 'smooth' : 'auto' });
+  }
 
   remplir(
     dialogue,
@@ -59,7 +72,11 @@ export function monterReperes(dialogue) {
               href: `#${id}`,
               onclick: (e) => {
                 e.preventDefault();
-                dialogue.querySelector(`#${id}`)?.scrollIntoView({ behavior: 'smooth' });
+                const section = dialogue.querySelector(`#${id}`);
+                if (!section) return;
+                defilerVers(section, { doux: true });
+                // Le focus suit, pour le clavier et les lecteurs d'écran, sans redéfiler.
+                section.querySelector('h3')?.focus({ preventScroll: true });
               },
             },
             nom,
@@ -219,14 +236,14 @@ export function monterReperes(dialogue) {
       if (!dialogue.open) dialogue.showModal();
       const cible = ancre ? dialogue.querySelector(`#${CSS.escape(ancre)}`) : null;
       if (cible) {
-        cible.scrollIntoView({ block: 'center' });
+        defilerVers(cible, { centrer: true });
         cible.focus({ preventScroll: true });
         cible.classList.add('repere-actif');
         setTimeout(() => cible.classList.remove('repere-actif'), 1600);
       } else {
         dialogue.querySelector('.panneau__corps').scrollTop = 0;
         dialogue.querySelector('#titre-reperes').setAttribute('tabindex', '-1');
-        dialogue.querySelector('#titre-reperes').focus();
+        dialogue.querySelector('#titre-reperes').focus({ preventScroll: true });
       }
     },
   };
