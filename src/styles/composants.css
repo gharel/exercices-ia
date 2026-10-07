@@ -1441,9 +1441,15 @@
   .choix > :not(legend) {
     grid-column: 1;
   }
+  /* Le titre n'est pas un élément de la grille : son écart avec les boutons se donne à part.
+     Les groupes sont plus espacés entre eux que le titre de ses boutons. */
+  .profil__formulaire {
+    gap: var(--e-6);
+  }
   .choix > legend {
     float: none;
     padding: 0;
+    margin-bottom: var(--e-3);
   }
   .variantes,
   .fiche__reperes,

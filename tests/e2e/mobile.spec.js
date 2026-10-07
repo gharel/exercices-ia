@@ -25,6 +25,16 @@ test('sur téléphone : métiers, niveaux et filtres tiennent dans l’écran, r
         .map((e) => e.textContent.trim()),
     );
     expect(debordements, `à ${largeur} px`).toEqual([]);
+
+    // Chaque titre (« Votre métier »…) garde un écart avec ses boutons.
+    const ecarts = await page.evaluate(() =>
+      [...document.querySelectorAll('.choix')].map((groupe) => {
+        const titre = groupe.querySelector('legend').getBoundingClientRect();
+        const boutons = groupe.querySelector('legend + *').getBoundingClientRect();
+        return boutons.top - titre.bottom;
+      }),
+    );
+    for (const ecart of ecarts) expect(ecart).toBeGreaterThanOrEqual(8);
   }
 });
 
