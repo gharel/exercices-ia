@@ -188,3 +188,45 @@ test('sur téléphone : les panneaux laissent l’écran au contenu, Fermer rest
   await seance.getByRole('button', { name: 'Fermer ma séance' }).tap();
   await expect(seance).toBeHidden();
 });
+
+test('sur téléphone : l’icône d’un lien externe suit son dernier mot, même sur deux lignes', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.locator('.carte').first()).toBeVisible();
+  await page.getByRole('button', { name: 'Repères', exact: true }).tap();
+  const sources = page.getByRole('dialog').locator('#reperes-sources');
+  // Pour chaque lien : ses lignes de texte visibles, l'écart entre le dernier mot et l'icône, et
+  // l'écart vertical entre l'icône et la dernière ligne (en boîte flex, le texte passait en colonne
+  // et l'icône se centrait à côté, entre deux lignes).
+  const liens = await sources.locator('.lien-externe').evaluateAll((elements) =>
+    elements.map((a) => {
+      const parcours = document.createTreeWalker(a, NodeFilter.SHOW_TEXT);
+      const morceaux = [];
+      while (parcours.nextNode()) {
+        if (parcours.currentNode.parentElement.closest('.hors-ecran')) continue;
+        const plage = document.createRange();
+        plage.selectNodeContents(parcours.currentNode);
+        morceaux.push(...[...plage.getClientRects()].filter((r) => r.width > 0));
+      }
+      const dernierMot = morceaux.at(-1);
+      const derniereLigne = morceaux.reduce((bas, r) => (r.bottom > bas.bottom ? r : bas));
+      const icone = a.querySelector('.icone').getBoundingClientRect();
+      const milieu = (r) => (r.top + r.bottom) / 2;
+      return {
+        texte: a.textContent,
+        lignes: new Set(morceaux.map((r) => Math.round(r.top))).size,
+        ecart: icone.left - dernierMot.right,
+        decalage: Math.abs(milieu(icone) - milieu(derniereLigne)),
+      };
+    }),
+  );
+  expect(
+    liens.some((l) => l.lignes > 1),
+    'au moins un lien sur deux lignes',
+  ).toBe(true);
+  for (const l of liens) {
+    expect(l.ecart, l.texte).toBeLessThanOrEqual(10);
+    expect(l.decalage, l.texte).toBeLessThanOrEqual(4);
+  }
+});

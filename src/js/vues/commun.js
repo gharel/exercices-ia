@@ -1,7 +1,7 @@
 /**
  * Petits éléments partagés par les vues : noms des référentiels, badges, boutons, message.
  */
-import { el } from '../ui.js';
+import { el, typographier } from '../ui.js';
 import { icone } from '../icones.js';
 import { FAMILLES, NIVEAUX, COMPETENCES, TECHNIQUES } from '../../donnees/referentiels.js';
 import { OUTILS } from '../../donnees/outils.js';
@@ -50,6 +50,28 @@ export function bouton(
     },
     nomIcone ? icone(nomIcone) : null,
     texte ? el('span', { class: 'bouton__texte' }, texte) : null,
+  );
+}
+
+/**
+ * Lien vers un autre site, ouvert dans un nouvel onglet. L'icône reste collée au dernier mot :
+ * quand le texte passe sur deux lignes, elle le suit au lieu de partir au bout de la ligne.
+ */
+export function lienExterne(href, texte) {
+  // Typographié d'abord : la coupure ne tombe jamais entre un mot et son « ? » ou son « : ».
+  const propre = typographier(texte);
+  const coupure = propre.lastIndexOf(' ') + 1;
+  return el(
+    'a',
+    { class: 'lien-externe', href, target: '_blank', rel: 'noopener' },
+    propre.slice(0, coupure),
+    el(
+      'span',
+      { class: 'lien-externe__fin' },
+      propre.slice(coupure),
+      icone('arrow-up-right-from-square'),
+    ),
+    el('span', { class: 'hors-ecran' }, ' (nouvel onglet)'),
   );
 }
 

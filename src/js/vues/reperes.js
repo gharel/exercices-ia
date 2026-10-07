@@ -7,7 +7,7 @@ import { icone } from '../icones.js';
 import { COMPETENCES, TECHNIQUES } from '../../donnees/referentiels.js';
 import { OUTILS } from '../../donnees/outils.js';
 import { EXEMPLE_PROMPT, INGREDIENTS, REGLES, SOURCES } from '../../donnees/reperes.js';
-import { boutonIcone, texteAvecCrochets } from './commun.js';
+import { boutonIcone, lienExterne, texteAvecCrochets } from './commun.js';
 
 function bloc(id, titre, chapo, ...contenu) {
   return el(
@@ -218,13 +218,7 @@ export function monterReperes(dialogue) {
                 'li',
                 {},
                 el('span', { class: 'sources__editeur' }, s.editeur),
-                el(
-                  'a',
-                  { href: s.lien, target: '_blank', rel: 'noopener', class: 'lien-externe' },
-                  s.titre,
-                  icone('arrow-up-right-from-square'),
-                  el('span', { class: 'hors-ecran' }, ' (nouvel onglet)'),
-                ),
+                lienExterne(s.lien, s.titre),
               ),
             ),
           ),

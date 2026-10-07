@@ -264,17 +264,21 @@ textarea {
   cursor: pointer;
 }
 
+/* En ligne, et non en boîte flex : sur deux lignes, l'icône suit le dernier mot (auquel elle est
+   collée, voir lienExterne()) au lieu d'être repoussée au bout de la ligne. */
 .lien-externe {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  justify-self: start;
   font-weight: 600;
   text-decoration: none;
 }
 .lien-externe:hover {
   text-decoration: underline;
 }
+.lien-externe__fin {
+  white-space: nowrap;
+}
 .lien-externe .icone {
+  margin-left: 6px;
   font-size: 0.8em;
 }
 

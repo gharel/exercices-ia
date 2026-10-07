@@ -11,6 +11,7 @@ import {
   boutonIcone,
   competence,
   famille,
+  lienExterne,
   metier,
   nomNiveau,
   outil,
@@ -64,13 +65,7 @@ function ongletsOutils(e, outilsDuProfil) {
         },
         el('p', { class: 'astuce' }, icone('lightbulb'), astuce),
         o.note ? el('p', { class: 'fiche__note' }, o.note) : null,
-        el(
-          'a',
-          { class: 'lien-externe', href: o.lien, target: '_blank', rel: 'noopener' },
-          `Ouvrir ${o.nom}`,
-          icone('arrow-up-right-from-square'),
-          el('span', { class: 'hors-ecran' }, ' (nouvel onglet)'),
-        ),
+        lienExterne(o.lien, `Ouvrir ${o.nom}`),
       ),
     );
     return el(
