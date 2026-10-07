@@ -260,6 +260,22 @@
   font-size: var(--texte-sm);
   color: var(--scene-doux);
 }
+/* Carte trop étroite pour « Intermédiaire » à côté des marches (téléphones de 375 px et moins) :
+   les marches passent au-dessus du nom. */
+.niveau {
+  container-type: inline-size;
+}
+@container (max-width: 172px) {
+  .niveau__corps {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--e-1);
+    align-content: start;
+  }
+  .niveau__marches {
+    grid-row: auto;
+    margin-bottom: 2px;
+  }
+}
 
 /* Résumé compact du profil, qui suit le défilement */
 .resume-profil {
@@ -1429,17 +1445,6 @@
     float: none;
     padding: 0;
   }
-  .pastilles--metiers {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    margin-inline: calc(-1 * var(--e-4));
-    padding: 2px var(--e-4) var(--e-2);
-    scroll-snap-type: x proximity;
-    scrollbar-width: thin;
-  }
-  .pastilles--metiers .pastille {
-    scroll-snap-align: start;
-  }
   .variantes,
   .fiche__reperes,
   .avant-apres {
@@ -1492,6 +1497,21 @@
   }
   .reperes__sommaire {
     padding-inline: var(--e-4);
+  }
+  /* Familles sur téléphone : deux colonnes égales, le nombre calé à droite comme pour la durée
+     (une seule colonne sous 360 px). */
+  .familles {
+    flex: 1 1 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.75rem), 1fr));
+  }
+  .filtre-famille {
+    gap: 6px;
+    padding-left: 12px;
+  }
+  .filtre-famille > span:not(.filtre-famille__nombre) {
+    flex: 1;
+    text-align: left;
   }
   /* Durée sur téléphone : une grille 2 × 2 plutôt qu'une piste qui défile. */
   .duree__choix {

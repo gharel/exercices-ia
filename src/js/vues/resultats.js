@@ -20,7 +20,7 @@ export function monterResultats(conteneur, magasin, catalogue, { ouvrirFiche }) 
     type: 'search',
     id: 'recherche',
     class: 'champ champ--recherche',
-    placeholder: 'Rechercher : annonce, réclamation, planning…',
+    placeholder: 'Rechercher : annonce, planning…',
     'aria-label': 'Rechercher un exercice',
     autocomplete: 'off',
   });

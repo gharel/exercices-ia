@@ -4,6 +4,30 @@ import { verifierAccessibilite } from './outils.js';
 const sansDefilementHorizontal = (page) =>
   page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
 
+test('sur téléphone : métiers, niveaux et filtres tiennent dans l’écran, rien ne défile', async ({
+  page,
+}) => {
+  // 390 px (iPhone) et 360 px (Android courant).
+  for (const largeur of [390, 360]) {
+    await page.setViewportSize({ width: largeur, height: 844 });
+    await page.goto('/');
+    await expect(page.locator('.carte').first()).toBeVisible();
+    const debordements = await page.evaluate(() =>
+      [
+        ...document.querySelectorAll(
+          '.pastille, .niveau__nom, .niveau__accroche, .filtre-famille, .duree__option',
+        ),
+      ]
+        .filter((e) => {
+          const { left, right } = e.getBoundingClientRect();
+          return left < 0 || right > window.innerWidth || e.scrollWidth > e.clientWidth;
+        })
+        .map((e) => e.textContent.trim()),
+    );
+    expect(debordements, `à ${largeur} px`).toEqual([]);
+  }
+});
+
 test('sur téléphone : pas de défilement horizontal, fiche en plein écran', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.carte').first()).toBeVisible();
