@@ -133,13 +133,32 @@ textarea {
   display: none;
 }
 
+/* Signature commune aux outils Skazy Formation : logo, filet, pastille (le favicon), nom. */
 .bandeau__nom {
+  display: flex;
+  align-items: center;
+  font-size: 1.0625rem;
   font-weight: 700;
   color: var(--texte-fort);
-  padding-left: var(--e-4);
-  border-left: 1px solid var(--bord);
   line-height: 1.2;
   white-space: nowrap;
+}
+/* Le filet, à égale distance du logo et de la pastille. */
+.bandeau__nom::before {
+  content: '';
+  flex: none;
+  width: 1px;
+  height: 24px;
+  margin-right: var(--e-4);
+  background: var(--bord);
+}
+.bandeau__pastille {
+  flex: none;
+  width: 28px;
+  height: 28px;
+}
+.bandeau__nom-texte {
+  margin-left: 10px;
 }
 
 .bandeau__actions {
@@ -524,16 +543,30 @@ mark.a-completer {
     display: none;
   }
 }
+/* Le nom de l'outil cède la place aux boutons quand le bandeau manque de largeur ; la pastille
+   et son filet restent. */
+@media (max-width: 720px) {
+  .bandeau__nom-texte {
+    display: none;
+  }
+}
 @media (max-width: 640px) {
   .bandeau__interieur {
     padding-inline: var(--e-4);
     gap: var(--e-2);
   }
   .bandeau__nom {
-    display: none;
+    margin-left: var(--e-1);
+  }
+  .bandeau__nom::before {
+    margin-right: var(--e-3);
   }
   .bandeau__logo .logo {
     height: 30px;
+  }
+  .bandeau__pastille {
+    width: 24px;
+    height: 24px;
   }
   .bouton-seance__texte {
     display: none;

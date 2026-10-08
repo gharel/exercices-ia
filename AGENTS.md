@@ -12,6 +12,7 @@ Un outil pour **proposer des exercices concrets de pratique de l'IA** en formati
 - **Usage réservé aux stagiaires** : la page n'est pas indexée (`<meta name="robots" content="noindex">`) et le pied de page, comme les fiches imprimées, porte la mention de droits (`DROITS` et `USAGE_RESERVE` dans `src/js/vues/commun.js`).
 - **Aucune IA dans l'outil** : il ne fait aucun appel réseau. Il est livré en **un seul fichier HTML autonome** (`dist/index.html`), ouvrable hors ligne en double-cliquant, et publié sur GitHub Pages.
 - La charte est celle du design system **Skazy Formation** de Claude Design : vert `#50967c`, texte `#4a4a4a`, police Georama, boutons en pilule, cartes avec une barre de couleur de 6 px en haut, badges en majuscules, pas d'emoji.
+- Chaque outil Skazy Formation a sa couleur de l'arc-en-ciel, dans cet ordre : Quiz rouge, Mini-jeux orange, Vigie jaune, Atelier d’exercices IA vert, Comprendre l'IA bleu, Prompthèque violet. Le favicon (`src/assets/img/favicon.svg` : une haltère blanche sur un dégradé vert `#7ce963` → `#02934a`) sert aussi de pastille dans le bandeau : logo Skazy Formation, filet, pastille, nom de l'outil ; quand la place manque (téléphone), seul le nom s'efface. Titre d'onglet : « Atelier d’exercices IA · Skazy Formation », et « Page · Atelier d’exercices IA · Skazy Formation » pour une sous-page.
 
 ## Commandes
 

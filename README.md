@@ -50,3 +50,5 @@ Chaque push sur `main` relance les tests puis publie `dist/index.html` sur GitHu
 ## Crédits
 
 Charte graphique Skazy Formation (design system Claude Design), police Georama (SIL Open Font License), icônes Font Awesome Free (CC BY 4.0). Situations, personnes, entreprises et chiffres des exercices sont fictifs.
+
+Chaque outil Skazy Formation a sa couleur de l’arc-en-ciel, dans cet ordre : Quiz rouge, Mini-jeux orange, Vigie jaune, Atelier d’exercices IA vert, Comprendre l'IA bleu, Prompthèque violet. Le favicon de l’atelier (une haltère blanche sur un dégradé vert) sert aussi de pastille dans le bandeau : logo Skazy Formation, filet, pastille, nom de l’outil. Titre d’onglet : « Atelier d’exercices IA · Skazy Formation » (« Page · Atelier d’exercices IA · Skazy Formation » pour une sous-page).
