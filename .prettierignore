@@ -7,3 +7,4 @@ package-lock.json
 src/assets/img/*.svg
 src/js/icones-donnees.js
 captures/
+.claude/
