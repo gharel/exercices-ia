@@ -22,6 +22,14 @@ export const metier = (slug) => METIER.get(slug);
 export const competence = (slug) => COMPETENCE.get(slug);
 export const technique = (slug) => TECHNIQUE.get(slug);
 
+/**
+ * Mention de droits : pied de page et fiches imprimées. Le signe copyright est écrit \u00a9 :
+ * Unicode le classe parmi les pictogrammes, et le contrôle « aucune emoji » le refuserait.
+ */
+export const DROITS = '\u00a9 2026 Skazy Formation';
+export const USAGE_RESERVE =
+  'Usage réservé aux stagiaires de Skazy Formation : reproduction et réutilisation dans une autre formation interdites sans accord écrit.';
+
 export const nomNiveau = (slug) =>
   slug === 'tous' ? 'Tous niveaux' : (NIVEAU.get(slug)?.nom ?? slug);
 

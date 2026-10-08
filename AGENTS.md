@@ -9,6 +9,7 @@ Un outil pour **proposer des exercices concrets de pratique de l'IA** en formati
 - Le formateur prépare une séance (sélection d'exercices, impression en version apprenant, lien de partage) ; l'apprenant pratique en autonomie. Les notes formateur sont repliées dans chaque fiche ; un lien de séance partagé ouvre la vue apprenant, qui ne les affiche pas du tout.
 - Outils couverts : Claude, ChatGPT, Microsoft Copilot, Google Gemini, Gemini Notebook (ex-NotebookLM) et Canva.
 - Contexte : la Nouvelle-Calédonie (XPF, CAFAT, RUAMM, TGC, provinces, communes, nickel, tourisme). Toutes les données d'exercice sont **fictives**.
+- **Usage réservé aux stagiaires** : la page n'est pas indexée (`<meta name="robots" content="noindex">`) et le pied de page, comme les fiches imprimées, porte la mention de droits (`DROITS` et `USAGE_RESERVE` dans `src/js/vues/commun.js`).
 - **Aucune IA dans l'outil** : il ne fait aucun appel réseau. Il est livré en **un seul fichier HTML autonome** (`dist/index.html`), ouvrable hors ligne en double-cliquant, et publié sur GitHub Pages.
 - La charte est celle du design system **Skazy Formation** de Claude Design : vert `#50967c`, texte `#4a4a4a`, police Georama, boutons en pilule, cartes avec une barre de couleur de 6 px en haut, badges en majuscules, pas d'emoji.
 

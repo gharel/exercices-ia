@@ -44,6 +44,8 @@ test('composer une séance, l’exporter et la partager', async ({ page, context
   expect(imprime).toContain('Votre mission');
   expect(imprime).not.toContain('Notes formateur');
   expect(imprime).not.toContain('Résultat attendu');
+  expect(imprime).toContain('© 2026 Skazy Formation');
+  expect(imprime).toContain('Usage réservé aux stagiaires de Skazy Formation');
 
   // Lien de partage, ouvert comme un apprenant
   await seance.getByRole('button', { name: 'Copier le lien de partage' }).click();

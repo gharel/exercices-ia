@@ -14,6 +14,7 @@ import { monterFiche } from './vues/fiche.js';
 import { monterSeance } from './vues/seance.js';
 import { monterReperes } from './vues/reperes.js';
 import { creerImpression } from './vues/impression.js';
+import { DROITS, USAGE_RESERVE } from './vues/commun.js';
 
 const $ = (id) => document.getElementById(id);
 const magasin = creerEtat(CATALOGUE);
@@ -66,13 +67,14 @@ remplir(
   el(
     'p',
     {},
-    'Skazy Formation, Nouvelle-Calédonie · ',
+    `${DROITS}, Nouvelle-Calédonie · `,
     el(
       'a',
       { href: 'https://formation.skazy.nc', target: '_blank', rel: 'noopener', class: 'lien-pied' },
       'formation.skazy.nc',
     ),
   ),
+  el('p', {}, USAGE_RESERVE),
 );
 
 // #id-exercice dans l'adresse : ouvre la fiche (lien copié depuis une fiche).

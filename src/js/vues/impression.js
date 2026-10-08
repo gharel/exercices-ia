@@ -4,6 +4,7 @@
  */
 import { el, remplir } from '../ui.js';
 import { resume, formaterDuree, dureeTotale } from '../seance.js';
+import { DROITS, USAGE_RESERVE } from './commun.js';
 
 function ficheImprimee(e) {
   return el(
@@ -57,7 +58,7 @@ export function creerImpression(zone, magasin) {
       el(
         'p',
         { class: 'imp-pied' },
-        'Atelier d’exercices IA · Skazy Formation · Données d’exercice fictives.',
+        `Atelier d’exercices IA · ${DROITS} · Données d’exercice fictives. ${USAGE_RESERVE}`,
       ),
     );
     document.body.classList.add('en-impression');
