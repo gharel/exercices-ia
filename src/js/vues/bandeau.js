@@ -11,8 +11,16 @@ const THEMES = {
 };
 
 export function appliquerTheme(theme) {
-  if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+  const choisi = theme === 'light' || theme === 'dark';
+  if (choisi) document.documentElement.dataset.theme = theme;
   else delete document.documentElement.dataset.theme;
+  // Barre du navigateur sur téléphone : de la couleur du bandeau dans le thème choisi ; thème du
+  // système : celle que index.html donne à chaque schéma de couleurs.
+  const bandeau = getComputedStyle(document.documentElement).getPropertyValue('--surface').trim();
+  for (const meta of document.querySelectorAll('meta[name="theme-color"]')) {
+    meta.dataset.systeme ??= meta.content;
+    meta.content = choisi ? bandeau : meta.dataset.systeme;
+  }
 }
 
 export function monterBandeau(conteneur, magasin, { ouvrirSeance, ouvrirReperes }) {
