@@ -1,6 +1,7 @@
 /**
- * node outils/captures.js [dossier] : construit puis photographie dist/index.html (ouvert en
- * file://) en 1280×720, 1920×1080 et 390 px, en clair et en sombre, avec une fiche ouverte.
+ * node outils/captures.js [dossier] : photographie dist/index.html (ouvert en file://, à construire
+ * d'abord avec npm run build) en 1280×720, 1440×900, 1920×1080, 390 et 360 px, en clair et en
+ * sombre, avec une fiche ouverte, et après défilement (bouton « Remonter en haut »).
  * Pour vérifier l'interface à l'œil sans lancer de serveur. Les images vont dans le dossier
  * donné (par défaut captures/, ignoré par git).
  */
@@ -53,7 +54,21 @@ await capturer('fiche-1280-sombre', {
   theme: 'dark',
   action: ouvrirFiche,
 });
+await capturer('accueil-1440', { largeur: 1440, hauteur: 900 });
+await capturer('accueil-1440-sombre', { largeur: 1440, hauteur: 900, theme: 'dark' });
 await capturer('accueil-390', { largeur: 390, hauteur: 844, pleinePage: true });
+await capturer('accueil-390-sombre', { largeur: 390, hauteur: 844, theme: 'dark' });
+await capturer('accueil-360', { largeur: 360, hauteur: 780 });
+await capturer('accueil-360-sombre', { largeur: 360, hauteur: 780, theme: 'dark' });
+await capturer('defilement-360', {
+  largeur: 360,
+  hauteur: 780,
+  action: async (page) => {
+    // Une séance de 12 exercices : le compteur à deux chiffres doit tenir dans le bandeau.
+    for (let i = 0; i < 12; i++) await page.locator('.carte__signet').nth(i).click();
+    await page.evaluate(() => window.scrollTo(0, 2000));
+  },
+});
 await capturer('fiche-390', { largeur: 390, hauteur: 844, action: ouvrirFiche });
 await capturer('seance-1280', {
   largeur: 1280,

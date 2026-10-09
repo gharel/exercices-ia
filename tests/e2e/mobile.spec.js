@@ -230,3 +230,89 @@ test('sur téléphone : l’icône d’un lien externe suit son dernier mot, mê
     expect(l.decalage, l.texte).toBeLessThanOrEqual(4);
   }
 });
+
+test('sur téléphone : le bandeau tient sur une ligne, rien n’est coupé, en clair et en sombre', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.locator('.carte').first()).toBeVisible();
+  // Une séance de 12 exercices : le compteur à deux chiffres élargit « Ma séance ».
+  for (let i = 0; i < 12; i++) await page.locator('.carte__signet').nth(i).tap();
+  await expect(page.locator('#bouton-seance .compteur')).toHaveText('12');
+
+  for (const theme of ['light', 'dark']) {
+    await page.emulateMedia({ colorScheme: theme });
+    for (const largeur of [390, 360]) {
+      const contexte = `${largeur} px, thème ${theme}`;
+      await page.setViewportSize({ width: largeur, height: 844 });
+      const mesure = await page.evaluate(() => {
+        const interieur = document.querySelector('.bandeau__interieur');
+        const cadre = interieur.getBoundingClientRect();
+        const style = getComputedStyle(interieur);
+        const gauche = Math.max(cadre.left + parseFloat(style.paddingLeft), 0);
+        const droite = Math.min(cadre.right - parseFloat(style.paddingRight), innerWidth);
+        const elements = [...interieur.children]
+          .flatMap((e) => (e.matches('.bandeau__actions') ? [...e.children] : [e]))
+          .filter((e) => e.getClientRects().length);
+        const problemes = [];
+        let precedent;
+        for (const e of elements) {
+          const r = e.getBoundingClientRect();
+          const nom = e.getAttribute('aria-label') || e.textContent.trim() || e.className;
+          if (r.left < gauche - 0.5 || r.right > droite + 0.5)
+            problemes.push(`${nom} sort du cadre`);
+          if (e.scrollWidth > e.clientWidth + 1) problemes.push(`${nom} est coupé`);
+          if (precedent && r.left < precedent.right - 0.5) problemes.push(`${nom} chevauche`);
+          precedent = r;
+        }
+        return {
+          problemes,
+          dernier: elements.at(-1).className,
+          hauteur: document.querySelector('.bandeau').getBoundingClientRect().height,
+          defile: document.documentElement.scrollWidth > innerWidth,
+        };
+      });
+      expect(mesure.problemes, contexte).toEqual([]);
+      expect(mesure.dernier, contexte).toBe('bandeau__logo');
+      expect(mesure.hauteur, contexte).toBeLessThanOrEqual(73);
+      expect(mesure.defile, contexte).toBe(false);
+
+      // Le logo du thème, entier ; la pastille et la roue restent, leurs textes ne sont masqués
+      // qu'à l'œil (ils restent les noms des liens).
+      const logo = page.locator('.bandeau__logo img').filter({ visible: true });
+      await expect(logo, contexte).toHaveClass(theme === 'dark' ? /logo--sombre/ : /logo--clair/);
+      await expect(logo, contexte).toBeInViewport({ ratio: 1 });
+      await expect(page.locator('.bandeau__pastille')).toBeInViewport({ ratio: 1 });
+      const outils = page.getByRole('link', { name: 'Les outils', exact: true });
+      await expect(outils.locator('img')).toBeInViewport({ ratio: 1 });
+      expect((await outils.getByText('Les outils').boundingBox()).width, contexte).toBeLessThan(2);
+      const zone = await outils.boundingBox();
+      expect(zone.width, contexte).toBeGreaterThanOrEqual(40);
+      expect(zone.height, contexte).toBeGreaterThanOrEqual(40);
+      await expect(page.getByRole('link', { name: 'Atelier d’exercices IA' })).toBeVisible();
+    }
+  }
+  await verifierAccessibilite(page);
+});
+
+test('sur téléphone : « Remonter en haut » apparaît après défilement, jamais sur un panneau', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.locator('.carte').first()).toBeVisible();
+  const haut = page.getByRole('button', { name: 'Remonter en haut de la page' });
+  await expect(haut).toBeHidden();
+  await page.evaluate(() => window.scrollTo(0, 3000));
+  await expect(haut).toBeInViewport({ ratio: 1 });
+
+  await page.getByRole('button', { name: 'Repères', exact: true }).tap();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(haut).toBeHidden();
+  await page.getByRole('button', { name: 'Fermer les repères' }).tap();
+  await expect(haut).toBeVisible();
+
+  await haut.tap();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  await expect(page.locator('#titre-profil')).toBeFocused();
+  await expect(haut).toBeHidden();
+});

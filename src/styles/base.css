@@ -120,6 +120,72 @@ textarea {
   gap: var(--e-4);
 }
 
+/* Signature commune aux outils Skazy Formation, de gauche à droite : la pastille (le favicon) et
+   le nom de l'outil, qui mènent à son accueil ; les actions de l'outil ; « Les outils » (la roue
+   des outils), un filet, puis le logo Skazy Formation. */
+.bandeau__nom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  min-height: 44px;
+  border-radius: var(--rayon-md);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--texte-fort);
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.bandeau__pastille {
+  flex: none;
+  width: 28px;
+  height: 28px;
+}
+
+.bandeau__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+}
+
+/* « Les outils » : la page d'accueil de tous les outils Skazy Formation, dans le même onglet. */
+.bandeau__outils {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e-2);
+  flex: none;
+  min-width: 42px;
+  min-height: 42px;
+  padding: 6px 12px 6px 8px;
+  border-radius: var(--rayon-pilule);
+  color: var(--texte);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--transition-rapide);
+}
+.bandeau__outils:hover {
+  background: var(--surface-2);
+}
+.bandeau__roue {
+  flex: none;
+  width: 26px;
+  height: 26px;
+}
+
+.bandeau__filet {
+  flex: none;
+  width: 1px;
+  height: 24px;
+  background: var(--bord);
+}
+
+/* Le logo, dernier élément du bandeau, mène au site de Skazy Formation (nouvel onglet). */
 .bandeau__logo {
   display: flex;
   flex: none;
@@ -131,41 +197,6 @@ textarea {
 }
 .logo--sombre {
   display: none;
-}
-
-/* Signature commune aux outils Skazy Formation : logo, filet, pastille (le favicon), nom. */
-.bandeau__nom {
-  display: flex;
-  align-items: center;
-  font-size: 1.0625rem;
-  font-weight: 700;
-  color: var(--texte-fort);
-  line-height: 1.2;
-  white-space: nowrap;
-}
-/* Le filet, à égale distance du logo et de la pastille. */
-.bandeau__nom::before {
-  content: '';
-  flex: none;
-  width: 1px;
-  height: 24px;
-  margin-right: var(--e-4);
-  background: var(--bord);
-}
-.bandeau__pastille {
-  flex: none;
-  width: 28px;
-  height: 28px;
-}
-.bandeau__nom-texte {
-  margin-left: 10px;
-}
-
-.bandeau__actions {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: var(--e-2);
 }
 
 .bouton-seance {
@@ -493,6 +524,37 @@ mark.a-completer {
   transform: translate(-50%, 0);
 }
 
+/* ── Remonter en haut ────────────────────────────────── */
+/* Visible après un écran et un cinquième de défilement, jamais par-dessus un panneau ouvert. */
+.haut-de-page {
+  position: fixed;
+  right: var(--e-6);
+  bottom: calc(var(--e-6) + env(safe-area-inset-bottom, 0px));
+  z-index: 15;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--primaire-fonce);
+  color: var(--sur-primaire);
+  box-shadow: var(--ombre-lg);
+  font-size: 1.1rem;
+  cursor: pointer;
+  animation: apparition var(--transition);
+  transition: background var(--transition-rapide);
+}
+.haut-de-page:hover {
+  background: var(--primaire-tres-fonce);
+}
+@keyframes apparition {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
 /* ── Pied de page ────────────────────────────────────── */
 .pied {
   border-top: 1px solid var(--bord);
@@ -544,10 +606,27 @@ mark.a-completer {
   }
 }
 /* Le nom de l'outil cède la place aux boutons quand le bandeau manque de largeur ; la pastille
-   et son filet restent. */
-@media (max-width: 720px) {
+   reste. Le nom est masqué à l'œil seulement : il reste le nom du lien pour les lecteurs d'écran. */
+@media (max-width: 880px) {
   .bandeau__nom-texte {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}
+/* Sur téléphone, « Les outils » se réduit à la roue, de la même façon. */
+@media (max-width: 720px) {
+  .bandeau__outils {
+    padding: 0;
+  }
+  .bandeau__outils-texte {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
   }
 }
 @media (max-width: 640px) {
@@ -555,11 +634,8 @@ mark.a-completer {
     padding-inline: var(--e-4);
     gap: var(--e-2);
   }
-  .bandeau__nom {
-    margin-left: var(--e-1);
-  }
-  .bandeau__nom::before {
-    margin-right: var(--e-3);
+  .bandeau__actions {
+    gap: var(--e-1);
   }
   .bandeau__logo .logo {
     height: 30px;
@@ -568,11 +644,15 @@ mark.a-completer {
     width: 24px;
     height: 24px;
   }
+  .bouton-reperes {
+    width: 42px;
+    padding-inline: 0;
+  }
   .bouton-seance__texte {
     display: none;
   }
   .bouton-seance {
-    padding-inline: 14px;
+    padding-inline: 12px;
   }
   .panneau--reperes {
     width: 100vw;
@@ -596,6 +676,39 @@ mark.a-completer {
     z-index: 4;
     background: var(--surface);
     box-shadow: var(--ombre-md);
+  }
+  .haut-de-page {
+    right: var(--e-4);
+    bottom: calc(var(--e-4) + env(safe-area-inset-bottom, 0px));
+    width: 44px;
+    height: 44px;
+  }
+}
+/* Petits téléphones (360 px) : tout le bandeau tient sur une ligne, séance remplie comprise. */
+@media (max-width: 400px) {
+  .bandeau__interieur {
+    gap: 6px;
+  }
+  .bandeau__actions {
+    gap: 2px;
+  }
+  .bandeau__logo .logo {
+    height: 26px;
+  }
+  .bandeau__actions .bouton-icone,
+  .bouton-reperes {
+    width: 38px;
+    height: 38px;
+    min-height: 38px;
+  }
+  .bouton-seance {
+    min-height: 38px;
+    padding-inline: 9px;
+    gap: var(--e-1);
+  }
+  .bandeau__outils {
+    min-width: 40px;
+    min-height: 40px;
   }
 }
 

@@ -171,7 +171,8 @@ export function monterProfil(conteneur, resume, magasin) {
         el('p', { class: 'surtitre' }, 'Pratiquer l’IA en formation'),
         el(
           'h1',
-          { id: 'titre-profil' },
+          // Cible du focus du bouton « Remonter en haut ».
+          { id: 'titre-profil', tabindex: '-1' },
           'Des exercices concrets pour pratiquer l’IA dans votre métier',
         ),
         el(

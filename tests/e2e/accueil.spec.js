@@ -142,3 +142,85 @@ test('le thème sombre se choisit et reste accessible', async ({ page }) => {
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 });
+
+test('le bandeau : le nom mène à l’accueil, puis les actions, « Les outils », le logo en dernier', async ({
+  page,
+}) => {
+  const bandeau = page.locator('.bandeau__interieur');
+  const ordre = await bandeau.evaluate((b) =>
+    [...b.children].map((e) => ({
+      classe: e.classList[0],
+      gauche: e.getBoundingClientRect().left,
+    })),
+  );
+  expect(ordre.map((e) => e.classe)).toEqual([
+    'bandeau__nom',
+    'bandeau__actions',
+    'bandeau__outils',
+    'bandeau__filet',
+    'bandeau__logo',
+  ]);
+  for (let i = 1; i < ordre.length; i++) {
+    expect(ordre[i].gauche, ordre[i].classe).toBeGreaterThan(ordre[i - 1].gauche);
+  }
+
+  // La pastille et le nom forment un seul lien vers l'accueil de l'outil, la page courante.
+  const nom = bandeau.getByRole('link', { name: 'Atelier d’exercices IA' });
+  await expect(nom).toHaveAttribute('href', './');
+  await expect(nom).toHaveAttribute('aria-current', 'page');
+  await expect(nom.locator('.bandeau__pastille')).toBeVisible();
+  expect(await nom.evaluate((a) => a.href)).toBe(new URL('/', page.url()).href);
+
+  // « Les outils » : la page de tous les outils Skazy Formation, dans le même onglet.
+  const outils = bandeau.getByRole('link', { name: 'Les outils', exact: true });
+  await expect(outils).toHaveAttribute('href', 'https://gharel.github.io/home/');
+  await expect(outils).toHaveAttribute('title', 'Tous les outils Skazy Formation');
+  await expect(outils).not.toHaveAttribute('target', /.+/);
+  await expect(outils.locator('img')).toBeVisible();
+  await expect(outils.getByText('Les outils')).toBeVisible();
+
+  // Le logo, dernier élément, ouvre le site de Skazy Formation dans un nouvel onglet.
+  const logo = bandeau.getByRole('link', { name: 'Site de Skazy Formation (nouvel onglet)' });
+  await expect(logo).toHaveAttribute('href', 'https://formation.skazy.nc');
+  await expect(logo).toHaveAttribute('target', '_blank');
+  await expect(logo).toHaveAttribute('rel', 'noopener');
+  await expect(logo.locator('img').filter({ visible: true })).toHaveCount(1);
+});
+
+test('« Remonter en haut » apparaît après défilement, ramène en haut, jamais sur un panneau', async ({
+  page,
+}) => {
+  const haut = page.getByRole('button', { name: 'Remonter en haut de la page' });
+  await expect(haut).toBeHidden();
+  await page.evaluate(() => window.scrollTo(0, 1500));
+  await expect(haut).toBeInViewport({ ratio: 1 });
+
+  // Masqué tant qu'un panneau est ouvert : séance, fiche, repères.
+  await page.locator('#bouton-seance').click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(haut).toBeHidden();
+  await page.getByRole('button', { name: 'Fermer ma séance' }).click();
+  await expect(haut).toBeVisible();
+
+  await page.locator('.carte__lien').nth(9).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(haut).toBeHidden();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).toBeHidden();
+  await page.evaluate(() => window.scrollTo(0, 1500));
+  await expect(haut).toBeVisible();
+
+  await page.getByRole('button', { name: 'Repères', exact: true }).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(haut).toBeHidden();
+  await page.getByRole('button', { name: 'Fermer les repères' }).click();
+  await expect(haut).toBeVisible();
+
+  // Au clic : retour en haut, focus sur le titre de la page, sans anneau.
+  await haut.click();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  const titre = page.locator('#titre-profil');
+  await expect(titre).toBeFocused();
+  expect(await titre.evaluate((e) => getComputedStyle(e).outlineStyle)).toBe('none');
+  await expect(haut).toBeHidden();
+});

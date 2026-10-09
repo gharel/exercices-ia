@@ -6,6 +6,7 @@ import { CATALOGUE, EXERCICES_ECRITS } from '../donnees/catalogue.js';
 import { GABARITS } from '../donnees/gabarits.js';
 import { METIERS } from '../donnees/metiers.js';
 import { el, remplir, pluriel } from './ui.js';
+import { icone } from './icones.js';
 import { creerEtat } from './etat.js';
 import { monterBandeau } from './vues/bandeau.js';
 import { monterProfil } from './vues/profil.js';
@@ -40,6 +41,10 @@ monterBandeau($('actions-bandeau'), magasin, {
   ouvrirReperes: (ancre) => reperes.ouvrir(ancre),
 });
 monterProfil($('profil'), $('resume-profil'), magasin);
+
+// Le nom de l'outil mène à son accueil (« ./ »). Hors ligne, dans le fichier ouvert en
+// double-cliquant, « ./ » ouvrirait le dossier : il mène alors au fichier lui-même.
+if (globalThis.location.protocol === 'file:') $('lien-accueil').href = globalThis.location.pathname;
 
 // Les vrais nombres : un gabarit compte pour un exercice, même s'il est adapté à chaque métier.
 const nbMetiers = METIERS.length - 1;
@@ -84,6 +89,28 @@ function ouvrirDepuisAdresse() {
 }
 globalThis.addEventListener('hashchange', ouvrirDepuisAdresse);
 ouvrirDepuisAdresse();
+
+// Bouton « Remonter en haut » : visible après un écran de défilement, jamais par-dessus un
+// panneau ouvert (fiche, séance, repères). Le focus revient au titre de la page.
+const haut = $('haut-de-page');
+const panneaux = [...document.querySelectorAll('dialog')];
+haut.prepend(icone('arrow-up'));
+haut.addEventListener('click', () => {
+  const sansAnimation = globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  globalThis.scrollTo({ top: 0, behavior: sansAnimation ? 'auto' : 'smooth' });
+  $('titre-profil').focus({ preventScroll: true });
+});
+const surveillerDefilement = () => {
+  haut.hidden =
+    globalThis.scrollY < globalThis.innerHeight * 1.2 || panneaux.some((panneau) => panneau.open);
+};
+globalThis.addEventListener('scroll', surveillerDefilement, { passive: true });
+globalThis.addEventListener('resize', surveillerDefilement);
+const observateur = new MutationObserver(surveillerDefilement);
+for (const panneau of panneaux) {
+  observateur.observe(panneau, { attributes: true, attributeFilter: ['open'] });
+}
+surveillerDefilement();
 
 magasin.mettreAJourAdresse();
 document.documentElement.classList.add('pret');

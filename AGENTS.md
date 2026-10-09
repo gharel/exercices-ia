@@ -12,22 +12,29 @@ Un outil pour **proposer des exercices concrets de pratique de l'IA** en formati
 - **Usage réservé aux stagiaires** : la page n'est pas indexée (`<meta name="robots" content="noindex">`) et le pied de page, comme les fiches imprimées, porte la mention de droits (`DROITS` et `USAGE_RESERVE` dans `src/js/vues/commun.js`).
 - **Aucune IA dans l'outil** : il ne fait aucun appel réseau. Il est livré en **un seul fichier HTML autonome** (`dist/index.html`), ouvrable hors ligne en double-cliquant, et publié sur GitHub Pages.
 - La charte est celle du design system **Skazy Formation** de Claude Design : vert `#50967c`, texte `#4a4a4a`, police Georama, boutons en pilule, cartes avec une barre de couleur de 6 px en haut, badges en majuscules, pas d'emoji.
-- Chaque outil Skazy Formation a sa couleur de l'arc-en-ciel, dans cet ordre : Quiz rouge, Mini-jeux orange, Vigie jaune, Atelier d’exercices IA vert, Comprendre l'IA bleu, Prompthèque violet. Le favicon (`src/assets/img/favicon.svg` : une haltère blanche sur un dégradé vert `#7ce963` → `#02934a`) sert aussi de pastille dans le bandeau : logo Skazy Formation, filet, pastille, nom de l'outil ; quand la place manque (téléphone), seul le nom s'efface. Titre d'onglet : « Atelier d’exercices IA · Skazy Formation », et « Page · Atelier d’exercices IA · Skazy Formation » pour une sous-page.
+- Chaque outil Skazy Formation a sa couleur de l'arc-en-ciel, dans cet ordre : Quiz rouge, Mini-jeux orange, Vigie jaune, Atelier d’exercices IA vert, Comprendre l'IA bleu, Prompthèque violet. Le favicon (`src/assets/img/favicon.svg` : une haltère blanche sur un dégradé vert `#7ce963` → `#02934a`) sert aussi de pastille dans le bandeau. Titre d'onglet : « Atelier d’exercices IA · Skazy Formation », et « Page · Atelier d’exercices IA · Skazy Formation » pour une sous-page.
+- **Le bandeau est commun aux outils Skazy Formation** ; de gauche à droite :
+  - la pastille et le nom de l'outil, en un seul lien vers son accueil (`./`, avec `aria-current="page"` ; hors ligne, vers le fichier lui-même) ;
+  - les actions de l'outil : Repères, thème, Ma séance ;
+  - « Les outils », vers https://gharel.github.io/home/ dans le même onglet, avec la roue des outils (`src/assets/img/les-outils.svg`, copie du favicon de cette page, jamais liée à distance) ;
+  - un filet, puis le logo Skazy Formation, **dernier élément**, vers https://formation.skazy.nc dans un nouvel onglet.
+  - Quand la place manque, le nom (≤ 880 px) puis le texte « Les outils » (≤ 720 px) ne sont masqués qu'à l'œil : ils restent les noms des liens, la pastille et la roue restent affichées. À 360 px, tout tient sur une ligne, même avec une séance de 12 exercices.
+- Le bouton rond **« Remonter en haut »** (en bas à droite) apparaît après un écran et un cinquième de défilement, jamais par-dessus un panneau ouvert (fiche, séance, repères), et rend le focus au titre de la page.
 
 ## Commandes
 
-| Commande                                     | Rôle                                                                                  |
-| -------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `npm install`                                | Installe les outils de développement **et les hooks git** (script `prepare`)          |
-| `npx playwright install chromium`            | Installe le navigateur des tests e2e (une seule fois)                                 |
-| `npm run dev`                                | Serveur local sur http://localhost:4174 (sources, sans build) + navigateur            |
-| `npm run dev -- --sans-navigateur`           | Même chose sans ouvrir le navigateur (agents, tests manuels)                          |
-| `npm run build`                              | Construit `dist/index.html`, le fichier unique autonome                               |
-| `npm run icones`                             | Régénère `src/js/icones-donnees.js` après un ajout dans `src/js/icones.js`            |
-| `npm run check`                              | Lint + format + validation HTML + tests unitaires (**avant chaque commit**)           |
-| `npm run test:e2e`                           | Build, puis tests Playwright de bout en bout + accessibilité (**avant chaque push**)  |
-| `node outils/apercu.js <gabarit> [métiers…]` | Affiche un gabarit décliné, pour relire l'accord du français                          |
-| `node outils/captures.js`                    | Photographie `dist/index.html` (1280, 1920, 390 px, clair et sombre) dans `captures/` |
+| Commande                                     | Rôle                                                                                               |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `npm install`                                | Installe les outils de développement **et les hooks git** (script `prepare`)                       |
+| `npx playwright install chromium`            | Installe le navigateur des tests e2e (une seule fois)                                              |
+| `npm run dev`                                | Serveur local sur http://localhost:4174 (sources, sans build) + navigateur                         |
+| `npm run dev -- --sans-navigateur`           | Même chose sans ouvrir le navigateur (agents, tests manuels)                                       |
+| `npm run build`                              | Construit `dist/index.html`, le fichier unique autonome                                            |
+| `npm run icones`                             | Régénère `src/js/icones-donnees.js` après un ajout dans `src/js/icones.js`                         |
+| `npm run check`                              | Lint + format + validation HTML + tests unitaires (**avant chaque commit**)                        |
+| `npm run test:e2e`                           | Build, puis tests Playwright de bout en bout + accessibilité (**avant chaque push**)               |
+| `node outils/apercu.js <gabarit> [métiers…]` | Affiche un gabarit décliné, pour relire l'accord du français                                       |
+| `node outils/captures.js`                    | Photographie `dist/index.html` (1280, 1440, 1920, 390 et 360 px, clair et sombre) dans `captures/` |
 
 Les tests e2e portent sur le fichier construit, servi sur le port 4175 (`PORT_E2E` pour en changer).
 
@@ -118,7 +125,7 @@ Elles sont reprises du projet voisin `jeu-formation`, même auteur et même char
   - contraste WCAG AA dans les deux thèmes : pas de texte blanc sur `#50967c` (3,5:1), on utilise `--primaire-fonce` ;
   - tout se fait au clavier, les annonces passent par `annoncer()` ;
   - `prefers-reduced-motion` est respecté ;
-  - aucun défilement horizontal à 390 px de large.
+  - aucun défilement horizontal à 390 ni à 360 px de large ; le bandeau tient sur une ligne.
 - **Pas d'emoji** dans l'interface : icônes Font Awesome via `icone('nom')`, décoratives (`aria-hidden`).
 - **Format** : Prettier (guillemets simples, 100 colonnes). Lint : ESLint `recommended` + `eqeqeq`, `prefer-const`.
 
@@ -126,7 +133,7 @@ Elles sont reprises du projet voisin `jeu-formation`, même auteur et même char
 
 1. `npm run check` passe sans erreur (en cas d'échec de format : `npm run format`).
 2. `npm run test:e2e` passe entièrement. Vérifiez le code de sortie de la commande elle-même.
-3. Si l'interface a changé : `npm run dev`, vérification à l'œil en 1280×720, 1920×1080 et 390 px, en clair et en sombre, puis ouverture de `dist/index.html` en double-cliquant.
+3. Si l'interface a changé : `npm run dev`, vérification à l'œil en 1280×720, 1920×1080, 390 et 360 px, en clair et en sombre (`node outils/captures.js` après `npm run build`), puis ouverture de `dist/index.html` en double-cliquant.
 4. Commit au format Conventional Commits, en français : `feat(fiche): ajoute la copie du matériau`, `fix(filtres): …`, `docs:`, `test:`, `chore:`.
 5. Push sur `main` : [.github/workflows/publier.yml](.github/workflows/publier.yml) relance les tests, construit `dist/index.html` et le publie sur GitHub Pages. Un push sur `main` est une mise en ligne.
 

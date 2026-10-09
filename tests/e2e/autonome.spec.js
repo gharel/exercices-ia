@@ -17,6 +17,9 @@ test('le fichier s’ouvre hors ligne en double-cliquant, sans aucune requête r
   await page.goto(FICHIER);
   await expect(page.locator('.carte').first()).toBeVisible();
   await expect(page.locator('.bandeau__logo img').first()).toBeVisible();
+  await expect(page.locator('.bandeau__roue')).toBeVisible();
+  // Hors ligne, le nom de l'outil mène au fichier lui-même, et non au dossier (« ./ »).
+  expect(await page.locator('.bandeau__nom').evaluate((a) => a.href)).toBe(FICHIER);
   await page.locator('.carte__lien').first().click();
   await expect(page.getByRole('dialog').getByRole('heading', { level: 2 })).toBeVisible();
   const police = await page.evaluate(async () => {
