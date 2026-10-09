@@ -3,8 +3,9 @@
  * (qui ouvre la vue apprenant, sans notes formateur). Gardé dans le stockage du navigateur
  * (profil, séance, thème) et dans l'adresse
  * (profil, séance partagée), pour qu'un lien ouvre la même sélection.
+ * Le thème ('systeme', 'light' ou 'dark') est commun à tous les outils Skazy Formation.
  */
-import { lire, ecrire } from './stockage.js';
+import { lire, ecrire, lireTheme, ecrireTheme } from './stockage.js';
 import { lireParametres, titreParDefaut } from './seance.js';
 import { NIVEAUX } from '../donnees/referentiels.js';
 import { OUTILS } from '../donnees/outils.js';
@@ -60,18 +61,23 @@ export function creerEtat(catalogue, adresse = globalThis.location) {
     filtres: { familles: [], duree: '', recherche: '' },
     seance: nettoyerSeance(lire('seance', {}), idsConnus),
     vue: parametres.vue ?? 'formateur',
-    theme: ['light', 'dark'].includes(lire('theme')) ? lire('theme') : 'auto',
+    theme: lireTheme(),
     partage,
     limite: PAS_AFFICHAGE,
   };
 
   const ecouteurs = new Set();
 
-  function enregistrer() {
+  function enregistrer(changements) {
     ecrire('profil', etat.profil);
     ecrire('seance', etat.seance);
-    ecrire('theme', etat.theme === 'auto' ? null : etat.theme);
+    // Commun à tous les outils : écrit seulement quand on le change ici.
+    if ('theme' in changements) ecrireTheme(etat.theme);
     mettreAJourAdresse();
+  }
+
+  function prevenir(quoi) {
+    for (const ecouteur of ecouteurs) ecouteur(etat, new Set(quoi));
   }
 
   function mettreAJourAdresse() {
@@ -104,8 +110,13 @@ export function creerEtat(catalogue, adresse = globalThis.location) {
       Object.assign(etat, changements);
       if ('profil' in changements || 'filtres' in changements)
         etat.limite = changements.limite ?? PAS_AFFICHAGE;
-      enregistrer();
-      for (const ecouteur of ecouteurs) ecouteur(etat, new Set(quoi));
+      enregistrer(changements);
+      prevenir(quoi);
+    },
+    /** Le thème a changé dans un autre onglet ou un autre outil : on le relit, sans le réécrire. */
+    relireTheme() {
+      etat.theme = lireTheme();
+      prevenir(['theme']);
     },
     ecouter(ecouteur) {
       ecouteurs.add(ecouteur);

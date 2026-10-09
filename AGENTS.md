@@ -20,6 +20,10 @@ Un outil pour **proposer des exercices concrets de pratique de l'IA** en formati
   - un filet, puis le logo Skazy Formation, **dernier élément**, vers https://formation.skazy.nc dans un nouvel onglet.
   - Quand la place manque, le nom (≤ 880 px) puis le texte « Les outils » (≤ 720 px) ne sont masqués qu'à l'œil : ils restent les noms des liens, la pastille et la roue restent affichées. À 360 px, tout tient sur une ligne, même avec une séance de 12 exercices.
 - Le bouton rond **« Remonter en haut »** (en bas à droite) apparaît après un écran et un cinquième de défilement, jamais par-dessus un panneau ouvert (fiche, séance, repères), et rend le focus au titre de la page.
+- **Thème commun aux outils Skazy Formation** : le bouton du thème (`#bouton-theme`) a trois états, du thème du système au thème clair, puis sombre, puis de nouveau celui du système ; l’icône montre le thème actuel (demi-cercle, soleil, lune), le nom accessible et l’info-bulle disent « Thème : celui du système. Changer de thème » (puis « Thème : clair. … », « Thème : sombre. … »).
+  - Le choix vaut pour **tous les outils** (même origine, https://gharel.github.io, donc même stockage) : il est gardé sous la clé `skazy-outils:theme`, hors du préfixe de l’outil (`"light"` ou `"dark"` en JSON ; thème du système : clé effacée). Le script du `<head>` l’applique avant l’affichage ; un changement dans un autre onglet ou un autre outil (événement `storage`), ou le retour sur une page gardée en mémoire (`pageshow`), le reprend aussitôt. Les anciennes clés propres à l’outil ne sont plus lues.
+  - Thème clair choisi : `color-scheme: only light` ; thème sombre choisi : sombre ; sinon, celui du système.
+  - `<meta name="darkreader-lock" />` suit toujours `<meta name="color-scheme" content="light dark" />` : la page a son propre thème sombre ; sans ce verrou, le mode nuit de Brave (Dark Reader) la repeint, même en thème clair.
 
 ## Commandes
 
@@ -56,7 +60,7 @@ src/js/filtres.js               Pur : filtrer, trier, compter, tirer au hasard
 src/js/gabarits.js              Pur : décliner un gabarit avec le vocabulaire d'un métier
 src/js/seance.js                Pur : durée, résumé d’un exercice, lien de partage, paramètres d’adresse
 src/js/schema.js                Pur : schéma d'un exercice, contrôle de typographie
-src/js/ui.js · stockage.js      el(), remplir(), typographier() ; seul accès à localStorage (préfixe skazy-exos:)
+src/js/ui.js · stockage.js      el(), remplir(), typographier() ; seul accès à localStorage (préfixe skazy-exos: ; thème commun : skazy-outils:theme)
 src/js/icones.js                Liste des icônes Font Awesome utilisées ; icone('nom')
 src/js/vues/                    profil, resultats, carte, fiche, seance, reperes
 src/donnees/referentiels.js     Niveaux, familles de tâches, durées, compétences 4D, techniques de prompt
@@ -120,7 +124,7 @@ Elles sont reprises du projet voisin `jeu-formation`, même auteur et même char
 - **Aucune dépendance à l'exécution, aucun CDN, aucune requête réseau.** La police est intégrée, les icônes Font Awesome Free sont un sprite SVG généré (`npm run icones`). esbuild ne sert qu'à construire le fichier unique.
 - **La logique est séparée de l'affichage.** Les fonctions pures (`filtres.js`, `gabarits.js`, `seance.js`, `schema.js`) sont testées unitairement ; les vues ne font que construire la page et réagir aux clics.
 - **Sécurité** : tout texte passe par `el()` ou `textContent`, jamais par `innerHTML` (sauf le sprite d'icônes, généré au build).
-- **Stockage** : toujours par `stockage.js` (clés préfixées `skazy-exos:`) ; une erreur de stockage ne fait jamais planter la page.
+- **Stockage** : toujours par `stockage.js` (clés préfixées `skazy-exos:`, sauf le thème commun `skazy-outils:theme`) ; une erreur de stockage ne fait jamais planter la page.
 - **Accessibilité** :
   - contraste WCAG AA dans les deux thèmes : pas de texte blanc sur `#50967c` (3,5:1), on utilise `--primaire-fonce` ;
   - tout se fait au clavier, les annonces passent par `annoncer()` ;

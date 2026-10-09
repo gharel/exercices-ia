@@ -1,13 +1,16 @@
 /**
  * Les actions du bandeau : Repères, thème, Ma séance.
+ * Le thème suit le système, ou il est clair ou sombre ; l'icône montre le thème actuel. Le choix
+ * vaut pour tous les outils Skazy Formation et se reprend aussitôt quand il change ailleurs.
  */
 import { el, remplir, typographier } from '../ui.js';
 import { icone } from '../icones.js';
+import { ecouterTheme } from '../stockage.js';
 
 const THEMES = {
-  auto: { suivant: 'light', icone: 'circle-half-stroke', nom: 'Thème : celui du système' },
+  systeme: { suivant: 'light', icone: 'circle-half-stroke', nom: 'Thème : celui du système' },
   light: { suivant: 'dark', icone: 'sun', nom: 'Thème : clair' },
-  dark: { suivant: 'auto', icone: 'moon', nom: 'Thème : sombre' },
+  dark: { suivant: 'systeme', icone: 'moon', nom: 'Thème : sombre' },
 };
 
 export function appliquerTheme(theme) {
@@ -28,6 +31,8 @@ export function monterBandeau(conteneur, magasin, { ouvrirSeance, ouvrirReperes 
   theme.addEventListener('click', () => {
     magasin.modifier({ theme: THEMES[magasin.get().theme].suivant }, ['theme']);
   });
+  // Choisi dans un autre onglet ou un autre outil, ou au retour sur la page : on le reprend.
+  ecouterTheme(() => magasin.relireTheme());
 
   const compteur = el('span', { class: 'compteur' });
   const seance = el(
@@ -65,8 +70,9 @@ export function monterBandeau(conteneur, magasin, { ouvrirSeance, ouvrirReperes 
   function synchroniser(etat) {
     const t = THEMES[etat.theme];
     theme.replaceChildren(icone(t.icone));
-    theme.setAttribute('aria-label', typographier(`${t.nom}. Changer de thème`));
-    theme.title = typographier(t.nom);
+    const nom = typographier(`${t.nom}. Changer de thème`);
+    theme.setAttribute('aria-label', nom);
+    theme.title = nom;
     appliquerTheme(etat.theme);
     const n = etat.seance.ids.length;
     compteur.textContent = String(n);

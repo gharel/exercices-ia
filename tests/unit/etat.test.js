@@ -58,6 +58,27 @@ describe('creerEtat()', () => {
     expect(changements).toEqual([['seance'], ['seance']]);
   });
 
+  it('lit le thème commun à tous les outils et ne l’écrit que quand on le change', () => {
+    localStorage.setItem('skazy-outils:theme', '"dark"');
+    localStorage.setItem('skazy-exos:theme', '"light"');
+    const magasin = creerEtat(catalogue, adresse(''));
+    expect(magasin.get().theme).toBe('dark');
+    // Changé dans un autre outil : changer le profil ici ne le réécrit pas.
+    localStorage.setItem('skazy-outils:theme', '"light"');
+    magasin.modifier({ profil: { ...magasin.get().profil, niveau: 'avance' } }, ['profil']);
+    expect(localStorage.getItem('skazy-outils:theme')).toBe('"light"');
+    const changements = [];
+    magasin.ecouter((etat, quoi) => changements.push([etat.theme, [...quoi]]));
+    magasin.relireTheme();
+    expect(changements).toEqual([['light', ['theme']]]);
+    magasin.modifier({ theme: 'systeme' }, ['theme']);
+    expect(localStorage.getItem('skazy-outils:theme')).toBeNull();
+    magasin.modifier({ theme: 'dark' }, ['theme']);
+    expect(localStorage.getItem('skazy-outils:theme')).toBe('"dark"');
+    // L'ancienne clé de l'outil n'est plus ni lue ni écrite.
+    expect(localStorage.getItem('skazy-exos:theme')).toBe('"light"');
+  });
+
   it('résiste à un stockage abîmé', () => {
     localStorage.setItem('skazy-exos:profil', '{pas du json');
     localStorage.setItem('skazy-exos:seance', '42');
