@@ -24,6 +24,7 @@ Un outil pour **proposer des exercices concrets de pratique de l'IA** en formati
   - Le choix vaut pour **tous les outils** (même origine, https://gharel.github.io, donc même stockage) : il est gardé sous la clé `skazy-outils:theme`, hors du préfixe de l’outil (`"light"` ou `"dark"` en JSON ; thème du système : clé effacée). Le script du `<head>` l’applique avant l’affichage ; un changement dans un autre onglet ou un autre outil (événement `storage`), ou le retour sur une page gardée en mémoire (`pageshow`), le reprend aussitôt. Les anciennes clés propres à l’outil ne sont plus lues.
   - Thème clair choisi : `color-scheme: only light` ; thème sombre choisi : sombre ; sinon, celui du système.
   - `<meta name="darkreader-lock" />` suit toujours `<meta name="color-scheme" content="light dark" />` : la page a son propre thème sombre ; sans ce verrou, le mode nuit de Brave (Dark Reader) la repeint, même en thème clair.
+  - Sur téléphone (≤ 640 px), le profil sombre remplit l’écran : en thème clair, lui et son résumé collant prennent les couleurs claires de la page (`composants.css`, en tête). Ils restent sombres sur ordinateur et en thème sombre, comme la scène de la Prompthèque et le héros de la page d’accueil des outils.
 
 ## Commandes
 
