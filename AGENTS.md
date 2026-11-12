@@ -4,8 +4,14 @@ Consignes pour les agents de code (Claude Code, Codex, Copilot…) et pour les h
 
 ## Le projet
 
-Un outil pour **proposer des exercices concrets de pratique de l'IA** en formation, selon le **métier** et le **niveau** de l'apprenant.
+Un outil pour **proposer des exercices concrets de pratique de l'IA** en formation, selon la **fonction** (le poste tenu), le **secteur** d'activité et le **niveau** de l'apprenant.
 
+- **Fonction et secteur** : un « métier » est soit une fonction (Direction, Assistanat, Commercial, Comptabilité… : 12), soit un secteur (BTP, Santé, Tourisme… : 21). Le profil choisit l'une, l'autre ou les deux.
+  - Une fonction seule, ou un secteur seul : ses exercices écrits et les gabarits déclinés pour lui.
+  - Les deux ensemble : les exercices écrits de la fonction, puis ceux du secteur ; les gabarits ne sont pris qu'une fois, avec le vocabulaire du secteur.
+  - « Autre secteur » : la version neutre, avec le métier tapé glissé dans la situation et le prompt.
+  - Dans l'adresse : `?fonction=comptabilite&metier=btp` (`metier` porte le secteur). Un ancien lien `?metier=rh` ouvre la fonction RH.
+  - Sur téléphone (≤ 640 px), les deux listes sont repliées sur le choix courant ; « Changer » les déplie.
 - Le formateur prépare une séance (sélection d'exercices, impression en version apprenant, lien de partage) ; l'apprenant pratique en autonomie. Les notes formateur sont repliées dans chaque fiche ; un lien de séance partagé ouvre la vue apprenant, qui ne les affiche pas du tout.
 - Outils couverts : Claude, ChatGPT, Microsoft Copilot, Google Gemini, Gemini Notebook (ex-NotebookLM) et Canva.
 - Contexte : la Nouvelle-Calédonie (XPF, CAFAT, RUAMM, TGC, provinces, communes, nickel, tourisme). Toutes les données d'exercice sont **fictives**.
@@ -57,7 +63,7 @@ src/styles/composants.css       Profil, filtres, cartes, fiche, séance, repère
 src/styles/impression.css       Fiches imprimées (version apprenant), toujours en clair : seule autre feuille avec des couleurs
 src/js/main.js                  Montage de la page
 src/js/etat.js                  État : profil, filtres, séance, vue ; synchronisé avec l'URL et le stockage
-src/js/filtres.js               Pur : filtrer, trier, compter, tirer au hasard
+src/js/filtres.js               Pur : exercices d'un profil (fonction, secteur), filtrer, trier, compter, tirer au hasard
 src/js/gabarits.js              Pur : décliner un gabarit avec le vocabulaire d'un métier
 src/js/seance.js                Pur : durée, résumé d’un exercice, lien de partage, paramètres d’adresse
 src/js/schema.js                Pur : schéma d'un exercice, contrôle de typographie
@@ -67,7 +73,7 @@ src/js/vues/                    profil, resultats, carte, fiche, seance, reperes
 src/donnees/referentiels.js     Niveaux, familles de tâches, durées, compétences 4D, techniques de prompt
 src/donnees/outils.js           Les 6 outils, leurs fonctions (noms vérifiés) et leurs astuces par famille
 src/donnees/vocabulaire.js      Les clés du vocabulaire que chaque métier fournit aux gabarits
-src/donnees/metiers.js          Liste des métiers ; chacun a son fichier dans metiers/
+src/donnees/metiers.js          Liste des métiers (fonctions et secteurs) ; chacun a son fichier dans metiers/
 src/donnees/metiers/<slug>.js   Vocabulaire du métier + ses exercices écrits à la main
 src/donnees/gabarits/<famille>.js  Gabarits : exercices transversaux déclinés pour chaque métier
 src/donnees/catalogue.js        Le catalogue complet (exercices écrits + gabarits déclinés)
@@ -81,7 +87,10 @@ tests/e2e/                      Playwright : parcours, accessibilité (axe), fic
 
 ### Où
 
-- **Un exercice propre à un métier** va dans `src/donnees/metiers/<slug>.js`, tableau `exercices`. Exemple de référence : `metiers/immobilier.js`.
+- **Un exercice propre à un métier** va dans `src/donnees/metiers/<slug>.js`, tableau `exercices`. Exemples de référence : `metiers/immobilier.js` (un secteur), `metiers/assistanat.js` (une fonction).
+  - Dans un fichier de **fonction**, l'apprenant tient ce poste, et les situations changent de secteur d'un exercice à l'autre.
+  - Dans un fichier de **secteur**, les situations sont celles du secteur, et les postes varient.
+- **Un nouveau métier** : sa fiche dans `src/donnees/metiers.js` (une fonction s'ajoute aussi à `SLUGS_FONCTIONS`), son icône dans `src/js/icones.js` (`npm run icones`), et son fichier : les 28 clés du vocabulaire et 12 exercices au moins, dont 3 par niveau.
 - **Un exercice valable pour tous les métiers, qui change seulement de vocabulaire**, est un **gabarit** dans `src/donnees/gabarits/<famille>.js`. Exemple de référence : `gabarits/corriger.js`. Il est décliné automatiquement pour chaque métier et en version neutre (« tous »).
 - **Un exercice transversal qui ne dépend pas du métier** (comparer deux outils, sa bibliothèque de prompts…) va dans `metiers/tous.js`.
 

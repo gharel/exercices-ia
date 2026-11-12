@@ -1,6 +1,6 @@
 # Atelier d’exercices IA · Skazy Formation
 
-Près de 300 exercices concrets pour **pratiquer l’IA dans son métier**, choisis selon le métier, le niveau et les outils de l’apprenant. Chaque exercice est prêt à faire :
+Près de 500 exercices concrets pour **pratiquer l’IA dans son métier**, choisis selon la fonction, le secteur, le niveau et les outils de l’apprenant. Chaque exercice est prêt à faire :
 
 - une mise en situation en Nouvelle-Calédonie ;
 - une consigne en étapes ;
@@ -13,9 +13,9 @@ Près de 300 exercices concrets pour **pratiquer l’IA dans son métier**, choi
 ## Pour qui, et comment
 
 - **Le formateur** choisit un profil, ouvre les fiches, compose sa **séance** (bouton +), puis l’**imprime** (une fiche par exercice, version apprenant, sans les notes formateur) ou **partage un lien** à ses apprenants.
-- **L’apprenant** ouvre le lien reçu (sans les notes formateur), ou choisit lui-même son métier et son niveau. Dans chaque fiche, les **notes formateur** sont repliées : on peut projeter une fiche sans dévoiler le résultat attendu.
+- **L’apprenant** ouvre le lien reçu (sans les notes formateur), ou choisit lui-même sa fonction, son secteur et son niveau. Dans chaque fiche, les **notes formateur** sont repliées : on peut projeter une fiche sans dévoiler le résultat attendu.
 - **Outils couverts** : Claude, ChatGPT, Microsoft Copilot, Google Gemini, Gemini Notebook (ex-NotebookLM) et Canva.
-- **Métiers** : 18 métiers (dont restauration, bars et cafés ; alimentation et métiers de bouche), plus « Tous métiers » et « Autre métier » (le métier tapé est glissé dans la situation et le prompt).
+- **Fonctions et secteurs** : 12 fonctions (direction, management, assistanat, accueil, commercial, communication, comptabilité, RH, achats, informatique, qualité-sécurité-environnement, gestion de projet) et 21 secteurs (du BTP à l’agriculture, de la santé au numérique), à choisir séparément ou ensemble : une comptable du BTP voit les exercices de la comptabilité et ceux du BTP. « Autre secteur » glisse le métier tapé dans la situation et le prompt.
 - **Niveaux** : débutant (je découvre), intermédiaire (je pratique), avancé (j’automatise).
 
 La démarche suit les formations officielles :
