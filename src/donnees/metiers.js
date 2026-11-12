@@ -1,10 +1,28 @@
 /**
  * Les métiers. Chaque métier a son fichier dans metiers/ : son vocabulaire (pour décliner
  * les gabarits) et ses exercices écrits à la main.
- * « tous » porte le vocabulaire neutre, utilisé aussi pour « Autre métier ».
+ * Un métier est soit une fonction (`type: 'fonction'` : le poste tenu, quel que soit le
+ * secteur), soit un secteur (`type: 'secteur'` : l'activité de la structure). Le profil
+ * choisit l'une, l'autre ou les deux.
+ * « tous » porte le vocabulaire neutre, utilisé aussi pour « Autre secteur ».
  */
 
 import * as tous from './metiers/tous.js';
+import * as direction from './metiers/direction.js';
+import * as management from './metiers/management.js';
+import * as accueil from './metiers/accueil.js';
+import * as achats from './metiers/achats.js';
+import * as informatique from './metiers/informatique.js';
+import * as qualite from './metiers/qualite.js';
+import * as projet from './metiers/projet.js';
+import * as agriculture from './metiers/agriculture.js';
+import * as associations from './metiers/associations.js';
+import * as artisanat from './metiers/artisanat.js';
+import * as automobile from './metiers/automobile.js';
+import * as numerique from './metiers/numerique.js';
+import * as energie from './metiers/energie.js';
+import * as services from './metiers/services.js';
+import * as social from './metiers/social.js';
 import * as immobilier from './metiers/immobilier.js';
 import * as comptabilite from './metiers/comptabilite.js';
 import * as btp from './metiers/btp.js';
@@ -44,7 +62,38 @@ const FICHIERS = {
   formation,
   restauration,
   alimentation,
+  direction,
+  management,
+  accueil,
+  achats,
+  informatique,
+  qualite,
+  projet,
+  agriculture,
+  associations,
+  artisanat,
+  automobile,
+  numerique,
+  energie,
+  services,
+  social,
 };
+
+/** Les fonctions (le poste tenu). Les autres métiers, sauf « tous », sont des secteurs. */
+export const SLUGS_FONCTIONS = new Set([
+  'accueil',
+  'achats',
+  'assistanat',
+  'commercial',
+  'communication',
+  'comptabilite',
+  'direction',
+  'informatique',
+  'management',
+  'projet',
+  'qualite',
+  'rh',
+]);
 
 const FICHES = [
   {
@@ -64,7 +113,7 @@ const FICHES = [
   {
     slug: 'comptabilite',
     court: 'Comptabilité',
-    nom: 'Comptabilité et gestion',
+    nom: 'Comptabilité et finance',
     icone: 'calculator',
     description: 'Cabinet comptable, service comptable, contrôle de gestion.',
   },
@@ -85,7 +134,7 @@ const FICHES = [
   {
     slug: 'rh',
     court: 'RH',
-    nom: 'Ressources humaines',
+    nom: 'Ressources humaines et paie',
     icone: 'users',
     description: 'Recrutement, paie, formation, relations sociales.',
   },
@@ -180,21 +229,137 @@ const FICHES = [
     icone: 'bread-slice',
     description: 'Boulangerie, boucherie, traiteur, épicerie, production alimentaire locale.',
   },
+  // Fonctions
+  {
+    slug: 'direction',
+    court: 'Direction',
+    nom: 'Direction d’entreprise',
+    icone: 'user-tie',
+    description: 'Dirigeant, gérant, directeur général : pilotage, finances, décisions.',
+  },
+  {
+    slug: 'management',
+    court: 'Management',
+    nom: 'Management d’équipe',
+    icone: 'people-group',
+    description: 'Chef d’équipe, responsable de service, manager de proximité.',
+  },
+  {
+    slug: 'accueil',
+    court: 'Accueil, relation client',
+    nom: 'Accueil et relation client',
+    icone: 'headset',
+    description: 'Standard, guichet, service client, service après-vente.',
+  },
+  {
+    slug: 'achats',
+    court: 'Achats',
+    nom: 'Achats et approvisionnement',
+    icone: 'cart-shopping',
+    description: 'Consultation des fournisseurs, commandes, stocks, négociation.',
+  },
+  {
+    slug: 'informatique',
+    court: 'Informatique',
+    nom: 'Informatique et support',
+    icone: 'laptop-code',
+    description: 'Support aux utilisateurs, parc, procédures, sécurité du poste de travail.',
+  },
+  {
+    slug: 'qualite',
+    court: 'Qualité, sécurité',
+    nom: 'Qualité, sécurité, environnement',
+    icone: 'clipboard-check',
+    description: 'Audits, procédures, prévention des risques, actions correctives.',
+  },
+  {
+    slug: 'projet',
+    court: 'Gestion de projet',
+    nom: 'Gestion de projet',
+    icone: 'diagram-project',
+    description: 'Chef de projet, chargé d’affaires : cadrage, planning, risques, suivi.',
+  },
+  // Secteurs
+  {
+    slug: 'agriculture',
+    court: 'Agriculture, pêche',
+    nom: 'Agriculture, élevage et pêche',
+    icone: 'tractor',
+    description: 'Maraîchage, élevage, aquaculture, pêche, coopérative.',
+  },
+  {
+    slug: 'associations',
+    court: 'Associations',
+    nom: 'Associations, culture et sport',
+    icone: 'hand-holding-heart',
+    description: 'Association, club sportif, centre culturel, événementiel.',
+  },
+  {
+    slug: 'artisanat',
+    court: 'Artisanat, services',
+    nom: 'Artisanat et services de proximité',
+    icone: 'scissors',
+    description: 'Coiffure, esthétique, réparation, couture, fleuriste.',
+  },
+  {
+    slug: 'automobile',
+    court: 'Automobile',
+    nom: 'Automobile et mécanique',
+    icone: 'car',
+    description: 'Concession, garage, location de véhicules, pièces détachées.',
+  },
+  {
+    slug: 'numerique',
+    court: 'Numérique',
+    nom: 'Numérique et télécoms',
+    icone: 'tower-cell',
+    description: 'Société de services informatiques, agence web, télécoms.',
+  },
+  {
+    slug: 'energie',
+    court: 'Énergie, eau, déchets',
+    nom: 'Énergie, eau et déchets',
+    icone: 'bolt',
+    description: 'Électricité, eau, assainissement, collecte et tri des déchets.',
+  },
+  {
+    slug: 'services',
+    court: 'Services aux entreprises',
+    nom: 'Services aux entreprises',
+    icone: 'building-user',
+    description: 'Nettoyage, sécurité et gardiennage, intérim, conseil.',
+  },
+  {
+    slug: 'social',
+    court: 'Social, petite enfance',
+    nom: 'Social et petite enfance',
+    icone: 'children',
+    description: 'Crèche, aide à domicile, action sociale, accompagnement du handicap.',
+  },
 ];
+
+function typeDe(slug) {
+  if (slug === 'tous') return null;
+  return SLUGS_FONCTIONS.has(slug) ? 'fonction' : 'secteur';
+}
 
 export const METIERS = FICHES.map((fiche) => ({
   ...fiche,
+  type: typeDe(fiche.slug),
   vocabulaire: FICHIERS[fiche.slug].vocabulaire,
   exercices: FICHIERS[fiche.slug].exercices ?? [],
 }));
 
-/** Pseudo-métier : l'apprenant tape le sien. Il reprend le vocabulaire neutre de « tous ». */
+export const FONCTIONS = METIERS.filter((m) => m.type === 'fonction');
+export const SECTEURS = METIERS.filter((m) => m.type === 'secteur');
+
+/** Pseudo-secteur : l'apprenant tape le sien. Il reprend le vocabulaire neutre de « tous ». */
 export const AUTRE_METIER = {
   slug: 'autre',
-  court: 'Autre métier',
-  nom: 'Autre métier',
+  court: 'Autre secteur',
+  nom: 'Autre secteur',
   icone: 'pen',
-  description: 'Votre métier n’est pas dans la liste : tapez-le.',
+  description: 'Votre secteur n’est pas dans la liste : tapez-le.',
 };
 
 export const SLUGS_METIERS = new Set(METIERS.map((m) => m.slug));
