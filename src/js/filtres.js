@@ -1,5 +1,5 @@
 /**
- * Sélection des exercices : profil (métier, niveau, outils), filtres (familles, durée,
+ * Sélection des exercices : profil (fonction, secteur, niveau, outils), filtres (familles, durée,
  * recherche), tri et tirage au hasard. Fonctions pures, sans accès à la page.
  */
 import { FAMILLES, TRANCHES_DUREE } from '../donnees/referentiels.js';
@@ -21,18 +21,39 @@ export function estPropreAuMetier(exercice) {
 }
 
 /**
- * Les exercices d'un métier :
- * - un métier : ses exercices écrits et les gabarits déclinés pour lui ;
+ * Les exercices d'un secteur :
+ * - un secteur : ses exercices écrits et les gabarits déclinés pour lui ;
  * - « tous » : les gabarits en version neutre, les exercices transversaux, et les exercices
  *   écrits de chaque métier (pas les déclinaisons, qui seraient des doublons) ;
  * - « autre » : la version neutre seulement.
  */
-export function exercicesDuMetier(catalogue, metier) {
+function exercicesDuSecteur(catalogue, metier) {
   if (metier === 'tous') {
     return catalogue.filter((e) => e.metier === 'tous' || estPropreAuMetier(e));
   }
   if (metier === 'autre') return catalogue.filter((e) => e.metier === 'tous');
   return catalogue.filter((e) => e.metier === metier);
+}
+
+/**
+ * Les exercices d'un profil. `metier` porte le secteur, `fonction` le poste tenu :
+ * - sans fonction : les exercices du secteur ;
+ * - une fonction, tous secteurs : ses exercices écrits et les gabarits déclinés pour elle ;
+ * - une fonction et un secteur (ou « autre ») : les exercices écrits de la fonction, puis
+ *   ceux du secteur. Les gabarits ne sont pris qu'une fois, avec le vocabulaire du secteur.
+ */
+export function exercicesDuProfil(catalogue, { metier = 'tous', fonction = '' } = {}) {
+  if (!fonction) return exercicesDuSecteur(catalogue, metier);
+  if (metier === 'tous') return catalogue.filter((e) => e.metier === fonction);
+  return [
+    ...catalogue.filter((e) => e.metier === fonction && !e.gabarit),
+    ...exercicesDuSecteur(catalogue, metier),
+  ];
+}
+
+/** La liste mêle plusieurs métiers : chaque carte affiche alors le sien. */
+export function meleLesMetiers({ metier = 'tous', fonction = '' } = {}) {
+  return fonction ? metier !== 'tous' : metier === 'tous';
 }
 
 function correspondProfil(e, { niveau, outils }) {
@@ -77,7 +98,7 @@ export function trancheDe(duree) {
 export function selectionner(catalogue, profil, filtres = {}) {
   const mots = motsRecherche(filtres.recherche);
   const familles = filtres.familles ?? [];
-  const base = exercicesDuMetier(catalogue, profil.metier).filter(
+  const base = exercicesDuProfil(catalogue, profil).filter(
     (e) => correspondProfil(e, profil) && correspondRecherche(e, mots),
   );
   const dansFamilles = (e) => !familles.length || familles.includes(e.famille);
@@ -94,7 +115,7 @@ export function selectionner(catalogue, profil, filtres = {}) {
   }
   const retenus = base.filter((e) => correspondDuree(e, filtres.duree) && dansFamilles(e));
   return {
-    exercices: trier(retenus, mots),
+    exercices: trier(retenus, mots, profil.fonction),
     parFamille,
     parDuree: { '': toutesDurees, ...parDuree },
   };
@@ -102,12 +123,16 @@ export function selectionner(catalogue, profil, filtres = {}) {
 
 /**
  * Ordre d'affichage varié : les familles alternent (une de chaque, à tour de rôle), et dans
- * chaque famille les exercices propres au métier passent avant les gabarits.
+ * chaque famille les exercices propres au métier passent avant les gabarits ; quand une
+ * fonction est choisie avec un secteur, ses exercices écrits passent avant ceux du secteur.
  * Avec une recherche, les exercices dont le titre contient les mots passent devant.
  */
-export function trier(exercices, mots = []) {
+export function trier(exercices, mots = [], fonction = '') {
   const groupes = new Map(FAMILLES.map((f) => [f.slug, []]));
-  const rang = (e) => (e.gabarit ? 1 : 0);
+  const rang = (e) => {
+    if (e.gabarit) return 2;
+    return fonction && e.metier !== fonction ? 1 : 0;
+  };
   const tries = [...exercices].sort(
     (a, b) => rang(a) - rang(b) || ORDRE_FAMILLES.get(a.famille) - ORDRE_FAMILLES.get(b.famille),
   );

@@ -33,10 +33,23 @@ async function capturer(nom, { largeur, hauteur, theme = 'light', action, pleine
   await page.close();
 }
 
+/** Choisit une fonction ou un secteur. Sur téléphone, « Changer » déplie d'abord la liste. */
+const choisir = async (page, groupe, nom) => {
+  const changer = page.locator(`.pastilles--${groupe} .choix__changer`);
+  if (await changer.isVisible()) await changer.click();
+  await page.locator(`.pastilles--${groupe} label.pastille`, { hasText: nom }).click();
+};
+
 const ouvrirFiche = async (page) => {
-  await page.locator('label.pastille', { hasText: 'Immobilier' }).click();
+  await choisir(page, 'secteurs', 'Immobilier');
   await page.locator('.carte__lien').first().click();
   await page.getByRole('dialog').waitFor();
+};
+
+/** Une fonction et un secteur ensemble : les exercices des deux. */
+const croiser = async (page) => {
+  await choisir(page, 'fonctions', 'Comptabilité');
+  await choisir(page, 'secteurs', 'BTP');
 };
 
 await capturer('accueil-1280', { largeur: 1280, hauteur: 720 });
@@ -70,6 +83,31 @@ await capturer('defilement-360', {
   },
 });
 await capturer('fiche-390', { largeur: 390, hauteur: 844, action: ouvrirFiche });
+await capturer('croise-1280', { largeur: 1280, hauteur: 720, action: croiser, pleinePage: true });
+await capturer('croise-1280-sombre', {
+  largeur: 1280,
+  hauteur: 720,
+  theme: 'dark',
+  action: croiser,
+});
+await capturer('croise-360', { largeur: 360, hauteur: 780, action: croiser });
+await capturer('croise-defilement-360', {
+  largeur: 360,
+  hauteur: 780,
+  action: async (page) => {
+    await croiser(page);
+    await page.evaluate(() => window.scrollTo(0, 2000));
+  },
+});
+await capturer('secteurs-deplies-360', {
+  largeur: 360,
+  hauteur: 780,
+  theme: 'dark',
+  action: async (page) => {
+    await page.locator('.pastilles--secteurs .choix__changer').click();
+    await page.locator('.pastilles--secteurs').scrollIntoViewIfNeeded();
+  },
+});
 await capturer('seance-1280', {
   largeur: 1280,
   hauteur: 720,

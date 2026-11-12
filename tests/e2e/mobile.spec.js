@@ -18,7 +18,7 @@ const horsDuCadre = (page, elements, cadre) =>
     [elements, cadre],
   );
 
-test('sur téléphone : métiers, niveaux et filtres tiennent dans l’écran, rien ne défile', async ({
+test('sur téléphone : profil, niveaux et filtres tiennent dans l’écran, rien ne défile', async ({
   page,
 }) => {
   // 390 px (iPhone) et 360 px (Android courant).
@@ -40,7 +40,7 @@ test('sur téléphone : métiers, niveaux et filtres tiennent dans l’écran, r
     );
     expect(debordements, `à ${largeur} px`).toEqual([]);
 
-    // Chaque titre (« Votre métier »…) garde un écart avec ses boutons.
+    // Chaque titre (« Votre fonction »…) garde un écart avec ses boutons.
     const ecarts = await page.evaluate(() =>
       [...document.querySelectorAll('.choix')].map((groupe) => {
         const titre = groupe.querySelector('legend').getBoundingClientRect();
@@ -52,11 +52,79 @@ test('sur téléphone : métiers, niveaux et filtres tiennent dans l’écran, r
   }
 });
 
+test('sur téléphone : fonctions et secteurs sont repliés sur le choix courant', async ({
+  page,
+}) => {
+  const visibles = (groupe) => page.locator(`${groupe} .pastille`).filter({ visible: true });
+  const pastillesCoupees = () =>
+    page.evaluate(() =>
+      [...document.querySelectorAll('.pastilles--metiers .pastille, .choix__changer')]
+        .filter((e) => {
+          const { left, right, width } = e.getBoundingClientRect();
+          return width > 0 && (left < 0 || right > window.innerWidth);
+        })
+        .map((e) => e.textContent.trim()),
+    );
+
+  for (const largeur of [390, 360]) {
+    const contexte = `à ${largeur} px`;
+    await page.setViewportSize({ width: largeur, height: 844 });
+    await page.goto('/');
+    await expect(page.locator('.carte').first()).toBeVisible();
+
+    // Repliés : une seule pastille par groupe, et le profil ne remplit pas deux écrans.
+    const fonctions = '.pastilles--fonctions';
+    const secteurs = '.pastilles--secteurs';
+    await expect(visibles(fonctions), contexte).toHaveText(['Toutes fonctions']);
+    await expect(visibles(secteurs), contexte).toHaveText(['Tous secteurs']);
+    const hauteurs = await page.evaluate(() =>
+      [...document.querySelectorAll('.pastilles--metiers')].map(
+        (liste) => liste.getBoundingClientRect().height,
+      ),
+    );
+    for (const hauteur of hauteurs) expect(hauteur, contexte).toBeLessThanOrEqual(48);
+
+    // « Changer » déplie la liste, entière et sans rien de coupé.
+    const changer = page.locator(`${fonctions} .choix__changer`);
+    await expect(changer).toHaveAttribute('aria-expanded', 'false');
+    await changer.tap();
+    await expect(changer).toHaveAttribute('aria-expanded', 'true');
+    await expect(changer).toHaveText('Réduire');
+    await expect(visibles(fonctions), contexte).toHaveCount(13);
+    expect(await pastillesCoupees(), contexte).toEqual([]);
+    expect(await sansDefilementHorizontal(page), contexte).toBe(true);
+    await verifierAccessibilite(page);
+
+    // Un choix replie la liste sur lui.
+    await page.locator(`${fonctions} .pastille`, { hasText: 'Direction' }).tap();
+    await expect(visibles(fonctions), contexte).toHaveText(['Direction']);
+    await expect(changer).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.locator('.resultats__contexte')).toContainText('Direction d’entreprise');
+
+    await page.locator(`${secteurs} .choix__changer`).tap();
+    await expect(visibles(secteurs), contexte).toHaveCount(23);
+    expect(await pastillesCoupees(), contexte).toEqual([]);
+    expect(await sansDefilementHorizontal(page), contexte).toBe(true);
+    await page.locator(`${secteurs} .pastille`, { hasText: 'Tourisme' }).tap();
+    await expect(visibles(secteurs), contexte).toHaveText(['Tourisme']);
+
+    // Le résumé collant garde fonction et secteur sans dépasser de l'écran.
+    await page.evaluate(() => window.scrollTo(0, 2500));
+    const resume = page.locator('.resume-profil');
+    await expect(resume).toContainText('Direction');
+    await expect(resume).toContainText('Tourisme');
+    expect(await sansDefilementHorizontal(page), contexte).toBe(true);
+    expect(await horsDuCadre(page, '.resume-profil__texte > *', '.resume-profil')).toEqual([]);
+    await page.evaluate(() => localStorage.clear());
+  }
+});
+
 test('sur téléphone : pas de défilement horizontal, fiche en plein écran', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.carte').first()).toBeVisible();
   expect(await sansDefilementHorizontal(page)).toBe(true);
 
+  await page.locator('.pastilles--secteurs .choix__changer').tap();
   await page.locator('label.pastille', { hasText: 'Santé' }).click();
   await expect(page.locator('.resultats__contexte')).toContainText('Santé');
   expect(await sansDefilementHorizontal(page)).toBe(true);

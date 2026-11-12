@@ -9,13 +9,18 @@ import { lire, ecrire, lireTheme, ecrireTheme } from './stockage.js';
 import { lireParametres, titreParDefaut } from './seance.js';
 import { NIVEAUX } from '../donnees/referentiels.js';
 import { OUTILS } from '../donnees/outils.js';
-import { SLUGS_METIERS } from '../donnees/metiers.js';
+import { SLUGS_METIERS, SLUGS_FONCTIONS } from '../donnees/metiers.js';
 
 const NIVEAUX_VALIDES = new Set([...NIVEAUX.map((n) => n.slug), 'tous']);
 const OUTILS_VALIDES = new Set(OUTILS.map((o) => o.slug));
-const METIERS_VALIDES = new Set([...SLUGS_METIERS, 'autre']);
+// `metier` porte le secteur (ou « tous », « autre ») ; la fonction a son propre champ.
+const SECTEURS_VALIDES = new Set([
+  ...[...SLUGS_METIERS].filter((slug) => !SLUGS_FONCTIONS.has(slug)),
+  'autre',
+]);
 
 export const PROFIL_PAR_DEFAUT = {
+  fonction: '',
   metier: 'tous',
   metierLibre: '',
   niveau: 'tous',
@@ -26,7 +31,10 @@ export const PAS_AFFICHAGE = 24;
 /** Garde seulement des valeurs connues : un stockage ou un lien abîmé ne casse rien. */
 export function nettoyerProfil(brut) {
   const p = { ...PROFIL_PAR_DEFAUT };
-  if (METIERS_VALIDES.has(brut?.metier)) p.metier = brut.metier;
+  if (SLUGS_FONCTIONS.has(brut?.fonction)) p.fonction = brut.fonction;
+  if (SECTEURS_VALIDES.has(brut?.metier)) p.metier = brut.metier;
+  // Ancien lien ou ancien profil (« ?metier=rh ») : la fonction était rangée parmi les métiers.
+  else if (SLUGS_FONCTIONS.has(brut?.metier) && !p.fonction) p.fonction = brut.metier;
   if (typeof brut?.metierLibre === 'string') p.metierLibre = brut.metierLibre.slice(0, 80);
   if (NIVEAUX_VALIDES.has(brut?.niveau)) p.niveau = brut.niveau;
   if (Array.isArray(brut?.outils)) p.outils = brut.outils.filter((o) => OUTILS_VALIDES.has(o));
@@ -44,9 +52,15 @@ export function creerEtat(catalogue, adresse = globalThis.location) {
   const idsConnus = new Set(catalogue.map((e) => e.id));
   const parametres = lireParametres(adresse?.search ?? '');
 
+  // Ancien lien « ?metier=rh » : la fonction qu'il désigne prime sur le profil gardé.
+  const ancienneFonction = !parametres.fonction && SLUGS_FONCTIONS.has(parametres.metier);
   const profil = nettoyerProfil({
     ...lire('profil', {}),
-    ...(parametres.metier && { metier: parametres.metier }),
+    ...(parametres.fonction && { fonction: parametres.fonction }),
+    ...(parametres.metier &&
+      (ancienneFonction
+        ? { fonction: parametres.metier, metier: 'tous' }
+        : { metier: parametres.metier })),
     ...(parametres.niveau && { niveau: parametres.niveau }),
     ...(parametres.outils && { outils: parametres.outils }),
     ...(parametres.metierLibre !== null && { metierLibre: parametres.metierLibre }),
@@ -88,7 +102,8 @@ export function creerEtat(catalogue, adresse = globalThis.location) {
       if (etat.partage.titre) p.set('t', etat.partage.titre);
       p.set('vue', etat.vue);
     } else {
-      const { metier, niveau, outils, metierLibre } = etat.profil;
+      const { fonction, metier, niveau, outils, metierLibre } = etat.profil;
+      if (fonction) p.set('fonction', fonction);
       if (metier !== PROFIL_PAR_DEFAUT.metier) p.set('metier', metier);
       if (metier === 'autre' && metierLibre) p.set('m', metierLibre);
       if (niveau !== PROFIL_PAR_DEFAUT.niveau) p.set('niveau', niveau);

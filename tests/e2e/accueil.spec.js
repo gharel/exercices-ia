@@ -19,17 +19,96 @@ test('la page s’ouvre sur des exercices, sans erreur et accessible', async ({ 
   expect(erreurs).toEqual([]);
 });
 
-test('les métiers sont dans l’ordre alphabétique, « Tous » en tête', async ({ page }) => {
-  const metiers = (await page.locator('.pastilles--metiers .pastille').allTextContents()).map((t) =>
-    t.trim(),
-  );
-  expect(metiers[0]).toBe('Tous métiers');
-  expect(metiers.at(-1)).toBe('Autre métier');
-  const milieu = metiers.slice(1, -1);
-  const trie = [...milieu].sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
-  expect(milieu).toEqual(trie);
+test('fonctions et secteurs sont dans l’ordre alphabétique, « Tous » en tête', async ({ page }) => {
+  const pastilles = async (groupe) =>
+    (await page.locator(`${groupe} .pastille`).allTextContents()).map((t) => t.trim());
+  const enOrdre = (noms) =>
+    [...noms].sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+
+  const fonctions = await pastilles('.pastilles--fonctions');
+  expect(fonctions[0]).toBe('Toutes fonctions');
+  expect(fonctions.slice(1)).toEqual(enOrdre(fonctions.slice(1)));
+  expect(fonctions).toHaveLength(13);
+  for (const nom of ['Direction', 'Assistanat', 'Commercial', 'Communication', 'RH']) {
+    expect(fonctions).toContain(nom);
+  }
+
+  const secteurs = await pastilles('.pastilles--secteurs');
+  expect(secteurs[0]).toBe('Tous secteurs');
+  expect(secteurs.at(-1)).toBe('Autre secteur');
+  expect(secteurs.slice(1, -1)).toEqual(enOrdre(secteurs.slice(1, -1)));
+  expect(secteurs).toHaveLength(23);
+  // Une fonction n'est jamais rangée parmi les secteurs.
+  expect(secteurs.filter((nom) => fonctions.includes(nom))).toEqual([]);
+
+  await expect(page.locator('.choix legend')).toHaveText([
+    /Votre fonction/,
+    /Votre secteur/,
+    /Votre niveau/,
+    /Vos outils/,
+  ]);
   await expect(page.locator('label.niveau').first()).toContainText('Tous niveaux');
   await expect(page.locator('.pastilles--outils > *').first()).toHaveText('Tous les outils');
+});
+
+test('fonction et secteur se combinent : les exercices des deux, sans gabarit en double', async ({
+  page,
+}) => {
+  const metiersDesCartes = async () => {
+    await page.getByRole('radio', { name: /^Toutes durées/ }).check();
+    const noms = new Set();
+    for (;;) {
+      for (const nom of await page.locator('.carte__metier').allTextContents()) noms.add(nom);
+      const plus = page.getByRole('button', { name: /Afficher \d+ de plus/ });
+      if (!(await plus.count())) return [...noms].sort();
+      await plus.click();
+    }
+  };
+
+  await page.locator('label.pastille', { hasText: 'Comptabilité' }).click();
+  await expect(page.locator('.resultats__contexte')).toContainText('Comptabilité et finance');
+  const fonctionSeule = await nombre(page);
+  await expect(page.locator('.carte__metier')).toHaveCount(0);
+
+  await page.locator('label.pastille', { hasText: 'BTP' }).click();
+  await expect(page.locator('.resultats__contexte')).toContainText(
+    'Comptabilité et finance · Bâtiment et travaux publics',
+  );
+  await expect(page).toHaveURL(/fonction=comptabilite&metier=btp/);
+  // Les exercices écrits du secteur s'ajoutent ; les gabarits ne sont pas comptés deux fois.
+  const ecritsDuSecteur = 12;
+  await expect.poll(() => nombre(page)).toBeGreaterThanOrEqual(fonctionSeule + ecritsDuSecteur);
+  expect(await nombre(page)).toBeLessThan(fonctionSeule * 2);
+  expect(await metiersDesCartes()).toEqual([
+    'Bâtiment et travaux publics',
+    'Comptabilité et finance',
+  ]);
+  // Les exercices écrits de la fonction passent en tête.
+  await expect(page.locator('.carte__metier').first()).toHaveText('Comptabilité et finance');
+  const titres = await page.locator('.carte__titre').allTextContents();
+  expect(new Set(titres).size).toBe(titres.length);
+
+  // Le résumé collant garde les deux, en noms courts.
+  await page.evaluate(() => window.scrollTo(0, 1500));
+  await expect(page.locator('.resume-profil')).toContainText('Comptabilité');
+  await expect(page.locator('.resume-profil')).toContainText('BTP');
+
+  // Retour à « Toutes fonctions » : le secteur seul.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.locator('label.pastille', { hasText: 'Toutes fonctions' }).click();
+  await expect(page).not.toHaveURL(/fonction=/);
+  await expect(page.locator('.resultats__contexte')).toHaveText(/^Bâtiment et travaux publics · /);
+});
+
+test('un ancien lien « ?metier=rh » ouvre la fonction RH', async ({ page }) => {
+  await page.goto('/?metier=rh');
+  await expect(page.locator('.carte').first()).toBeVisible();
+  await expect(page.getByRole('radio', { name: 'Ressources humaines et paie' })).toBeChecked();
+  await expect(page.getByRole('radio', { name: 'Tous secteurs' })).toBeChecked();
+  await expect(page.locator('.resultats__contexte')).toContainText('Ressources humaines et paie');
+  // L'adresse est réécrite au premier changement de profil.
+  await page.locator('label.niveau', { hasText: 'Débutant' }).click();
+  await expect(page).toHaveURL(/\?fonction=rh&niveau=debutant$/);
 });
 
 test('le pied de page donne le vrai nombre d’exercices, sans téléchargement', async ({ page }) => {
@@ -124,12 +203,21 @@ test('« Afficher plus » ajoute un lot de cartes', async ({ page }) => {
   await expect(page.locator('.carte')).toHaveCount(48);
 });
 
-test('« Autre métier » glisse le métier tapé dans l’exercice', async ({ page }) => {
-  await page.locator('label.pastille', { hasText: 'Autre métier' }).click();
-  await page.getByLabel('Votre métier, en quelques mots').fill('fleuriste');
+test('« Autre secteur » glisse le métier tapé dans l’exercice', async ({ page }) => {
+  await page.locator('label.pastille', { hasText: 'Autre secteur' }).click();
+  await page.getByLabel('Votre secteur ou votre métier, en quelques mots').fill('fleuriste');
   await expect(page.locator('.resultats__contexte')).toContainText('fleuriste');
   await page.locator('.carte__lien').first().click();
   await expect(page.locator('#fiche .fiche__situation')).toContainText('Votre métier : fleuriste.');
+  await page.keyboard.press('Escape');
+
+  // Avec une fonction : ses exercices écrits s'ajoutent, la version neutre reste personnalisée.
+  const neutres = await nombre(page);
+  await page.locator('label.pastille', { hasText: 'Direction' }).click();
+  await expect(page.locator('.resultats__contexte')).toContainText(
+    'Direction d’entreprise · fleuriste',
+  );
+  await expect.poll(() => nombre(page)).toBeGreaterThanOrEqual(neutres + 12);
 });
 
 /** Thème commun à tous les outils Skazy Formation : clé, nom du bouton, page. */

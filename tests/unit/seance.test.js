@@ -64,8 +64,15 @@ describe('adresse', () => {
   });
 
   it('ignore les valeurs mal formées', () => {
-    const p = lireParametres('?metier=<script>&niveau=avance&outils=claude,EVIL!,canva&vue=root');
+    const p = lireParametres(
+      '?metier=<script>&fonction=RH!&niveau=avance&outils=claude,EVIL!,canva&vue=root',
+    );
     expect(p.metier).toBeNull();
+    expect(p.fonction).toBeNull();
+    expect(lireParametres('?fonction=rh&metier=btp')).toMatchObject({
+      fonction: 'rh',
+      metier: 'btp',
+    });
     expect(p.niveau).toBe('avance');
     expect(p.outils).toEqual(['claude', 'canva']);
     expect(p.vue).toBeNull();

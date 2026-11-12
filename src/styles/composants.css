@@ -186,6 +186,10 @@
   border-color: var(--scene-accent);
   color: var(--scene-texte);
 }
+/* « Changer » : seulement sur téléphone, où fonctions et secteurs sont repliés sur le choix courant. */
+.choix__changer {
+  display: none;
+}
 
 .profil__autre {
   display: grid;
@@ -1503,6 +1507,14 @@
     padding-block: var(--e-6) var(--e-8);
   }
   .resume-profil__outils {
+    display: none;
+  }
+  /* Douze fonctions et une vingtaine de secteurs rempliraient deux écrans : chaque groupe ne
+     montre que le choix courant, « Changer » déplie la liste. */
+  .choix__changer {
+    display: inline-block;
+  }
+  .pastilles--metiers:not([data-ouvert]) .pastille:not(:has(input:checked)) {
     display: none;
   }
   /* « Profil » au-dessus, comme un surtitre : métier et niveau tiennent ensemble sur la ligne. */

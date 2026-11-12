@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  exercicesDuMetier,
+  exercicesDuProfil,
+  meleLesMetiers,
   motsRecherche,
   normaliser,
   personnaliser,
@@ -34,12 +35,14 @@ const catalogue = [
   exo('g-x--tous', { gabarit: 'g-x', metier: 'tous', famille: 'corriger' }),
   exo('tous-a', { metier: 'tous', famille: 'organiser', titre: 'Organiser sa boîte de réception' }),
   exo('btp-a', { metier: 'btp', famille: 'visuels', motsCles: ['chantier'] }),
+  exo('rh-a', { metier: 'rh', famille: 'organiser' }),
+  exo('g-x--rh', { gabarit: 'g-x', metier: 'rh', famille: 'corriger' }),
 ];
 const ids = (liste) => liste.map((e) => e.id);
 
-describe('exercicesDuMetier()', () => {
-  it('un métier : ses exercices et ses déclinaisons', () => {
-    expect(ids(exercicesDuMetier(catalogue, 'immobilier'))).toEqual([
+describe('exercicesDuProfil()', () => {
+  it('un secteur : ses exercices et ses déclinaisons', () => {
+    expect(ids(exercicesDuProfil(catalogue, { metier: 'immobilier' }))).toEqual([
       'immo-a',
       'immo-b',
       'g-x--immobilier',
@@ -47,13 +50,47 @@ describe('exercicesDuMetier()', () => {
   });
 
   it('tous : version neutre, transversaux et exercices propres, sans doublons de gabarits', () => {
-    expect(ids(exercicesDuMetier(catalogue, 'tous')).sort()).toEqual(
-      ['btp-a', 'g-x--tous', 'immo-a', 'immo-b', 'tous-a'].sort(),
+    expect(ids(exercicesDuProfil(catalogue, { metier: 'tous' })).sort()).toEqual(
+      ['btp-a', 'g-x--tous', 'immo-a', 'immo-b', 'rh-a', 'tous-a'].sort(),
+    );
+    expect(ids(exercicesDuProfil(catalogue)).sort()).toEqual(
+      ids(exercicesDuProfil(catalogue, { metier: 'tous', fonction: '' })).sort(),
     );
   });
 
   it('autre : la version neutre seulement', () => {
-    expect(ids(exercicesDuMetier(catalogue, 'autre'))).toEqual(['g-x--tous', 'tous-a']);
+    expect(ids(exercicesDuProfil(catalogue, { metier: 'autre' }))).toEqual(['g-x--tous', 'tous-a']);
+  });
+
+  it('une fonction, tous secteurs : ses exercices et ses déclinaisons', () => {
+    expect(ids(exercicesDuProfil(catalogue, { metier: 'tous', fonction: 'rh' }))).toEqual([
+      'rh-a',
+      'g-x--rh',
+    ]);
+  });
+
+  it('une fonction et un secteur : les écrits des deux, les gabarits du secteur seulement', () => {
+    expect(ids(exercicesDuProfil(catalogue, { metier: 'btp', fonction: 'rh' }))).toEqual([
+      'rh-a',
+      'g-x--btp',
+      'btp-a',
+    ]);
+  });
+
+  it('une fonction et « autre » : les écrits de la fonction et la version neutre', () => {
+    expect(ids(exercicesDuProfil(catalogue, { metier: 'autre', fonction: 'rh' }))).toEqual([
+      'rh-a',
+      'g-x--tous',
+      'tous-a',
+    ]);
+  });
+
+  it('dit si la liste mêle plusieurs métiers', () => {
+    expect(meleLesMetiers({ metier: 'tous', fonction: '' })).toBe(true);
+    expect(meleLesMetiers({ metier: 'btp', fonction: '' })).toBe(false);
+    expect(meleLesMetiers({ metier: 'tous', fonction: 'rh' })).toBe(false);
+    expect(meleLesMetiers({ metier: 'btp', fonction: 'rh' })).toBe(true);
+    expect(meleLesMetiers({ metier: 'autre', fonction: 'rh' })).toBe(true);
   });
 });
 
@@ -129,6 +166,18 @@ describe('trier()', () => {
       exo('c1', { famille: 'corriger' }),
     ];
     expect(ids(trier(liste))).toEqual(['r1', 'c1', 'r2', 'g1']);
+  });
+
+  it('avec une fonction, ses exercices écrits passent avant ceux du secteur', () => {
+    const liste = [
+      exo('g1', { gabarit: 'g', metier: 'btp', famille: 'rediger' }),
+      exo('btp1', { metier: 'btp', famille: 'rediger' }),
+      exo('rh1', { metier: 'rh', famille: 'rediger' }),
+      exo('btp2', { metier: 'btp', famille: 'corriger' }),
+    ];
+    expect(ids(trier(liste, [], 'rh'))).toEqual(['rh1', 'btp2', 'btp1', 'g1']);
+    const profil = { metier: 'btp', fonction: 'rh', niveau: 'tous', outils: [] };
+    expect(ids(selectionner(liste, profil).exercices)).toEqual(['rh1', 'btp2', 'btp1', 'g1']);
   });
 
   it('avec une recherche, les titres qui contiennent les mots passent devant', () => {

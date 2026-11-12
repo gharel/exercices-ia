@@ -5,7 +5,7 @@
 import { el, remplir, pluriel, annoncer } from '../ui.js';
 import { icone } from '../icones.js';
 import { FAMILLES, TRANCHES_DUREE } from '../../donnees/referentiels.js';
-import { selectionner, tirerAuHasard, personnaliser } from '../filtres.js';
+import { selectionner, tirerAuHasard, personnaliser, meleLesMetiers } from '../filtres.js';
 import { PAS_AFFICHAGE } from '../etat.js';
 import { creerCarte, majSignet } from './carte.js';
 import { bouton, toast } from './commun.js';
@@ -172,7 +172,7 @@ export function monterResultats(conteneur, magasin, catalogue, { ouvrirFiche }) 
       visibles.map((e) =>
         creerCarte(e, {
           dansSeance: ids.has(e.id),
-          afficherMetier: etat.partage || etat.profil.metier === 'tous',
+          afficherMetier: Boolean(etat.partage) || meleLesMetiers(etat.profil),
           onOuvrir: (id) => ouvrirFiche(id, courants),
           onBasculer: basculer,
         }),

@@ -11,8 +11,31 @@ describe('nettoyage', () => {
         outils: ['canva', 'pirate'],
         metierLibre: 3,
       }),
-    ).toEqual({ metier: 'btp', metierLibre: '', niveau: 'avance', outils: ['canva'] });
+    ).toEqual({
+      fonction: '',
+      metier: 'btp',
+      metierLibre: '',
+      niveau: 'avance',
+      outils: ['canva'],
+    });
     expect(nettoyerProfil({ metier: '<script>', niveau: 'expert' })).toEqual(PROFIL_PAR_DEFAUT);
+    expect(nettoyerProfil({ fonction: 'btp', metier: 'sante' })).toMatchObject({
+      fonction: '',
+      metier: 'sante',
+    });
+  });
+
+  it('range la fonction à part du secteur, même venue d’un ancien lien', () => {
+    expect(nettoyerProfil({ fonction: 'comptabilite', metier: 'btp' })).toMatchObject({
+      fonction: 'comptabilite',
+      metier: 'btp',
+    });
+    // Avant, les fonctions étaient des métiers comme les autres : « ?metier=rh ».
+    expect(nettoyerProfil({ metier: 'rh' })).toMatchObject({ fonction: 'rh', metier: 'tous' });
+    expect(nettoyerProfil({ fonction: 'direction', metier: 'rh' })).toMatchObject({
+      fonction: 'direction',
+      metier: 'tous',
+    });
     expect(
       nettoyerProfil({ metier: 'autre', metierLibre: 'x'.repeat(200) }).metierLibre,
     ).toHaveLength(80);
@@ -40,6 +63,26 @@ describe('creerEtat()', () => {
     );
     const etat = creerEtat(catalogue, adresse('?metier=btp&outils=claude')).get();
     expect(etat.profil).toMatchObject({ metier: 'btp', niveau: 'avance', outils: ['claude'] });
+  });
+
+  it('lit la fonction dans l’adresse et l’y garde, avec le secteur', () => {
+    const adresseTest = adresse('?fonction=comptabilite&metier=btp');
+    const remplacements = [];
+    const histoire = globalThis.history.replaceState;
+    globalThis.history.replaceState = (_etat, _titre, url) => remplacements.push(url);
+    try {
+      const magasin = creerEtat(catalogue, adresseTest);
+      expect(magasin.get().profil).toMatchObject({ fonction: 'comptabilite', metier: 'btp' });
+      magasin.modifier({ profil: { ...magasin.get().profil, niveau: 'debutant' } }, ['profil']);
+      expect(remplacements.at(-1)).toBe('/?fonction=comptabilite&metier=btp&niveau=debutant');
+      // Ancien lien : la fonction RH était un métier.
+      expect(creerEtat(catalogue, adresse('?metier=rh')).get().profil).toMatchObject({
+        fonction: 'rh',
+        metier: 'tous',
+      });
+    } finally {
+      globalThis.history.replaceState = histoire;
+    }
   });
 
   it('reçoit une séance partagée et passe en vue apprenant', () => {

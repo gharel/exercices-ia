@@ -58,6 +58,7 @@ export function lireParametres(recherche) {
   const slug = (cle) => (SLUG.test(p.get(cle) ?? '') ? p.get(cle) : null);
   const vue = p.get('vue');
   return {
+    fonction: slug('fonction'),
     metier: slug('metier'),
     niveau: slug('niveau'),
     outils: p.has('outils') ? liste('outils') : null,
