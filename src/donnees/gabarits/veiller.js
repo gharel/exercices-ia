@@ -427,4 +427,64 @@ export const gabarits = [
       'veille',
     ],
   },
+  {
+    id: 'g-gemini-deep-research',
+    titre: 'Cadrer une recherche Deep Research sur {veille}, puis annoter le rapport',
+    niveau: 'avance',
+    famille: 'veiller',
+    duree: 45,
+    outils: ['gemini'],
+    outilConseille: 'gemini',
+    situation:
+      'Vous travaillez dans {structure.un} à Nouméa. La direction vous demande un état des lieux approfondi sur {veille}. Vous avez accès à Deep Research dans Gemini, mais le rapport qu’il rend vaut ce que vaut votre demande, et il faut ensuite le contrôler : une recherche longue peut paraître très sérieuse tout en mélangeant les sources, les territoires et les époques.',
+    objectif:
+      'Cadrer une recherche approfondie avant de la lancer (question, période, territoire, sources, exclusions), corriger le plan proposé par Gemini, puis annoter le rapport et n’en garder que ce qui est vérifié.',
+    etapes: [
+      'Remplissez le prompt de départ : une question précise, la période, le territoire (la Nouvelle-Calédonie), les sources à privilégier et ce qu’il faut écarter.',
+      'Dans Gemini, activez Deep Research (limité en offre gratuite : vérifiez ce qui vous reste) et envoyez la demande. Gemini propose un plan de recherche avant de commencer.',
+      'Relisez ce plan et modifiez-le avant de lancer : retirez une piste hors sujet, ajoutez une source ou une question qui manque, rappelez le territoire.',
+      'Lancez la recherche, puis exportez le rapport dans Google Docs.',
+      'Annotez le rapport avec les repères du matériau : « vérifié », « à vérifier », « hors sujet », « règle de métropole ».',
+      'Ouvrez au moins cinq sources citées et passez chaque annotation à « vérifié » ou « à retirer » selon ce que vous y lisez.',
+      'Rédigez une synthèse d’une demi-page qui ne garde que les points vérifiés, chacun avec sa source et sa date.',
+    ],
+    prompt:
+      'Tu es chargé de veille pour {structure.un} à Nouméa, en Nouvelle-Calédonie. Fais une recherche approfondie sur la question suivante : [une question précise, en une phrase, sur {veille}].\n\nPériode : [par exemple les vingt-quatre derniers mois].\nTerritoire : la Nouvelle-Calédonie. Signale clairement tout ce qui concerne la France métropolitaine ou un autre pays, et ne le présente pas comme applicable ici.\nSources à privilégier : {sourcesVeille}.\nÀ écarter : [par exemple les articles sans date, les contenus sponsorisés, les forums].\n\nRends un rapport de deux pages au plus : faits marquants datés, chiffres clés avec leur source et leur lien, tendances, points sur lesquels les sources se contredisent, et ce que tu n’as pas pu trouver. N’écris aucune affirmation sans source.',
+    materiau: {
+      titre: 'Repères d’annotation du rapport',
+      texte:
+        'Vérifié : j’ai ouvert la source, elle dit bien cela, avec la même date et les mêmes chiffres.\nÀ vérifier : la source existe, mais je n’ai pas encore contrôlé le passage, ou le chiffre est sans date.\nHors sujet : exact, mais sans lien avec ma question.\nRègle de métropole : valable en France, pas forcément en Nouvelle-Calédonie ; à confirmer auprès d’une source locale.\nSource faible : page sans auteur, sans date, ou simple copie d’un autre article.\n\nBilan : … points vérifiés, … à retirer, … sources ouvertes (au moins 5).',
+    },
+    variantes: {
+      simple:
+        'Limiter la question à un seul aspect, ouvrir trois sources et rédiger une synthèse de dix lignes.',
+      poussee:
+        'Relancer la recherche avec une demande reformulée à partir de vos annotations (sources à écarter, territoire mieux précisé), puis comparer les deux rapports : qu’est-ce qui a changé ?',
+    },
+    astuces: {
+      gemini:
+        'Deep Research propose un plan avant de démarrer : c’est le moment de le corriger. Une fois le rapport exporté dans Google Docs, utilisez les commentaires pour annoter chaque passage.',
+    },
+    vigilance:
+      'Un rapport de recherche approfondie est long, bien présenté et cité : cela ne prouve rien. Il peut mal résumer une source, s’appuyer sur une page peu fiable ou appliquer une règle de métropole à la Nouvelle-Calédonie. Ne mettez dans la demande aucune information confidentielle sur {structure.le}.',
+    formateur: {
+      resultat:
+        'Une demande cadrée, un plan de recherche modifié avant lancement, un rapport annoté dans Google Docs, au moins cinq sources ouvertes et une synthèse d’une demi-page qui ne garde que le vérifié.',
+      criteres: [
+        'La demande précise la question, la période, le territoire, les sources à privilégier et ce qu’il faut écarter.',
+        'Le plan de recherche a été modifié avant le lancement.',
+        'Le rapport est annoté et au moins cinq sources ont été ouvertes.',
+        'La synthèse ne garde que des points vérifiés, avec leur source et leur date.',
+      ],
+      pieges: [
+        'Lancer la recherche avec une question vague : le rapport est long et à côté du sujet.',
+        'Accepter le plan proposé sans le lire.',
+        'Garder une règle de métropole sans la confirmer pour la Nouvelle-Calédonie.',
+        'Croire le rapport parce qu’il cite beaucoup de sources, sans en ouvrir aucune.',
+      ],
+      competence: 'discernement',
+      technique: 'sources',
+    },
+    motsCles: ['Deep Research', 'Gemini', 'recherche approfondie', 'annoter', 'sources', 'veille'],
+  },
 ];

@@ -419,4 +419,126 @@ export const gabarits = [
     },
     motsCles: ['courrier', 'plan', 'relecture', 'changement d’organisation', 'étapes'],
   },
+  {
+    id: 'g-copilot-outlook-brouillon',
+    titre: 'Répondre {client.au} dans Outlook avec Copilot : brouillon, puis coaching',
+    niveau: 'debutant',
+    famille: 'rediger',
+    duree: 15,
+    outils: ['copilot'],
+    outilConseille: 'copilot',
+    situation:
+      'Vous travaillez dans {structure.un} à Nouméa. {Client.un} vous a écrit il y a dix jours et relance avec une pointe d’impatience : personne ne lui a encore répondu. Vous voulez lui répondre vite, mais sans partir d’une page blanche ni écrire un message trop sec.',
+    objectif:
+      'Utiliser dans Outlook deux fonctions de Copilot, le brouillon puis le coaching, et décider vous-même quelles remarques retenir avant d’envoyer.',
+    etapes: [
+      'Dans Outlook, envoyez-vous à vous-même le message du matériau (ou ouvrez-le comme s’il venait d’arriver), puis cliquez sur « Répondre ». Vous n’écrivez jamais à un vrai destinataire dans cet exercice.',
+      'Lancez « Brouillon avec Copilot » et donnez-lui l’essentiel en quelques mots : à qui vous répondez, ce que vous dites, le ton. Complétez les crochets du prompt de départ.',
+      'Réglez le brouillon : demandez un ton plus chaleureux, puis une version plus courte. Comparez-les et gardez celle qui répond à la question posée dès la première phrase.',
+      'Lancez « Coaching par Copilot » sur le brouillon que vous avez retenu : lisez ses remarques sur le ton, la clarté et le ressenti du lecteur.',
+      'Décidez vous-même, remarque par remarque, ce que vous retenez ou refusez, puis corrigez le message à la main.',
+      'Vérifiez que le message ne promet rien de plus que ce que vous avez écrit dans votre consigne (délai, geste, élément à transmettre). Fermez le brouillon sans l’envoyer.',
+    ],
+    prompt:
+      'Réponds à [prénom], qui m’a écrit il y a dix jours : excuse-toi pour le délai, dis-lui que je lui envoie la liste des éléments à me transmettre avant le jeudi 19 novembre, et rappelle-lui mon contact direct : [ton prénom, ta fonction, ton numéro]. Ne promets rien d’autre.\nTon : courtois et rassurant, en vouvoiement. Longueur : 100 mots au plus.\n\n[Dans Copilot Chat seulement, ajoutez la suite :]\nVoici le message reçu :\n<message>\n[colle le message reçu ici]\n</message>',
+    materiau: {
+      titre: 'Message reçu (données fictives)',
+      texte:
+        'De : Marie Wanabo\nObjet : Ma demande du 2 novembre, toujours sans réponse\n\nBonjour,\n\nJe vous ai écrit le lundi 2 novembre pour savoir ce que je dois vous transmettre pour que ma demande soit traitée, et dans quel délai. Je n’ai toujours pas de réponse et je commence à m’inquiéter, car j’aimerais avancer avant la fin du mois.\n\nPouvez-vous me dire ce qu’il vous faut de ma part et quand je peux espérer une réponse ?\n\nCordialement,\nMarie Wanabo',
+    },
+    variantes: {
+      simple:
+        'Si vous n’avez pas Outlook avec Copilot, faites le brouillon dans Copilot Chat : collez le message reçu entre les balises, puis demandez vous-même une relecture du ton et de la clarté.',
+      poussee:
+        'Répondez à un fil de plusieurs messages : faites d’abord un « Résumer (Outlook) », puis un brouillon qui en tient compte, puis le coaching, et comparez avec une réponse écrite sans l’IA.',
+    },
+    astuces: {
+      copilot:
+        'Dans Outlook, « Brouillon avec Copilot » et « Coaching par Copilot » sont inclus dans Microsoft 365 : le coaching apparaît quand votre brouillon est écrit, vous pouvez le relancer après chaque retouche.',
+    },
+    vigilance:
+      'N’écrivez à aucun vrai destinataire pendant l’exercice et ne collez pas de vrai message avec un nom ou un numéro de dossier. Le coaching donne un avis, pas une règle : relisez chaque date et chaque engagement avant d’envoyer un vrai message.',
+    formateur: {
+      resultat:
+        'Un brouillon de 100 mots au plus qui s’excuse, annonce la liste des éléments à transmettre avant le jeudi 19 novembre et donne un contact direct, retouché après le coaching, avec la liste des remarques retenues et refusées.',
+      criteres: [
+        'Le brouillon est demandé avec les trois éléments : à qui, quoi, ton.',
+        'Le ton et la longueur ont été réglés au moins une fois chacun.',
+        'L’apprenant a retenu une partie seulement des remarques du coaching et sait dire pourquoi.',
+        'Le message final ne contient aucun engagement absent de la consigne, et rien n’a été envoyé.',
+      ],
+      pieges: [
+        'Accepter le brouillon tel quel : Copilot ajoute volontiers un délai ou un geste que personne n’a décidé.',
+        'Appliquer toutes les remarques du coaching, y compris celles qui effacent la précision de la date.',
+        'Faire l’exercice avec un vrai message reçu, nom et coordonnées compris.',
+      ],
+      competence: 'discernement',
+      technique: 'iterer',
+    },
+    motsCles: ['Outlook', 'Copilot', 'brouillon', 'coaching', 'e-mail', 'ton'],
+  },
+  {
+    id: 'g-gemini-gmail-aide-ecrire',
+    titre: 'Demander un rendez-vous {partenaire.au} dans Gmail avec Aide-moi à écrire',
+    niveau: 'debutant',
+    famille: 'rediger',
+    duree: 15,
+    outils: ['gemini'],
+    outilConseille: 'gemini',
+    situation:
+      'Vous travaillez dans {structure.un} à Nouméa. Vous souhaitez rencontrer {partenaire.un} pour faire le point sur vos échanges en cours. Vous avez les idées en tête, mais pas le temps de rédiger : vous voulez un premier jet fidèle à votre demande.',
+    objectif:
+      'Utiliser « Aide-moi à écrire » dans Gmail à partir d’une demande précise en une phrase, affiner le brouillon, puis corriger ce que l’outil a inventé.',
+    etapes: [
+      'Remplissez la fiche du matériau, puis écrivez votre demande en une seule phrase : qui, pourquoi, quand, combien de temps.',
+      'Dans Gmail, ouvrez un nouveau message adressé à vous-même et lancez « Aide-moi à écrire » avec cette phrase (le prompt de départ en donne un modèle).',
+      'Affinez le brouillon avec les réglages proposés : le raccourcir, le rendre plus formel, le développer. Comparez les trois versions.',
+      'Comparez le brouillon avec votre demande de départ, fait par fait : tout ce que vous avez demandé y est-il, et rien d’autre ?',
+      'Corrigez à la main ce que l’outil a inventé (une date, une disponibilité, un lieu), puis relisez le message à voix haute. Supprimez le brouillon sans l’envoyer.',
+    ],
+    prompt:
+      'Écris un e-mail à [prénom ou fonction du contact] pour demander un rendez-vous de 30 minutes la semaine du 23 novembre, afin de faire le point sur nos échanges en cours. Je suis disponible le mardi ou le jeudi matin. Ton courtois et direct, en vouvoiement, 100 mots au plus. N’invente aucune date ni aucune disponibilité que je n’ai pas indiquées.',
+    materiau: {
+      titre: 'Fiche de la demande (données fictives)',
+      texte:
+        'Qui : [prénom ou fonction du contact], un interlocuteur extérieur à la structure\nPourquoi : faire le point sur nos échanges en cours\nQuand : la semaine du 23 novembre, le mardi ou le jeudi matin uniquement\nCombien de temps : 30 minutes\nOù : chez le contact ou en visioconférence, à son choix\nCe que je ne dis pas : aucun sujet de fond, aucun chiffre, aucune réclamation\n\nÀ vérifier dans le brouillon :\n1. les deux jours proposés sont bien le mardi et le jeudi, le matin ;\n2. la durée est de 30 minutes ;\n3. aucune heure précise n’est inventée ;\n4. le message ne parle pas d’un sujet que vous n’avez pas cité.',
+    },
+    variantes: {
+      simple:
+        'Sans Google Workspace, rédigez dans l’application Gemini avec Canvas : collez votre demande en une phrase, puis retouchez le brouillon passage par passage.',
+      poussee:
+        'Préparez aussi la réponse à un contact qui propose un autre jour : demandez à Gemini deux versions, l’une qui accepte, l’autre qui propose poliment un autre créneau.',
+    },
+    astuces: {
+      gemini:
+        'Dans Gmail, « Aide-moi à écrire » demande Google Workspace. Après le premier brouillon, essayez les réglages qui raccourcissent, rendent plus formel ou développent le texte : vous pouvez les enchaîner, puis comparer les versions.',
+    },
+    vigilance:
+      'N’envoyez rien à un vrai destinataire pendant l’exercice. Ne mettez dans votre demande ni donnée personnelle ni information confidentielle. L’outil n’a pas accès à votre agenda : toute date ou disponibilité qu’il ajoute est de son invention.',
+    formateur: {
+      resultat:
+        'Un e-mail de 100 mots au plus qui demande 30 minutes la semaine du 23 novembre, le mardi ou le jeudi matin, comparé à la demande de départ, avec les ajouts inventés par l’outil repérés et corrigés.',
+      criteres: [
+        'La demande en une phrase donne qui, pourquoi, quand et combien de temps.',
+        'Les trois réglages (raccourcir, plus formel, développer) ont été essayés et comparés.',
+        'La comparaison avec la demande de départ a été faite fait par fait.',
+        'Aucune date, heure ou disponibilité inventée ne subsiste, et rien n’a été envoyé.',
+      ],
+      pieges: [
+        'Laisser passer une heure précise ou un jour que vous n’aviez pas proposé.',
+        'Choisir la version développée, qui ajoute un sujet de fond non prévu.',
+        'Croire que l’outil connaît votre agenda.',
+      ],
+      competence: 'discernement',
+      technique: 'iterer',
+    },
+    motsCles: [
+      'Gmail',
+      'Gemini',
+      'Aide-moi à écrire',
+      'rendez-vous',
+      'brouillon',
+      'Google Workspace',
+    ],
+  },
 ];

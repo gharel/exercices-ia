@@ -415,4 +415,167 @@ export const gabarits = [
     },
     motsCles: ['tableau de bord', 'mensuel', 'assistant', 'Projet', 'Gem', 'indicateurs'],
   },
+  {
+    id: 'g-notebook-comparer-sources',
+    titre: 'Comparer {comparaison} dans un carnet Gemini Notebook, citations à l’appui',
+    niveau: 'intermediaire',
+    famille: 'analyser',
+    duree: 30,
+    outils: ['notebook'],
+    outilConseille: 'notebook',
+    situation:
+      'Vous travaillez dans {structure.un} à Nouméa et vous devez comparer {comparaison}. Votre responsable veut un tableau comparatif où chaque ligne peut être justifiée par un passage précis des documents. Gemini Notebook répond uniquement à partir des sources que vous chargez, et chaque réponse renvoie à une citation : c’est un bon outil pour comparer en limitant les inventions, à condition d’ouvrir les citations.',
+    objectif:
+      'Charger deux documents comme sources, faire produire un tableau comparatif, vérifier chaque ligne en ouvrant sa citation et repérer ce que le carnet dit ne pas trouver.',
+    etapes: [
+      'Créez un carnet, puis ajoutez comme sources les deux documents à comparer, sans données personnelles ni confidentielles. À défaut, entraînez-vous sur le matériau : deux offres de maintenance d’un photocopieur, un achat commun à toutes les structures, à coller comme deux sources de type « texte copié ».',
+      'Dans la discussion, collez le prompt de départ, en précisant entre crochets ce que vous comparez, pour obtenir un tableau comparatif avec une citation par case.',
+      'Pour chaque ligne du tableau, cliquez sur le numéro de la citation, ouvrez le passage dans la source et vérifiez que le chiffre ou la phrase cités y figurent bien.',
+      'Repérez les cases où le carnet écrit qu’il ne trouve pas l’information dans une source, et notez chaque fois si l’information manque vraiment ou si le carnet est passé à côté.',
+      'Posez deux questions de suivi sur les différences les moins visibles, par exemple ce qui n’est pas inclus ou ce qui n’apparaît que dans un seul document.',
+      'Rédigez en cinq lignes la comparaison à transmettre, avec la différence principale et ce qu’il reste à demander aux auteurs des documents.',
+    ],
+    prompt:
+      'Tu m’aides à comparer les deux documents chargés comme sources : [{comparaison}, ou les deux offres de maintenance du matériau]. Appuie-toi uniquement sur ces sources.\n\nConstruis un tableau comparatif avec une ligne par critère et une colonne par source : montant, durée ou validité, délais, ce qui est inclus, ce qui n’est pas inclus, conditions (garantie, résiliation…), autres points importants. Si un critère ne s’applique pas à ces documents, dis-le et propose à la place un critère qui compte pour eux.\nDans chaque case, cite le passage de la source. Si une information n’apparaît pas dans une source, écris « non trouvé dans cette source » au lieu de la supposer ou de la déduire.\nTermine par la liste des informations présentes dans un seul des deux documents.',
+    materiau: {
+      titre: 'Deux offres fictives à charger comme sources',
+      texte:
+        'SOURCE 1 : Offre de maintenance Bureau Plus (Nouméa)\n\nObjet : maintenance du photocopieur multifonction de vos bureaux.\nPrix : 38 000 XPF par mois, soit 456 000 XPF par an, facturés chaque trimestre.\nDurée d’engagement : 36 mois, renouvelés tacitement.\nIntervention : un technicien se déplace sous 4 heures ouvrées en cas de panne, du lundi au vendredi.\nInclus : main-d’œuvre, déplacements dans le Grand Nouméa, pièces d’usure courantes.\nNon inclus : toner et papier, qui restent à votre charge.\nRésiliation : par courrier recommandé, avec un préavis de 3 mois avant la date d’échéance.\n\nSOURCE 2 : Proposition Pacifique Copie\n\nObjet : contrat d’entretien du photocopieur multifonction de vos bureaux.\nPrix : 31 500 XPF par mois, facturés chaque mois.\nDurée d’engagement : 12 mois, renouvelables à votre demande.\nIntervention : sous 24 heures ouvrées en cas de panne, du lundi au vendredi.\nInclus : main-d’œuvre, toner noir illimité, une formation de 30 minutes pour les utilisateurs.\nNon inclus : déplacements hors Nouméa, pièces autres que les pièces d’usure, toner couleur.\nRésiliation : possible à tout moment après les 12 mois, avec un préavis d’un mois.',
+    },
+    variantes: {
+      simple:
+        'Comparer seulement trois critères (montant, durée, délai d’intervention) et vérifier une citation par critère.',
+      poussee:
+        'Ajouter une troisième source, puis demander les trois questions à poser aux auteurs des documents pour lever les points non trouvés, avec leur citation de départ.',
+    },
+    astuces: {
+      notebook:
+        'Dans « Sources », nommez clairement chaque document (offre A, offre B) : les citations de la discussion renvoient alors à la bonne source. Dans la réponse, cliquez sur un numéro de citation pour ouvrir le passage exact.',
+    },
+    vigilance:
+      'Ne chargez aucun document contenant des données personnelles ou des conditions confidentielles pour cet entraînement. Une citation prouve d’où vient une phrase, pas que l’IA l’a bien comprise : ouvrez chaque passage et relisez les chiffres.',
+    formateur: {
+      resultat:
+        'Un tableau comparatif de deux sources avec une citation par case, vérifié ligne à ligne par l’apprenant, avec la liste des informations présentes dans une seule source et une comparaison de cinq lignes.',
+      criteres: [
+        'Chaque ligne du tableau a une citation, et l’apprenant a ouvert les citations pour contrôler.',
+        'Les chiffres du tableau (montants, durées, délais) correspondent aux sources.',
+        'Les cases « non trouvé » sont examinées : information absente de la source, ou oubli du carnet.',
+        'Les informations présentes dans un seul des deux documents sont repérées et signalées (avec le matériau : la formation de 30 minutes, le papier laissé à votre charge).',
+      ],
+      pieges: [
+        'Croire une ligne exacte parce qu’elle porte une citation, sans ouvrir le passage.',
+        'Comparer des montants sans tenir compte de la durée ni de ce qui est inclus (avec le matériau : toner, déplacements, durée d’engagement).',
+        'Remplir soi-même une case « non trouvé » avec une hypothèse, alors que l’information n’est dans aucune source.',
+      ],
+      competence: 'discernement',
+      technique: 'critique',
+    },
+    motsCles: ['Gemini Notebook', 'sources', 'citations', 'comparaison', 'tableau comparatif'],
+  },
+  {
+    id: 'g-copilot-excel-analyse',
+    titre: 'Analyser {donnees} dans Excel avec Copilot',
+    niveau: 'intermediaire',
+    famille: 'analyser',
+    duree: 30,
+    outils: ['copilot'],
+    outilConseille: 'copilot',
+    situation:
+      'Vous travaillez dans {structure.un} à Nouméa et, dans Excel, vous tenez à jour {donnees}. Avant de confier de vrais chiffres à Copilot, vous voulez savoir ce qu’il sait calculer, tracer et signaler. Vous vous entraînez sur un tableau fictif aux mêmes colonnes.',
+    objectif:
+      'Faire générer un tableau fictif, le préparer dans Excel, demander à Copilot un calcul, un graphique et les valeurs étonnantes, puis contrôler un total par une formule.',
+    etapes: [
+      'Dans Copilot Chat, collez le prompt 1 pour obtenir un tableau fictif de 15 lignes avec les colonnes de votre activité.',
+      'Copiez le tableau dans une feuille Excel, à partir de la cellule A1. Sélectionnez-le, puis utilisez « Mettre sous forme de tableau » et cochez « Mon tableau comporte des en-têtes ».',
+      'Ouvrez Copilot dans Excel et collez le prompt 2 : il calcule l’indicateur, propose un graphique et signale les valeurs étonnantes.',
+      'Refaites un total ou une moyenne avec une formule dans une cellule à part (SOMME, MOYENNE…) et comparez-la au chiffre de Copilot.',
+      'Pour chaque valeur étonnante signalée, décidez vous-même s’il s’agit d’une erreur ou d’une valeur normale, et notez pourquoi.',
+    ],
+    prompt:
+      'Prompt 1 (Copilot Chat) :\nTu es assistant dans {structure.un} à Nouméa. Génère un tableau fictif de 15 lignes avec exactement ces colonnes : {colonnes}\nLes valeurs doivent être vraisemblables pour la Nouvelle-Calédonie, avec les éventuels montants en XPF et aucun nom de personne réelle. Glisse une ou deux valeurs inhabituelles sans me les signaler.\n\nPrompt 2 (Copilot dans Excel, sur le tableau) :\nAnalyse ce tableau. 1. Calcule {indicateur} et explique le calcul en une phrase. 2. Propose un graphique qui met en valeur cet indicateur, avec un titre qui dit le message. 3. Signale les valeurs qui te semblent étonnantes, avec leur ligne et la raison du doute. Si une donnée manque pour répondre, dis-le au lieu de la supposer.',
+    variantes: {
+      simple:
+        'Si vous n’avez pas la licence Copilot dans Excel, enregistrez le tableau au format Excel ou CSV et joignez-le à Copilot Chat, avec le même prompt 2.',
+      poussee:
+        'Demander à Copilot un deuxième graphique et une colonne qui signale automatiquement les lignes à surveiller, puis tester ses formules en modifiant une valeur.',
+    },
+    astuces: {
+      copilot:
+        'Copilot dans Excel lit mieux des données mises sous forme de tableau, dans un fichier enregistré en ligne (OneDrive ou SharePoint) ; il dépend de la licence : sans elle, joignez le fichier à Copilot Chat.',
+    },
+    vigilance:
+      'Pour cet entraînement, ne mettez aucune vraie donnée de la structure dans le fichier. Un chiffre calculé par Copilot peut reposer sur une mauvaise colonne ou une mauvaise période : refaites au moins un total par formule avant de le réutiliser.',
+    formateur: {
+      resultat:
+        'Un tableau Excel fictif mis sous forme de tableau, un indicateur calculé par Copilot et recalculé par formule, un graphique titré et une liste de valeurs étonnantes triées par l’apprenant.',
+      criteres: [
+        'Les données sont sous forme de tableau Excel, avec des en-têtes, avant la demande à Copilot.',
+        'Un total ou une moyenne a été refait par une formule et comparé au chiffre de Copilot.',
+        'Le graphique a un titre qui dit le message et des unités lisibles.',
+        'Chaque valeur étonnante signalée est examinée : erreur ou valeur normale.',
+      ],
+      pieges: [
+        'Données collées sans les mettre sous forme de tableau : Copilot ne les lit pas ou les lit mal.',
+        'Accepter le chiffre de Copilot sans le recalculer, alors qu’il a pu porter sur la mauvaise colonne.',
+        'Corriger une valeur étonnante qui était en fait normale, ou laisser passer une vraie erreur.',
+      ],
+      competence: 'discernement',
+      technique: 'critique',
+    },
+    motsCles: ['Excel', 'Copilot', 'graphique', 'indicateur', 'tableau'],
+  },
+  {
+    id: 'g-gemini-sheets-tableau',
+    titre:
+      'Créer un tableau de suivi dans Google Sheets avec Gemini et faire expliquer ses formules',
+    niveau: 'intermediaire',
+    famille: 'analyser',
+    duree: 30,
+    outils: ['gemini'],
+    outilConseille: 'gemini',
+    situation:
+      'Vous travaillez dans {structure.un} à Nouméa et, dans Google Sheets, vous voulez tenir à jour {donnees} et le partager avec l’équipe, sans construire le tableau cellule par cellule. Vous testez ce que Gemini sait créer dans Google Sheets, sur des lignes fictives.',
+    objectif:
+      'Faire créer un tableau de suivi dans Google Sheets, obtenir deux formules expliquées pas à pas et une mise en évidence des lignes à surveiller, puis contrôler une formule à la main.',
+    etapes: [
+      'Ouvrez une feuille Google Sheets vide, puis le panneau « Demander à Gemini » (Google Workspace), et envoyez la demande 1 du prompt de départ pour créer le tableau. Insérez-le dans la feuille.',
+      'Vérifiez le résultat : les bonnes colonnes, 12 lignes fictives, des montants éventuels en XPF, des en-têtes lisibles.',
+      'Envoyez la demande 2 : deux formules utiles pour ce suivi, une pour un total ou une moyenne et une pour un statut calculé, chacune avec son explication pas à pas. Placez-les dans les cellules indiquées.',
+      'Envoyez la demande 3 : Gemini propose une règle pour repérer les lignes à surveiller. Lisez-la, puis appliquez-la vous-même avec Format, Mise en forme conditionnelle, et modifiez une valeur pour voir si la mise en forme réagit.',
+      'Contrôlez à la main une formule : choisissez deux lignes, refaites le calcul à la calculatrice et comparez-le au résultat affiché.',
+    ],
+    prompt:
+      'Demande 1 :\nCrée un tableau de suivi pour {structure.un} à Nouméa, avec exactement ces colonnes : {colonnes}\nAjoute 12 lignes de données fictives vraisemblables pour la Nouvelle-Calédonie, avec les éventuels montants en XPF et aucun nom de personne réelle.\n\nDemande 2 :\nPropose deux formules utiles pour ce tableau : une pour un total ou une moyenne, une pour une colonne de statut calculé. Pour chaque formule, indique la cellule où la placer, la formule exacte avec le point-virgule comme séparateur, et explique-la pas à pas, en une phrase par morceau.\n\nDemande 3 :\nPropose une règle simple pour repérer les lignes à surveiller dans ce tableau, et la formule personnalisée de mise en forme conditionnelle qui l’applique. Explique-la avant que je l’applique.',
+    variantes: {
+      simple:
+        'Sans Google Workspace, demandez le tableau dans l’application Gemini, puis exportez-le dans Google Sheets et ajoutez les formules vous-même à partir des explications.',
+      poussee:
+        'Ajouter une liste déroulante pour le statut, puis demander à Gemini une synthèse chiffrée du tableau et vérifier chacun de ses chiffres par une formule.',
+    },
+    astuces: {
+      gemini:
+        '« Demander à Gemini » dans Google Sheets dépend de l’offre Google Workspace : envoyez une demande à la fois, et vérifiez ce qu’il propose avant de l’insérer dans la feuille.',
+    },
+    vigilance:
+      'Pour cet entraînement, n’utilisez que des lignes fictives : ne collez aucune donnée réelle ni personnelle dans une feuille partagée. Une formule qui s’affiche sans erreur n’est pas forcément juste : vérifiez les plages de cellules et refaites un calcul à la main.',
+    formateur: {
+      resultat:
+        'Un tableau de suivi créé dans Google Sheets avec ses lignes fictives, deux formules expliquées et testées, une mise en évidence des lignes à surveiller et une formule contrôlée à la main.',
+      criteres: [
+        'Le tableau respecte les colonnes demandées et contient des lignes fictives vraisemblables.',
+        'Les deux formules fonctionnent dans la feuille et l’apprenant sait les expliquer.',
+        'La règle de mise en évidence réagit quand on modifie une valeur.',
+        'Une formule a été vérifiée à la main sur au moins deux lignes.',
+      ],
+      pieges: [
+        'Plage de cellules qui oublie une ligne : le total est faux sans message d’erreur.',
+        'Appliquer une mise en évidence sans lire la règle proposée.',
+        'Prendre l’explication de Gemini pour une preuve alors qu’elle peut décrire une formule autre que celle écrite.',
+      ],
+      competence: 'discernement',
+      technique: 'structurer',
+    },
+    motsCles: ['Google Sheets', 'Gemini', 'tableau de suivi', 'formules', 'mise en forme'],
+  },
 ];

@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { METIERS, SLUGS_METIERS } from '../../src/donnees/metiers.js';
 import { GABARITS } from '../../src/donnees/gabarits.js';
 import { FAMILLES, NIVEAUX } from '../../src/donnees/referentiels.js';
+import { OUTILS } from '../../src/donnees/outils.js';
 import { CLES_NOMS, CLES_EXPRESSIONS } from '../../src/donnees/vocabulaire.js';
 import { declinerGabarit, declinerTout, estNom } from '../../src/js/gabarits.js';
 import { fautesTypo, textesDe, validerExercice } from '../../src/js/schema.js';
@@ -115,6 +116,23 @@ describe('catalogue', () => {
       for (const famille of FAMILLES) {
         if (!siens.some((e) => e.famille === famille.slug)) {
           manques.push(`${metier.slug} : aucune famille ${famille.slug}`);
+        }
+      }
+    }
+    expect(manques).toEqual([]);
+  });
+
+  it('donne à chaque métier au moins 2 exercices par outil et par niveau', () => {
+    const tout = catalogue();
+    const manques = [];
+    for (const metier of METIERS) {
+      const siens = tout.filter((e) => e.metier === metier.slug);
+      for (const niveau of NIVEAUX) {
+        for (const outil of OUTILS) {
+          const n = siens.filter(
+            (e) => e.niveau === niveau.slug && e.outils.includes(outil.slug),
+          ).length;
+          if (n < 2) manques.push(`${metier.slug} / ${niveau.slug} / ${outil.slug} : ${n}`);
         }
       }
     }

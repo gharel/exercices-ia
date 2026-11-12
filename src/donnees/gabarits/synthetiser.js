@@ -415,4 +415,62 @@ export const gabarits = [
     },
     motsCles: ['comparer', 'versions', 'différences', 'règlement intérieur', 'vérification'],
   },
+  {
+    id: 'g-notebook-premieres-questions',
+    titre: 'Interroger un document dans Gemini Notebook et vérifier chaque citation',
+    niveau: 'debutant',
+    famille: 'synthetiser',
+    duree: 20,
+    outils: ['notebook'],
+    outilConseille: 'notebook',
+    situation:
+      'Vous travaillez dans {structure.un} à Nouméa. Vous devez souvent retrouver une information précise dans {documentLong.un}, vite et sans erreur. Vous découvrez Gemini Notebook : un outil qui ne répond qu’à partir des documents que vous lui donnez, et qui montre d’où vient chaque réponse. Vous l’essayez d’abord sur un document court.',
+    objectif:
+      'Charger un seul document dans un carnet, lui poser des questions, ouvrir chaque citation pour vérifier la réponse, et constater que le carnet reconnaît quand le document ne dit rien.',
+    etapes: [
+      'Choisissez un document court, sans donnée personnelle ni confidentielle. À défaut, copiez le texte du matériau dans un document vierge ou collez-le comme source.',
+      'Dans Gemini Notebook, créez un carnet et ajoutez ce document comme source (« Sources »).',
+      'Dans la discussion, posez trois questions dont la réponse est dans le document, une à la fois, avec le prompt de départ. Par exemple, pour le matériau : le délai de dépôt des demandes, la présence minimale en fin d’année, la date de réouverture.',
+      'Pour chaque réponse, cliquez sur la citation numérotée : le passage exact s’ouvre dans la source. Dit-il bien ce que la réponse affirme ? Notez un « oui » ou un « non » pour chacune.',
+      'Posez une question dont la réponse n’est pas dans le document (pour le matériau : « Combien de jours de congé a-t-on par an ? »). Le carnet doit répondre que la source ne le précise pas, sans rien inventer.',
+      'Notez en deux lignes ce que le carnet fait mieux qu’une conversation ordinaire avec une IA, et ce que vous continuerez de vérifier vous-même.',
+    ],
+    prompt:
+      'Réponds uniquement à partir de la source de ce carnet. Ma question : [votre question].\n\nDonne une réponse courte, avec la citation du passage qui la justifie. Si la source ne contient pas la réponse, écris « absent de la source » et n’y ajoute rien.',
+    materiau: {
+      titre: 'Note interne sur les congés et les remplacements (document fictif)',
+      texte:
+        'NOTE INTERNE – Organisation des congés et des remplacements\nPériode concernée : du 1er décembre au 31 janvier\n\n1. Dépôt des demandes\nLes demandes de congés se déposent dans le tableau partagé avant le vendredi 6 novembre. Passé cette date, elles sont traitées dans l’ordre d’arrivée, selon les places restantes. La réponse est donnée au plus tard le vendredi 13 novembre.\n\n2. Présence minimale\nTrois personnes au moins sont présentes chaque jour d’ouverture. Du 21 décembre au 8 janvier, ce minimum est ramené à deux personnes.\n\n3. Remplacements\nChaque personne qui part en congé désigne un remplaçant avant son départ. Elle lui remet une fiche de passation d’une page, au plus tard la veille du départ. Les appels de la personne absente sont renvoyés vers le poste de son remplaçant.\n\n4. Fermeture de fin d’année\nLes bureaux ferment le jeudi 24 décembre à 12 h. Ils rouvrent le lundi 28 décembre à 7 h 30. Aucune demande de congé n’est nécessaire pour cette période.\n\n5. Demandes concurrentes\nSi plus de deux personnes demandent les mêmes dates, la responsable de l’équipe arbitre. Elle privilégie l’alternance avec l’année précédente.\n\n6. Questions\nLes questions sur cette note sont à adresser à Léa, référente du planning, au poste 214.',
+    },
+    variantes: {
+      simple:
+        'Se limiter à deux questions dont la réponse est dans le document, et à la question sans réponse.',
+      poussee:
+        'Ajouter un second document qui contredit le premier sur une date, poser la même question, et observer comment le carnet présente les deux citations.',
+    },
+    astuces: {
+      notebook:
+        'Passez le pointeur sur le numéro d’une citation : un aperçu du passage s’affiche, et un clic ouvre la source à l’endroit exact.',
+    },
+    vigilance:
+      'Ne chargez aucun document contenant des données personnelles ou confidentielles : un carnet se partage facilement. Une citation prouve d’où vient la réponse, pas qu’elle est bien comprise : lisez toujours le passage.',
+    formateur: {
+      resultat:
+        'Un carnet à une source, trois réponses vérifiées en ouvrant leur citation (avec le matériau : vendredi 6 novembre, deux personnes du 21 décembre au 8 janvier, réouverture le 28 décembre à 7 h 30), et une question sans réponse à laquelle le carnet répond « absent de la source ».',
+      criteres: [
+        'Le document chargé ne contient aucune donnée personnelle ou confidentielle.',
+        'L’apprenant a ouvert la citation de chacune des trois réponses et noté si elle confirme la réponse.',
+        'À la question dont la réponse n’est pas dans le document, le carnet dit que la source ne le précise pas.',
+        'Les questions ont été posées une à une, avec le contexte « uniquement à partir de la source ».',
+      ],
+      pieges: [
+        'Se contenter de voir un numéro de citation sans ouvrir le passage : il peut dire autre chose que la réponse.',
+        'Confondre deux périodes du document (le minimum de trois personnes, puis de deux personnes en fin d’année).',
+        'Charger un document personnel ou confidentiel pour « tester ».',
+      ],
+      competence: 'discernement',
+      technique: 'sources',
+    },
+    motsCles: ['Gemini Notebook', 'NotebookLM', 'sources', 'citations', 'document', 'débutant'],
+  },
 ];

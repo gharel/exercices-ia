@@ -169,6 +169,8 @@ export const gabarits = [
     famille: 'visuels',
     duree: 30,
     outils: ['canva'],
+    // Services internes : ils ne publient pas sur les réseaux sociaux.
+    exclure: ['informatique', 'qualite', 'projet'],
     situation:
       'Vous avez réussi une publication carrée pour {offre.le}. On vous demande maintenant la même chose en story, en affiche A4 pour l’accueil et en bannière pour votre page Facebook : même message, mêmes informations, mais des textes adaptés à chaque format.',
     objectif:
@@ -406,5 +408,62 @@ export const gabarits = [
       'Canva',
       'cohérence',
     ],
+  },
+  {
+    id: 'g-canva-ecriture-magique',
+    titre: 'Raccourcir et clarifier les textes {visuel.du} avec Écriture magique',
+    niveau: 'intermediaire',
+    famille: 'visuels',
+    duree: 20,
+    outils: ['canva'],
+    outilConseille: 'canva',
+    situation:
+      'Vous travaillez dans {structure.un} à Nouméa. Vous avez {visuel.un} qui présente {offre.le}, mais son texte est bavard : un bloc que personne ne lira. Public visé : {publicCible}. Vous devez le rendre lisible en trois secondes sans changer une seule information pratique.',
+    objectif:
+      'Utiliser Écriture magique bloc par bloc (titre, accroche, informations pratiques), puis comparer avec le texte de départ et rétablir ce que l’outil a changé ou inventé.',
+    etapes: [
+      'Partez de votre propre visuel trop chargé, ou créez un design Canva et collez-y le texte du matériau.',
+      'Sélectionnez le bloc de texte, ouvrez Écriture magique (gratuit, mais limité) et demandez un titre de six mots au plus.',
+      'Sélectionnez de nouveau le texte de départ et demandez une accroche d’une phrase, puis trois informations pratiques en lignes courtes.',
+      'Mettez la nouvelle version à côté du texte de départ et comparez : jours, horaires, date du samedi, adresse, contact. Notez chaque écart dans la fiche du matériau.',
+      'Rétablissez à la main tout ce qui a été modifié ou inventé, puis relisez l’orthographe.',
+      'Montrez le visuel trois secondes à un collègue : retrouve-t-il le titre, les horaires et l’adresse ?',
+    ],
+    prompt:
+      'Prompt 1, pour le titre :\nÀ partir de ce texte, écris un titre de six mots au plus, direct, qui donne envie. N’utilise aucun chiffre ni aucune date.\n\nPrompt 2, pour l’accroche :\nÉcris une accroche d’une phrase de vingt mots au plus pour {offre.le}. Public visé : {publicCible}. Ton : [chaleureux / direct].\n\nPrompt 3, pour les informations pratiques :\nExtrais trois informations pratiques en lignes de huit mots au plus : [les jours et les horaires], [l’adresse], [le contact]. Recopie exactement les jours, les dates, les horaires et les coordonnées, sans rien ajouter.',
+    materiau: {
+      titre: 'Texte de départ (fictif) et fiche de comparaison',
+      texte:
+        'Texte de départ :\nNous avons le plaisir de vous présenter {offre.le}. Après plusieurs mois de préparation avec toute notre équipe, nous sommes heureux de vous inviter à venir en savoir plus et à poser toutes vos questions, car nous savons que chacun a des besoins différents et mérite une réponse adaptée à sa situation. Notre équipe vous reçoit pour cela à notre accueil, au 12 rue des Hibiscus, à Nouméa, du lundi au vendredi de 7 h 30 à 16 h, et exceptionnellement le samedi 20 mars 2027 de 8 h à 12 h. Elle prendra le temps de répondre à vos questions et de vous aider dans vos démarches. Pour tout renseignement, appelez le 75 12 34 ou écrivez à contact@exemple.nc. Nous vous attendons nombreux !\n\nFiche de comparaison :\nJours et horaires d’accueil : identiques / modifiés\nOuverture exceptionnelle du samedi (date et horaires) : identique / modifiée\nAdresse : identique / modifiée\nContact (téléphone, e-mail) : identique / modifié\nInformation ajoutée par l’outil : …\nCorrection apportée : …',
+    },
+    variantes: {
+      simple: 'Ne demander que le titre et les trois informations pratiques, sans accroche.',
+      poussee:
+        'Demander trois titres de ton différent pour le même visuel, les faire voter par trois collègues, puis ajuster l’accroche pour qu’elle ne répète pas le titre.',
+    },
+    astuces: {
+      canva:
+        'Écriture magique travaille sur le bloc sélectionné : sélectionnez un bloc à la fois, et gardez le texte de départ sur une page à part pour comparer.',
+    },
+    vigilance:
+      'En raccourcissant, l’outil peut arrondir un horaire, changer un jour ou inventer un détail (une date, un numéro, un lieu). Les informations pratiques se recopient depuis votre source, jamais depuis la version générée. N’affichez que des coordonnées de la structure, pas des numéros personnels.',
+    formateur: {
+      resultat:
+        'Un visuel au titre de six mots au plus, avec une accroche et trois informations pratiques, dont les horaires, la date du samedi, l’adresse et le contact ont été comparés au texte de départ et rétablis si besoin.',
+      criteres: [
+        'Le titre compte six mots au plus et ne contient ni chiffre ni date.',
+        'Chaque information pratique a été comparée au texte de départ.',
+        'Les écarts ont été notés puis corrigés à la main.',
+        'Le visuel a été relu pour l’orthographe, puis testé trois secondes sur une autre personne.',
+      ],
+      pieges: [
+        'Un horaire « arrondi » ou le samedi exceptionnel oublié par l’outil, laissés dans le visuel.',
+        'Un détail inventé (tarif, date limite, numéro) qui paraît plausible.',
+        'Raccourcir tant que l’appel à l’action ou le contact a disparu.',
+      ],
+      competence: 'discernement',
+      technique: 'iterer',
+    },
+    motsCles: ['Écriture magique', 'Canva', 'raccourcir', 'titre', 'accroche', 'visuel'],
   },
 ];

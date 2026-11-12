@@ -407,4 +407,60 @@ export const gabarits = [
     },
     motsCles: ['assistant', 'relecture', 'projet', 'gem', 'agent', 'instructions'],
   },
+  {
+    id: 'g-chatgpt-canevas',
+    titre: 'Retravailler {documentCourant.un} passage par passage dans le canevas de ChatGPT',
+    niveau: 'intermediaire',
+    famille: 'corriger',
+    duree: 20,
+    outils: ['chatgpt'],
+    outilConseille: 'chatgpt',
+    situation:
+      'Vous travaillez dans {structure.un} à Nouméa. Vous devez améliorer les passages rédigés {documentCourant.du} sans tout réécrire : une rubrique est trop longue, une phrase trop abrupte. Chaque fois que vous demandez une retouche, vous craignez que l’IA change aussi ce qui allait bien.',
+    objectif:
+      'Utiliser le canevas pour retoucher un texte passage par passage, accepter seulement une partie des suggestions et vérifier que le reste n’a pas bougé.',
+    etapes: [
+      'Partez d’un document de votre structure sans donnée personnelle ni confidentielle. À défaut, envoyez le prompt de départ : ChatGPT rédige dans le canevas un premier jet fictif et volontairement maladroit.',
+      'Copiez le texte de départ dans un document à part : il vous servira de référence pour la comparaison finale.',
+      'Faites les cinq retouches du matériau, une à la fois, en sélectionnant le passage concerné dans le canevas.',
+      'À la retouche 3, demandez des suggestions de modification et n’en acceptez qu’une partie : notez celles que vous refusez et pourquoi.',
+      'Comparez le texte final avec votre référence, rubrique par rubrique : le reste n’a-t-il pas bougé (chiffres, noms, dates, formulations) ?',
+    ],
+    prompt:
+      'Ouvre un canevas et rédige-y {documentCourant.un} d’environ 250 mots pour {structure.un} à Nouméa, au contenu entièrement fictif, en cinq rubriques. Au moins trois d’entre elles sont rédigées en phrases (description, observations, conditions, remarques…), pas seulement en listes ou en tableau. Rends ces passages volontairement maladroits : une rubrique beaucoup trop longue, une phrase au ton trop sec pour son lecteur, des répétitions, une formule vague. Utilise des noms, des dates et, s’il y en a, des montants en XPF inventés. Ne corrige rien : je retravaillerai le texte passage par passage.',
+    materiau: {
+      titre: 'Les cinq retouches à faire (consigne)',
+      texte:
+        '1. Raccourcir une seule rubrique, la plus longue, de moitié environ, sans rien changer d’autre.\n2. Changer le ton d’une seule phrase, la plus sèche, pour la rendre courtoise ou neutre, sans toucher aux phrases voisines.\n3. Demander des suggestions de modification sur une autre rubrique, puis en accepter une partie seulement.\n4. Remplacer une formule vague par une information précise que vous fournissez vous-même.\n5. Vérifier que tout le reste du texte est resté identique à la référence : chiffres, noms, dates, ordre des rubriques.',
+    },
+    variantes: {
+      simple: 'Ne faire que les retouches 1 et 2, puis la vérification finale.',
+      poussee:
+        'Ajoutez une retouche demandée sans sélection : constatez ce qui change dans tout le texte, puis refaites-la en sélectionnant le passage, et comparez les deux résultats.',
+    },
+    astuces: {
+      chatgpt:
+        'Le canevas est gratuit : sélectionnez le passage à retoucher avant de formuler votre demande, et demandez des suggestions de modification pour voir chaque proposition avant de l’accepter.',
+    },
+    vigilance:
+      'Ne collez dans le canevas aucune donnée personnelle ni information confidentielle. Même sur un seul passage, l’IA peut modifier un chiffre ou un nom : comparez avec votre référence avant de diffuser le document.',
+    formateur: {
+      resultat:
+        'Un texte retravaillé par cinq retouches ciblées, avec une partie seulement des suggestions acceptées, et une comparaison finale avec la référence qui montre ce qui a changé et ce qui n’a pas bougé.',
+      criteres: [
+        'Chaque retouche porte sur un seul passage sélectionné dans le canevas.',
+        'Les suggestions de modification ont été demandées, et certaines refusées.',
+        'Une référence copiée avant les retouches a servi à la comparaison finale.',
+        'L’apprenant a repéré au moins une modification non demandée, ou confirmé qu’il n’y en a pas.',
+      ],
+      pieges: [
+        'Demander une retouche sans sélectionner le passage : l’IA réécrit tout le texte.',
+        'Accepter toutes les suggestions sans les lire.',
+        'Ne pas garder de référence, puis ne plus savoir ce qui a changé.',
+      ],
+      competence: 'discernement',
+      technique: 'decomposer',
+    },
+    motsCles: ['canevas', 'ChatGPT', 'retouche', 'suggestions', 'passage', 'relecture'],
+  },
 ];

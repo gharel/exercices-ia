@@ -132,6 +132,9 @@ export const gabarits = [
     duree: 45,
     outils: ['claude', 'chatgpt', 'gemini'],
     outilConseille: 'claude',
+    // L'accueil, l'informatique, les associations et l'artisanat ont leur propre assistant de
+    // réponses ; la qualité et la gestion de projet ne répondent pas à ce genre de questions.
+    exclure: ['accueil', 'informatique', 'qualite', 'projet', 'associations', 'artisanat'],
     situation:
       '{Client.les} posent souvent les mêmes questions : horaires, documents à fournir, délais, suivi de leur demande. Les réponses existent dans vos documents, mais chacun répond à sa façon. Vous voulez un espace de travail qui prépare des projets de réponse fondés sur ces documents, relus avant envoi.',
     objectif:
@@ -418,5 +421,64 @@ export const gabarits = [
       technique: 'decomposer',
     },
     motsCles: ['chaîne', 'étapes', 'contrôle humain', 'réclamation', 'suivi', 'automatisation'],
+  },
+  {
+    id: 'g-claude-artefact-outil',
+    titre: 'Créer avec un artefact Claude un petit outil pour {tacheRepetitive}',
+    niveau: 'avance',
+    famille: 'automatiser',
+    duree: 45,
+    outils: ['claude'],
+    outilConseille: 'claude',
+    situation:
+      'Dans {structure.votre}, une tâche vous revient sans cesse : {tacheRepetitive}. Chaque fois, vous refaites les mêmes gestes à la main. Vous n’êtes pas informaticien, mais Claude peut afficher à côté de la conversation une petite application utilisable tout de suite : un artefact. Vous voulez essayer d’en faire un outil simple pour cette tâche.',
+    objectif:
+      'Décrire en français un petit outil (ce qu’on saisit, ce qui doit sortir), le tester avec trois cas dont un cas limite, le faire corriger point par point, puis décider de ce qu’on en fait.',
+    etapes: [
+      'Choisissez la forme de l’outil : un formulaire qui produit un message prêt à copier, une check-list interactive ou un petit calculateur. Remplissez les trous du prompt de départ.',
+      'Envoyez la demande à Claude, avec la fonction Artefacts disponible, et laissez-le afficher l’outil.',
+      'Testez avec trois cas fictifs : un cas courant, un cas compliqué et un cas limite (champ vide, montant à zéro, nom très long). Notez ce qui ne va pas dans la fiche du matériau.',
+      'Demandez les corrections une par une, en reprenant le cas qui a échoué, et retestez après chacune.',
+      'Si l’outil calcule quoi que ce soit, refaites un calcul à la main et comparez le résultat.',
+      'Décidez ce que vous en faites : outil personnel, outil à proposer à l’équipe, ou abandon. Notez votre choix et vos raisons.',
+    ],
+    prompt:
+      'Je ne sais pas programmer. Crée-moi dans un artefact un petit outil pour m’aider avec {tacheRepetitive}. Je travaille dans {structure.un} à Nouméa.\n\nForme : [un formulaire qui produit un message prêt à copier / une check-list interactive / un petit calculateur].\nCe que l’utilisateur saisit : [la liste des champs, par exemple le nom, la date, le montant en XPF].\nCe qui doit sortir : [le message, la liste cochée ou le résultat du calcul, avec son format].\nRègles : [par exemple « si un champ est vide, affiche une alerte au lieu d’inventer une valeur »].\nContraintes : un seul écran, en français, vouvoiement, boutons simples, un bouton « Copier » sur le résultat. L’outil ne doit pas enregistrer les données saisies.\n\nAvant de construire, pose-moi trois questions au maximum si quelque chose n’est pas clair.',
+    materiau: {
+      titre: 'Fiche de test de l’outil',
+      texte:
+        'Cas 1 (courant) : saisie : … ; résultat attendu : … ; résultat obtenu : … ; conforme oui / non\nCas 2 (compliqué) : saisie : … ; résultat attendu : … ; résultat obtenu : … ; conforme oui / non\nCas 3 (limite : champ vide, zéro, texte très long) : saisie : … ; résultat attendu : … ; résultat obtenu : … ; conforme oui / non\n\nCalcul refait à la main : … ; écart : …\nCorrections demandées, une par une : …\nDécision : outil personnel / à proposer à l’équipe / abandon, car …',
+    },
+    variantes: {
+      simple:
+        'Se limiter à une check-list interactive à cinq cases, sans calcul, et la tester avec deux cas.',
+      poussee:
+        'Ajouter une seconde fonction à l’outil (un modèle de message différent selon la situation, ou un total par catégorie), puis refaire toute la fiche de test.',
+    },
+    astuces: {
+      claude:
+        'Avec Artefacts, l’outil s’affiche à côté de la conversation : testez-le directement, puis décrivez à Claude ce qui ne va pas plutôt que de tout redemander.',
+    },
+    vigilance:
+      'Aucune donnée réelle ni confidentielle dans l’outil ni dans vos tests : uniquement des cas fictifs. Un calcul affiché n’est pas un calcul juste : vérifiez-le à la main. Avant de partager l’outil avec l’équipe, dites qu’il a été créé avec l’IA et faites-le valider par la personne responsable.',
+    formateur: {
+      resultat:
+        'Un petit outil fonctionnel dans un artefact, testé avec trois cas fictifs dont un cas limite, corrigé point par point, avec un calcul vérifié à la main et une décision argumentée sur son usage.',
+      criteres: [
+        'Le prompt décrit la forme, les champs saisis, le résultat attendu et les règles.',
+        'Trois cas ont été testés, dont un cas limite, et consignés dans la fiche.',
+        'Les corrections ont été demandées une par une, avec un nouveau test à chaque fois.',
+        'Un calcul a été refait à la main, et l’outil ne contient aucune donnée réelle.',
+      ],
+      pieges: [
+        'Tester un seul cas courant et conclure que l’outil marche.',
+        'Demander dix corrections d’un coup : l’une casse une autre sans qu’on le voie.',
+        'Faire confiance à un total ou à un pourcentage jamais recalculé.',
+        'Partager l’outil à l’équipe sans le dire créé par l’IA ni le faire valider.',
+      ],
+      competence: 'delegation',
+      technique: 'iterer',
+    },
+    motsCles: ['Artefacts', 'Claude', 'petit outil', 'formulaire', 'check-list', 'sans programmer'],
   },
 ];

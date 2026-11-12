@@ -429,4 +429,141 @@ export const gabarits = [
       'intégration',
     ],
   },
+  {
+    id: 'g-notebook-audio-carte',
+    titre:
+      'Préparer la présentation d’un document à l’équipe avec un résumé audio et une carte mentale',
+    niveau: 'debutant',
+    famille: 'organiser',
+    duree: 20,
+    outils: ['notebook'],
+    outilConseille: 'notebook',
+    situation:
+      'Vous travaillez dans {structure.un} à Nouméa. Vendredi, vous devez présenter à l’équipe, en cinq minutes, les points essentiels d’un document que personne n’a eu le temps de lire : une procédure, une note interne, {documentLong.un}… Vous voulez d’abord voir de quoi il parle, puis l’entendre, avant de construire votre plan.',
+    objectif:
+      'Utiliser la carte mentale pour repérer les notions à présenter, le résumé audio pour une première écoute, vérifier dans la source ce que l’audio affirme, puis écrire le plan d’une présentation de cinq minutes.',
+    etapes: [
+      'Chargez dans un nouveau carnet Gemini Notebook un document sans donnée personnelle ni confidentielle. À défaut, copiez le texte du matériau dans un document et chargez-le comme source.',
+      'Générez la carte mentale. Dépliez les branches et choisissez trois ou quatre notions à présenter : lesquelles comptent le plus pour l’équipe ?',
+      'Générez le résumé audio, écoutez-le en entier et notez trois affirmations précises (un chiffre, un délai, une règle, un rôle).',
+      'Retrouvez chacune de ces trois affirmations dans la source. Notez « exacte », « simplifiée » ou « déformée » : le résumé audio condense et peut changer le sens.',
+      'Dans la discussion, envoyez le prompt de départ pour obtenir un plan de cinq minutes appuyé sur les notions retenues.',
+      'Relisez le plan : corrigez ce qui n’est pas dans la source, puis chronométrez-vous à voix haute.',
+    ],
+    prompt:
+      'Prépare le plan d’une présentation orale de cinq minutes pour mes collègues, à partir uniquement de la source de ce carnet.\n\nNotions à présenter : [les trois ou quatre notions choisies sur la carte mentale].\n\nPour chaque notion : une phrase d’introduction, deux points à retenir avec la citation de la source, et ce que mes collègues doivent faire après. Prévois une durée par notion, pour un total de cinq minutes. Si la source ne dit rien sur un point, écris « absent de la source ».',
+    materiau: {
+      titre: 'Procédure d’accueil d’un nouveau collègue (document fictif)',
+      texte:
+        'PROCÉDURE – Accueillir un nouveau collègue\n\nAvant l’arrivée\n- Le responsable prévient l’équipe au moins une semaine avant le premier jour.\n- Le service informatique prépare le poste de travail et l’adresse e-mail trois jours avant l’arrivée.\n- Un parrain est désigné parmi les collègues ayant plus d’un an d’ancienneté.\n\nPremier jour\n- Accueil à 7 h 30 par le parrain, qui fait visiter les locaux.\n- Remise du badge, des clés et du livret d’accueil.\n- Déjeuner avec l’équipe, offert par la structure.\n- Fin de journée à 15 h 30 : le nouveau remplit avec son parrain la liste des accès à demander.\n\nPremière semaine\n- Une demi-heure par jour avec le parrain pour répondre aux questions.\n- Lecture des trois procédures de base, signalées par une étoile dans le classeur partagé.\n- Vendredi : point de 20 minutes avec le responsable, sur ce qui a surpris ou manqué.\n\nPremier mois\n- Point à trente jours avec le responsable et le parrain.\n- Le nouveau propose une amélioration de cette procédure d’accueil.',
+    },
+    variantes: {
+      simple:
+        'Se limiter à la carte mentale et au plan, sans résumé audio ni vérification des affirmations.',
+      poussee:
+        'Ajouter un deuxième document sur le même sujet, puis comparer la carte mentale du carnet complet avec celle du premier document seul : quelles notions apparaissent ?',
+    },
+    astuces: {
+      notebook:
+        'Cliquez sur une branche de la carte mentale pour poser une question sur cette notion dans la discussion : la réponse s’appuie sur la source et renvoie à ses citations.',
+    },
+    vigilance:
+      'Ne chargez aucun document contenant des données personnelles ou confidentielles. Le résumé audio paraît très sûr de lui : il simplifie, arrondit et laisse de côté des exceptions. Ne présentez rien à l’équipe que vous n’avez pas retrouvé dans la source.',
+    formateur: {
+      resultat:
+        'Une carte mentale d’où ressortent trois ou quatre notions, trois affirmations du résumé audio contrôlées une à une dans la source (exactes, simplifiées ou déformées), et un plan de présentation de cinq minutes dont chaque point est appuyé sur une citation.',
+      criteres: [
+        'Le document chargé ne contient aucune donnée personnelle ou confidentielle.',
+        'Trois ou quatre notions ont été choisies à partir de la carte mentale, pas toutes les branches.',
+        'Chacune des trois affirmations notées à l’écoute a été retrouvée dans la source et classée.',
+        'Le plan tient en cinq minutes et ne contient aucune information absente de la source.',
+      ],
+      pieges: [
+        'Reprendre telle quelle une affirmation du résumé audio : un délai ou un nombre peut être arrondi ou déplacé.',
+        'Présenter toutes les branches de la carte mentale, au lieu de choisir les notions utiles à l’équipe.',
+        'Ne retenir que ce que dit l’audio, qui peut omettre une étape de la procédure.',
+      ],
+      competence: 'discernement',
+      technique: 'critique',
+    },
+    motsCles: [
+      'Gemini Notebook',
+      'NotebookLM',
+      'résumé audio',
+      'carte mentale',
+      'présentation',
+      'débutant',
+    ],
+  },
+  {
+    id: 'g-copilot-teams-pages',
+    titre: 'Passer du récapitulatif {reunion.du} à un plan d’action partagé dans Copilot Pages',
+    niveau: 'avance',
+    famille: 'organiser',
+    duree: 45,
+    outils: ['copilot'],
+    outilConseille: 'copilot',
+    // Réunions qui ne débouchent pas sur le plan d'action d'une équipe : conseil municipal,
+    // assemblée générale de copropriété, délégués du personnel, présentation du bilan.
+    exclure: ['collectivites', 'immobilier', 'rh', 'comptabilite'],
+    situation:
+      'Vous travaillez dans {structure.un} à Nouméa. {Reunion.le} a eu lieu hier : tout le monde est reparti avec le sentiment d’avoir décidé quelque chose, mais personne ne sait qui fait quoi pour quand. Votre responsable vous demande un plan d’action que l’équipe puisse suivre, et les relances qui vont avec.',
+    objectif:
+      'Partir du récapitulatif d’une réunion pour obtenir un tableau d’actions, repérer ce qu’il laisse dans le flou, le transformer en page partagée, et préparer des relances que vous relisez avant que quiconque les reçoive.',
+    etapes: [
+      'Si la réunion a eu lieu dans Teams avec la licence Copilot, ouvrez son « Récapitulatif de réunion ». Sinon, collez la transcription du matériau dans Copilot Chat.',
+      'Envoyez le prompt de départ pour obtenir le tableau des actions : quoi, qui, pour quand, et ce qui reste « à préciser ».',
+      'Comparez le tableau avec la transcription : chaque décision y est-elle vraiment prise ? Une action sans responsable a-t-elle reçu un nom que personne n’a cité ? Les deux dates contradictoires sont-elles signalées ?',
+      'Demandez la liste des questions à poser aux participants pour lever chaque flou, puis corrigez le tableau.',
+      'Transformez la réponse en page modifiable avec « Copilot Pages » (compte professionnel) et partagez-la avec un collègue, qui complète ou conteste une ligne.',
+      'Demandez les messages de relance, un par personne concernée, sans les envoyer.',
+      'Relisez chaque message : ton, exactitude des dates et des actions. Ne l’envoyez vous-même qu’après validation : personne n’est relancé sans relecture.',
+    ],
+    prompt:
+      'Tu es [ta fonction] dans {structure.un} à Nouméa. Voici la transcription (ou le récapitulatif) de {reunion.du} d’hier.\n\n<reunion>\n[collez la transcription ici, ou joignez le récapitulatif]\n</reunion>\n\nÉtablis un tableau des actions : action, responsable, échéance, source (la phrase qui la justifie). N’invente aucun responsable ni aucune date : si l’un d’eux manque, écris « à préciser ». Si deux dates se contredisent, indique les deux et signale la contradiction.\n\nAjoute sous le tableau :\n1. les décisions qui ne sont pas vraiment prises (formulations floues) ;\n2. les questions à poser aux participants pour lever chaque flou.',
+    materiau: {
+      titre: 'Transcription d’un extrait de réunion (fictive)',
+      texte:
+        'Mardi 10 novembre – point d’avancement, projet « classeur partagé » – 9 h 00 à 9 h 40\nParticipants : Sophie (animatrice), Kevin, Mélanie, Jean-Marc\n\nSophie : On fait le point sur le nouveau classeur partagé. Kevin, où en est-on ?\nKevin : J’ai migré environ la moitié des dossiers. Le reste devrait suivre assez vite.\nSophie : C’est quoi, assez vite ?\nKevin : Disons d’ici fin novembre, si rien ne bloque.\nMélanie : Il faudrait aussi décider du nom des dossiers, parce que chacun fait à sa façon.\nSophie : Oui. On va partir sur l’année, puis le thème, puis le nom. Enfin, on verra à l’usage.\nJean-Marc : Moi je préfère qu’on mette le thème en premier, ce sera plus simple à retrouver.\nSophie : On en reparle. Pour l’instant, on garde l’année en premier.\nMélanie : D’accord, mais il faudrait le noter quelque part.\nSophie : Oui, quelqu’un s’en occupe.\nKevin : Autre sujet, l’ancien classeur. On le ferme quand ?\nSophie : Il faut d’abord prévenir tout le monde. Il faudra le faire avant la fermeture.\nJean-Marc : Qui prévient les autres services ?\nSophie : On verra. Bon.\nMélanie : Pour la présentation à la direction, c’est quand ?\nSophie : Le jeudi 26 novembre, je crois.\nKevin : Moi j’avais noté le 3 décembre.\nSophie : Ah. Il faudra vérifier. Mélanie, tu prépares trois diapositives pour la présentation ?\nMélanie : Oui, je peux faire ça la semaine prochaine.\nSophie : Parfait. Jean-Marc, tu testes le classeur avec deux collègues avant la présentation ?\nJean-Marc : Je peux essayer. Ça dépend de leur agenda.\nSophie : Très bien. Kevin, tu m’envoies l’état de la migration chaque vendredi ?\nKevin : Oui, pas de souci.\nMélanie : Et la formation des collègues sur le nouveau classeur ? On la fait quand ?\nSophie : Peut-être en décembre, après la présentation.\nSophie : Bon, on s’arrête là. Merci à tous.',
+    },
+    variantes: {
+      simple:
+        'Sans Teams ni Pages, tout faire dans Copilot Chat : coller la transcription, obtenir le tableau, puis copier le tableau vérifié dans un e-mail ou un document partagé.',
+      poussee:
+        'Demander à Copilot un plan de suivi sur quatre semaines (point hebdomadaire, indicateur, critère de clôture pour chaque action) puis une relance de J-3 avant chaque échéance, à valider une par une.',
+    },
+    astuces: {
+      copilot:
+        'Dans Copilot Chat, transformez la réponse en Copilot Page : le tableau devient une page que vos collègues complètent en même temps que vous. Le récapitulatif de réunion exige la licence Copilot, et Copilot Pages un compte professionnel.',
+    },
+    vigilance:
+      'Une transcription réelle contient des noms, des avis personnels et parfois des sujets sensibles : retirez-les avant de la coller ou de la partager dans une page. Une page partagée est lue et modifiée par d’autres : relisez-la avant de donner l’accès, et ne lancez aucune relance sans l’avoir relue.',
+    formateur: {
+      resultat:
+        'Un tableau d’actions où les responsables et dates manquants sont « à préciser » (nom des dossiers, prévenir les autres services, date de la présentation, formation), une liste de décisions floues et de questions à poser, une page partagée relue par un collègue, et des relances écrites mais envoyées par l’apprenant après relecture.',
+      criteres: [
+        'Le tableau distingue ce qui est décidé de ce qui est flou, et ne contient aucun nom inventé.',
+        'L’action « prévenir les autres services » apparaît sans responsable, et le tableau signale les deux dates (26 novembre et 3 décembre).',
+        'Une liste de questions à poser aux participants accompagne le tableau.',
+        'La page a été partagée avec au moins un collègue, ou le tableau a été relu à deux dans Copilot Chat.',
+        'Aucun message de relance n’est envoyé avant relecture par l’apprenant.',
+      ],
+      pieges: [
+        'Laisser Copilot attribuer « prévenir les autres services » ou « noter le nom des dossiers » à quelqu’un qui ne l’a jamais accepté.',
+        'Retenir une seule des deux dates de la présentation sans signaler la contradiction.',
+        'Présenter « Je peux essayer » de Jean-Marc comme un engagement ferme.',
+        'Envoyer les relances rédigées par l’IA sans les relire : date erronée, ton trop sec, ou personne relancée à tort.',
+      ],
+      competence: 'diligence',
+      technique: 'decomposer',
+    },
+    motsCles: [
+      'Copilot Pages',
+      'Teams',
+      'récapitulatif de réunion',
+      'plan d’action',
+      'relances',
+      'Microsoft Copilot',
+    ],
+  },
 ];
