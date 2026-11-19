@@ -128,7 +128,7 @@ Le schéma complet est en tête de `src/js/schema.js`. Les slugs valides sont da
 
 ## Conventions de code
 
-Elles sont reprises du projet voisin `jeu-formation`, même auteur et même charte :
+Elles sont reprises du projet voisin `jeux`, même auteur et même charte :
 
 - **En français** : noms de fonctions et de variables, commentaires, textes affichés, messages de commit.
 - **Aucune dépendance à l'exécution, aucun CDN, aucune requête réseau.** La police est intégrée, les icônes Font Awesome Free sont un sprite SVG généré (`npm run icones`). esbuild ne sert qu'à construire le fichier unique.
