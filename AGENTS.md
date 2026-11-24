@@ -22,7 +22,7 @@ Un outil pour **proposer des exercices concrets de pratique de l'IA** en formati
 - **Le bandeau est commun aux outils Skazy Formation** ; de gauche à droite :
   - la pastille et le nom de l'outil, en un seul lien vers son accueil (`./`, avec `aria-current="page"` ; hors ligne, vers le fichier lui-même) ;
   - les actions de l'outil : Repères, thème, Ma séance ;
-  - « Les outils », vers https://gharel.github.io/home/ dans le même onglet, avec la roue des outils (`src/assets/img/les-outils.svg`, copie du favicon de cette page, jamais liée à distance) ;
+  - « Les outils », vers https://gharel.github.io/pro/ dans le même onglet, avec la roue des outils (`src/assets/img/les-outils.svg`, copie du favicon de cette page, jamais liée à distance) ;
   - un filet, puis le logo Skazy Formation, **dernier élément**, vers https://formation.skazy.nc dans un nouvel onglet.
   - Quand la place manque, le nom (≤ 880 px) puis le texte « Les outils » (≤ 720 px) ne sont masqués qu'à l'œil : ils restent les noms des liens, la pastille et la roue restent affichées. À 360 px, tout tient sur une ligne, même avec une séance de 12 exercices.
 - Le bouton rond **« Remonter en haut »** (en bas à droite) apparaît après un écran et un cinquième de défilement, jamais par-dessus un panneau ouvert (fiche, séance, repères), et rend le focus au titre de la page.
