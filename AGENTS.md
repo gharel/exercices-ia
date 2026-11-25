@@ -27,7 +27,7 @@ Un outil pour **proposer des exercices concrets de pratique de l'IA** en formati
   - Quand la place manque, le nom (≤ 880 px) puis le texte « Les outils » (≤ 720 px) ne sont masqués qu'à l'œil : ils restent les noms des liens, la pastille et la roue restent affichées. À 360 px, tout tient sur une ligne, même avec une séance de 12 exercices.
 - Le bouton rond **« Remonter en haut »** (en bas à droite) apparaît après un écran et un cinquième de défilement, jamais par-dessus un panneau ouvert (fiche, séance, repères), et rend le focus au titre de la page.
 - **Thème commun aux outils Skazy Formation** : le bouton du thème (`#bouton-theme`) a trois états, du thème du système au thème clair, puis sombre, puis de nouveau celui du système ; l’icône montre le thème actuel (demi-cercle, soleil, lune), le nom accessible et l’info-bulle disent « Thème : celui du système. Changer de thème » (puis « Thème : clair. … », « Thème : sombre. … »).
-  - Le choix vaut pour **tous les outils** (même origine, https://gharel.github.io, donc même stockage) : il est gardé sous la clé `skazy-outils:theme`, hors du préfixe de l’outil (`"light"` ou `"dark"` en JSON ; thème du système : clé effacée). Le script du `<head>` l’applique avant l’affichage ; un changement dans un autre onglet ou un autre outil (événement `storage`), ou le retour sur une page gardée en mémoire (`pageshow`), le reprend aussitôt. Les anciennes clés propres à l’outil ne sont plus lues.
+  - Le choix vaut pour **tous les outils** (même origine, https://gharel.github.io, donc même stockage) : il est gardé sous la clé `skazy-outils:theme`, hors du préfixe de l’outil (`"light"` ou `"dark"` en JSON ; thème du système : clé effacée). Le script du `<head>` (`src/js/theme-initial.js`) l’applique avant l’affichage ; un changement dans un autre onglet ou un autre outil (événement `storage`), ou le retour sur une page gardée en mémoire (`pageshow`), le reprend aussitôt. Les anciennes clés propres à l’outil ne sont plus lues.
   - Thème clair choisi : `color-scheme: only light` ; thème sombre choisi : sombre ; sinon, celui du système.
   - `<meta name="darkreader-lock" />` suit toujours `<meta name="color-scheme" content="light dark" />` : la page a son propre thème sombre ; sans ce verrou, le mode nuit de Brave (Dark Reader) la repeint, même en thème clair.
   - Sur téléphone (≤ 640 px), le profil sombre remplit l’écran : en thème clair, lui et son résumé collant prennent les couleurs claires de la page (`composants.css`, en tête). Ils restent sombres sur ordinateur et en thème sombre, comme la scène de la Prompthèque et le héros de la page d’accueil des outils.
@@ -62,6 +62,7 @@ src/styles/base.css             Mise en page, bandeau, boutons, champs, dialogue
 src/styles/composants.css       Profil, filtres, cartes, fiche, séance, repères
 src/styles/impression.css       Fiches imprimées (version apprenant), toujours en clair : seule autre feuille avec des couleurs
 src/js/main.js                  Montage de la page
+src/js/theme-initial.js         Script classique du <head> : le thème choisi, appliqué avant l'affichage
 src/js/etat.js                  État : profil, filtres, séance, vue ; synchronisé avec l'URL et le stockage
 src/js/filtres.js               Pur : exercices d'un profil (fonction, secteur), filtrer, trier, compter, tirer au hasard
 src/js/gabarits.js              Pur : décliner un gabarit avec le vocabulaire d'un métier
@@ -133,7 +134,7 @@ Elles sont reprises du projet voisin `jeux`, même auteur et même charte :
 - **En français** : noms de fonctions et de variables, commentaires, textes affichés, messages de commit.
 - **Aucune dépendance à l'exécution, aucun CDN, aucune requête réseau.** La police est intégrée, les icônes Font Awesome Free sont un sprite SVG généré (`npm run icones`). esbuild ne sert qu'à construire le fichier unique.
 - **La logique est séparée de l'affichage.** Les fonctions pures (`filtres.js`, `gabarits.js`, `seance.js`, `schema.js`) sont testées unitairement ; les vues ne font que construire la page et réagir aux clics.
-- **Sécurité** : tout texte passe par `el()` ou `textContent`, jamais par `innerHTML` (sauf le sprite d'icônes, généré au build).
+- **Sécurité** : tout texte passe par `el()` ou `textContent`, jamais par `innerHTML` (sauf le sprite d'icônes, généré au build). Politique de sécurité (`<meta http-equiv="Content-Security-Policy">` de `src/index.html`) : aucune ressource hors du fichier ou du site, styles en ligne permis, et aucun script en ligne ni attribut `onclick` dans les sources (`script-src 'self'`). Le build recopie les deux scripts (`theme-initial.js` et le paquet de `main.js`) en ligne dans `dist/index.html` et remplace `'self'` par leur empreinte SHA-256 : tout autre script est bloqué (`autonome.spec.js` le vérifie).
 - **Stockage** : toujours par `stockage.js` (clés préfixées `skazy-exos:`, sauf le thème commun `skazy-outils:theme`) ; une erreur de stockage ne fait jamais planter la page.
 - **Accessibilité** :
   - contraste WCAG AA dans les deux thèmes : pas de texte blanc sur `#50967c` (3,5:1), on utilise `--primaire-fonce` ;
